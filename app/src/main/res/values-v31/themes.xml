@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.Catcha" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+        <!-- Splash screen background -->
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+
+        <!-- Splash screen icon -->
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/catcha_logo</item>
+    </style>
+</resources>

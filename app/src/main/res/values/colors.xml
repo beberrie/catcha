@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- BRANDING COLORS -->
+    <color name="yellow">#EDC247</color>
+    <color name="soft_yellow">#D8B963</color>
+    <color name="blue">#304057</color>
+    <color name="soft_blue">#33455E</color>
+    <color name="light_blue">#556077</color>
+
+</resources>
