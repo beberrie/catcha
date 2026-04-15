@@ -32,19 +32,18 @@ public class LoginActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
-        // Initialize UI components
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         actvRole = findViewById(R.id.actvRole);
         btnLogin = findViewById(R.id.btnLogin);
         tvSignupLink = findViewById(R.id.tvSignupLink);
 
-        // Set up the Role Dropdown
+        // role dropdown
         String[] roles = getResources().getStringArray(R.array.login_roles);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, roles);
         actvRole.setAdapter(adapter);
 
-        // Login Button Click - Navigate to Home (Placeholder Logic)
+        // login button click - navigate to Home (placeholder logic)
         btnLogin.setOnClickListener(v -> {
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
@@ -53,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             if (email.isEmpty() || password.isEmpty() || role.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
-                // For now, just navigate to HomeActivity
+                // for now, this navigate to HomeActivity
                 Toast.makeText(this, "Logging in as " + role, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
@@ -61,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // Signup Link Click
+        // signup link click
         tvSignupLink.setOnClickListener(v -> {
              Toast.makeText(this, "Navigating to Signup...", Toast.LENGTH_SHORT).show();
         });

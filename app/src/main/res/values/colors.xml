@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="black">#FF000000</color>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- HELPER COLORS -->
+    <color name="black">#1A1A1A</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="off_white">#F7F7F7</color>
 
     <!-- BRANDING COLORS -->
     <color name="yellow">#EDC247</color>
     <color name="soft_yellow">#D8B963</color>
     <color name="blue">#304057</color>
     <color name="soft_blue">#33455E</color>
-    <color name="light_blue">#556077</color>
+    <color name="softlight_blue">#556077</color>
 
+    <!-- OPACITY COLORS -->
+    <color name="softlight_blue_30">#4D556077</color>
+    <color name="softlight_blue_35">#59556077</color>
 </resources>

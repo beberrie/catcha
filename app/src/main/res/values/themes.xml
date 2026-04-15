@@ -2,7 +2,56 @@
 
     <!-- Base application theme -->
     <style name="Base.Theme.Catcha" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
+        <!-- Primary Brand Color -->
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/soft_blue</item>
+        <item name="colorOnPrimaryContainer">@color/white</item>
+
+        <!-- Secondary Brand Color -->
+        <item name="colorSecondary">@color/yellow</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorSecondaryContainer">@color/soft_yellow</item>
+        <item name="colorOnSecondaryContainer">@color/black</item>
+
+        <!-- Background and Surface Colors -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+
+        <!-- Status Bar and Navigation Bar -->
+        <item name="android:statusBarColor">@color/blue</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Default Font Family (Inter for normal text) -->
+        <item name="android:fontFamily">@font/inter</item>
+
+        <!-- TextInput Form Styling -->
+        <item name="textInputStyle">@style/Widget.Catcha.TextInputLayout</item>
+    </style>
+
+    <!-- Custom Style for TextInputLayout -->
+    <style name="Widget.Catcha.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/off_white</item>
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="hintTextColor">@color/blue</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.SmallComponent</item>
+    </style>
+
+    <style name="Widget.Catcha.TextInputLayout.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxBackgroundColor">@color/off_white</item>
+        <item name="boxStrokeColor">@color/text_input_stroke_color</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.SmallComponent</item>
+    </style>
+
+    <style name="ShapeAppearance.Catcha.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">22dp</item>
     </style>
 
     <style name="Theme.Catcha" parent="Base.Theme.Catcha" />
