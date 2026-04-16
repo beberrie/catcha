@@ -1,24 +1,30 @@
 package ph.edu.uscDCISMCatcha.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.activities.auth.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Handle the splash screen transition.
         SplashScreen.installSplashScreen(this);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
 
+        // Redirect to LoginActivity immediately after splash
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        
+        // Finish MainActivity so the user doesn't return to it on back press
+        finish();
     }
 }

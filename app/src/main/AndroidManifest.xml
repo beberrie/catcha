@@ -16,7 +16,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.auth.LoginActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".activities.HomeActivity"
             android:exported="false" />
