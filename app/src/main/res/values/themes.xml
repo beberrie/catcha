@@ -50,6 +50,32 @@
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.SmallComponent</item>
     </style>
 
+    <!-- Reusable Button Styles -->
+    <style name="Widget.Catcha.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:layout_width">319dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="backgroundTint">@color/soft_yellow</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:outlineAmbientShadowColor">@color/softlight_blue</item>
+        <item name="android:outlineSpotShadowColor">@color/softlight_blue</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textColor">@color/softlight_blue</item>
+        <item name="android:textFontWeight">900</item>
+        <item name="cornerRadius">25dp</item>
+    </style>
+
+    <style name="Widget.Catcha.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">319dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textFontWeight">900</item>
+        <item name="cornerRadius">25dp</item>
+        <item name="strokeColor">@color/blue</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
     <style name="ShapeAppearance.Catcha.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerSize">22dp</item>
     </style>

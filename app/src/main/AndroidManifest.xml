@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Catcha">
         <activity
+            android:name=".activities.auth.SignupActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.auth.LoginActivity"
             android:exported="true" />
         <activity

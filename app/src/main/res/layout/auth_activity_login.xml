@@ -8,7 +8,7 @@
     android:padding="24dp"
     tools:context=".activities.auth.LoginActivity">
 
-    <include layout="@layout/layout_auth_header" />
+    <include layout="@layout/auth_layout_header" />
 
     <TextView
         android:id="@+id/tvHeader"

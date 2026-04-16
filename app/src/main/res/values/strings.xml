@@ -12,9 +12,52 @@
     <string name="reset_link">Reset</string>
     <string name="skip_button">skip for now</string>
 
+    <string name="signup_header">Join Us, \nREGISTER NOW!</string>
+    <string name="have_account">Have been here? / </string>
+    <string name="login_link">Login Account</string>
+    <string name="signup_step1_title">1. Select University</string>
+    <string name="signup_step1_label">Which university are you from?</string>
+    <string name="university_hint">Select University</string>
+    <string name="next_button">Next Step</string>
+
+    <string name="signup_step2_title">2. Select Your Role</string>
+    <string name="signup_step2_label">Register as</string>
+    <string name="role_signup_hint">Select Role</string>
+
+    <string name="signup_step3_title">3. Validate Email</string>
+    <string name="signup_step3_label">Enter your school email</string>
+    <string name="signup_step3_otp_label">Enter the 4-digit code sent to your email</string>
+    <string name="school_email_hint">School Email Address</string>
+
+    <string name="signup_step4_title">4. Personal Information</string>
+    <string name="first_name_label">First Name</string>
+    <string name="last_name_label">Last Name</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Last Name</string>
+
+    <string name="signup_step5_title">5. Create Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+
+    <string name="signup_step6_title">6. Username</string>
+    <string name="username_label">How do you want to be called?</string>
+    <string name="username_hint">Username</string>
+    <string name="finish_button">Complete Registration</string>
+
     <string-array name="login_roles">
         <item>Student</item>
         <item>Organization Handler</item>
         <item>Admin</item>
+    </string-array>
+
+    <string-array name="universities">
+        <item>University of San Carlos</item>
+        <item>University of Cebu</item>
+        <item>Cebu Institute of Technology University</item>
+    </string-array>
+
+    <string-array name="signup_roles">
+        <item>Organization</item>
+        <item>User</item>
     </string-array>
 </resources>
