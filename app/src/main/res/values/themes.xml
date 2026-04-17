@@ -76,8 +76,56 @@
         <item name="strokeWidth">2dp</item>
     </style>
 
+    <!-- Reusable Filter Styles -->
+    <style name="Widget.Catcha.Filter.Outlined" parent="Widget.Material3.Chip.Filter">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:gravity">center</item>
+        <item name="chipBackgroundColor">@color/white</item>
+        <item name="chipStrokeColor">@color/blue</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.Filter</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+    </style>
+
+    <!-- Custom Style for Buttons in Organizations Pages-->
+    <style name="Widget.Catcha.Button.Join.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">12dp</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="strokeColor">@color/yellow</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="cornerRadius">22dp</item>
+    </style>
+
+    <!-- Custom Styles for Tags using Chips -->
+    <style name="Widget.Catcha.Chip.Tag.Blue" parent="Widget.Material3.Chip.Suggestion">
+        <item name="chipBackgroundColor">@color/blue</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.SmallComponent</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textSize">9sp</item>
+    </style>
+
+    <style name="Widget.Catcha.Chip.Tag.Yellow" parent="Widget.Material3.Chip.Suggestion">
+        <item name="chipBackgroundColor">@color/yellow</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.SmallComponent</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textSize">9sp</item>
+        <item name="chipMinHeight">24dp</item>
+    </style>
+
     <style name="ShapeAppearance.Catcha.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerSize">22dp</item>
+    </style>
+
+    <style name="ShapeAppearance.Catcha.Filter" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">20dp</item>
     </style>
 
     <style name="Theme.Catcha" parent="Base.Theme.Catcha" />
