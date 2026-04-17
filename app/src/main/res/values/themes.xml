@@ -79,7 +79,7 @@
     <!-- Reusable Filter Styles -->
     <style name="Widget.Catcha.Filter.Outlined" parent="Widget.Material3.Chip.Filter">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">25dp</item>
+        <item name="android:layout_height">22dp</item>
         <item name="android:gravity">center</item>
         <item name="chipBackgroundColor">@color/white</item>
         <item name="chipStrokeColor">@color/blue</item>
@@ -100,6 +100,27 @@
         <item name="strokeColor">@color/yellow</item>
         <item name="strokeWidth">1.5dp</item>
         <item name="cornerRadius">22dp</item>
+    </style>
+
+    <!-- Style for Joined Button (Solid Yellow) -->
+    <style name="Widget.Catcha.Button.Joined.Solid" parent="Widget.Material3.Button">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="backgroundTint">@color/yellow</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
+    </style>
+
+    <!-- Style for Member Status (Outlined Blue) -->
+    <style name="Widget.Catcha.Button.Member.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">14sp</item>
+        <item name="strokeColor">@color/blue</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
     </style>
 
     <!-- Custom Styles for Tags using Chips -->

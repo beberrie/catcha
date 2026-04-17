@@ -5,4 +5,5 @@
     android:layout_height="35dp"
     android:clickable="false"
     android:focusable="false"
+    android:text="Placeholder"
     android:fontFamily="@font/inter"/>

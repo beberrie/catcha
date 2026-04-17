@@ -185,26 +185,16 @@
                     android:textSize="16sp" />
 
                 <!-- Filters button -->
-                <LinearLayout
-                    app:style="@style/Widget.Catcha.Filter.Outlined"
+                <com.google.android.material.chip.Chip
+                    style="@style/Widget.Catcha.Filter.Outlined"
                     android:layout_width="wrap_content"
-                    android:layout_height="25dp" >
+                    android:layout_height="wrap_content"
+                    android:text="Filters"
+                    app:chipIcon="@android:drawable/ic_menu_sort_by_size"
+                    app:chipIconSize="14dp"
+                    app:chipIconVisible="true"
+                    app:iconStartPadding="8dp" />
 
-                    <ImageView
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:src="@android:drawable/ic_menu_sort_by_size"
-                        android:layout_marginEnd="5dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Filters"
-                        android:fontFamily="@font/inter"
-                        android:textColor="@color/blue"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
             </LinearLayout>
 
             <!-- ───────────────────────────────────────────── -->
