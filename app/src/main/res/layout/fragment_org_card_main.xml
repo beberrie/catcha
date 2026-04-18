@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="@color/white"
+    app:strokeColor="@color/yellow"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- GDG header: logo + name -->
+
+        <!-- Divider -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_menu_gallery"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Catcha.SmallComponent" />
+
+            <!-- Overlay text on banner -->
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F0F0F0" />
+
+        <!-- Contact info grid -->
+
+        <!-- Description -->
+
+        <!-- Tags row -->
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="4dp"
+            android:text="Title of the Org"
+            android:textColor="#444444"
+            android:textSize="12sp"
+            android:fontFamily="@font/inter" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp"
+            android:layout_marginVertical="8dp">
+
+            <!-- ───────────────────────────────────────────── -->
+            <!-- WHERE YOU INSERT THE TAG                      -->
+            <!-- ───────────────────────────────────────────── -->
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.Catcha.Chip.Tag.Blue"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:clickable="false"
+                android:focusable="false"
+                android:text="SAS" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+# members"
+                android:textColor="#888888"
+                android:textSize="9sp"
+                android:layout_marginHorizontal="8dp"
+                android:fontFamily="@font/inter" />
+
+            <!-- REPLACE src with member avatar -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
+
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F0F0F0" />
+
+        <!-- Join button -->
+        <Button
+            style="@style/Widget.Catcha.Button.Join.Outlined"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_margin="12dp"
+            android:text="Join"
+            android:fontFamily="@font/poppins" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
