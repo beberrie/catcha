@@ -41,9 +41,10 @@ public class CreatePostFragment extends Fragment {
         viewModel.getStatusMessage().observe(getViewLifecycleOwner(), message -> {
             if (message != null) {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                if (message.contains("sent") || message.contains("created")) {
+                if (message.contains("successfully")) {
                     clearInputs();
                 }
+                viewModel.clearStatus();
             }
         });
 
@@ -55,6 +56,9 @@ public class CreatePostFragment extends Fragment {
     private void setupTabs() {
         binding.btnTabAnnouncement.setOnClickListener(v -> switchTab(true));
         binding.btnTabEvent.setOnClickListener(v -> switchTab(false));
+
+        // Initialize state
+        switchTab(true);
     }
 
     private void switchTab(boolean showAnnouncement) {
@@ -81,7 +85,7 @@ public class CreatePostFragment extends Fragment {
             Calendar calendar = Calendar.getInstance();
             new DatePickerDialog(requireContext(),
                     (datePicker, year, month, day) -> {
-                        String date = year + "-" + (month + 1) + "-" + day;
+                        String date = String.format(Locale.getDefault(), "%d-%02d-%02d", year, month + 1, day);
                         binding.tvDate.setText(date);
                     },
                     calendar.get(Calendar.YEAR),
@@ -115,8 +119,12 @@ public class CreatePostFragment extends Fragment {
             String message = binding.etMessage.getText().toString().trim();
             boolean sendPush = binding.switchPushNotification.isChecked();
 
-            if (title.isEmpty() || message.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            if (title.isEmpty()) {
+                binding.etTitle.setError("Required");
+                return;
+            }
+            if (message.isEmpty()) {
+                Toast.makeText(requireContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -132,8 +140,12 @@ public class CreatePostFragment extends Fragment {
             String description = binding.etDescription.getText().toString().trim();
             boolean autoReminders = binding.switchAutoReminders.isChecked();
 
-            if (title.isEmpty() || date.equals("Pick date") || time.equals("Pick time") || location.isEmpty()) {
-                Toast.makeText(requireContext(), "Please fill in all required fields", Toast.LENGTH_SHORT).show();
+            if (title.isEmpty()) {
+                binding.etTitle.setError("Required");
+                return;
+            }
+            if (date.equals("Pick date") || time.equals("Pick time") || location.isEmpty()) {
+                Toast.makeText(requireContext(), "Fill in all required fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -151,6 +163,7 @@ public class CreatePostFragment extends Fragment {
         binding.tvEndTime.setText("Pick time");
         binding.switchPushNotification.setChecked(false);
         binding.switchAutoReminders.setChecked(false);
+        binding.etTitle.requestFocus();
     }
 
     @Override
