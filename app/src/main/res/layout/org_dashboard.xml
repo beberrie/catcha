@@ -13,53 +13,11 @@
         android:orientation="vertical">
 
         <!-- ───────────────────────────────────────────── -->
-        <!-- TOP APP BAR                                   -->
+        <!-- TOP APP BAR (Included Reusable Header)         -->
         <!-- ───────────────────────────────────────────── -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="#FFFFFF"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:orientation="horizontal">
-
-            <!-- Logo -->
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:src="@drawable/ic_launcher_foreground"
-                android:layout_weight="1" />
-
-            <!-- Icons -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="56dp"
-                android:layout_marginLeft="200dp"
-                android:background="#FFFFFF"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:src="@android:drawable/ic_menu_search"
-                    android:layout_marginEnd="14dp" />
-
-                <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
-                    android:src="@android:drawable/ic_popup_reminder"
-                    android:layout_marginEnd="14dp" />
-
-                <!-- Avatar – replace src with your image -->
-                <ImageView
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:src="@android:drawable/ic_menu_gallery"
-                    android:scaleType="centerCrop"/>
-            </LinearLayout>
-        </LinearLayout>
+        <include
+            android:id="@+id/header"
+            layout="@layout/layout_header_main" />
 
         <!-- ───────────────────────────────────────────── -->
         <!-- SUGGESTED FOR YOU                             -->
@@ -99,7 +57,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-
                         android:layout_marginTop="2dp">
 
                         <TextView
@@ -135,13 +92,12 @@
                 android:scrollbars="none">
 
                 <LinearLayout
+                    android:id="@+id/suggestedOrgsContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <!-- ───────────────────────────────────────────── -->
-                    <!-- WHERE YOU INSERT THE SUGGEST CARD             -->
-                    <!-- ───────────────────────────────────────────── -->
+                    <!-- Cards will be inserted here dynamically -->
 
                 </LinearLayout>
             </HorizontalScrollView>
@@ -151,8 +107,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            android:background="@color/soft_blue"
-            />
+            android:background="@color/soft_blue" />
 
         <!-- ───────────────────────────────────────────── -->
         <!-- ORGANIZATIONS SECTION                         -->
@@ -186,6 +141,7 @@
 
                 <!-- Filters button -->
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFilters"
                     style="@style/Widget.Catcha.Filter.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -197,9 +153,16 @@
 
             </LinearLayout>
 
-            <!-- ───────────────────────────────────────────── -->
-            <!-- WHERE YOU INSERT THE CARD                     -->
-            <!-- ───────────────────────────────────────────── -->
+            <!-- Container for all orgs -->
+            <LinearLayout
+                android:id="@+id/allOrgsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Cards will be inserted here dynamically -->
+
+            </LinearLayout>
 
         </LinearLayout>
 
