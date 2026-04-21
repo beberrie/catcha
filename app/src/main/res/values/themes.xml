@@ -91,15 +91,18 @@
 
     <!-- Custom Style for Buttons in Organizations Pages-->
     <style name="Widget.Catcha.Button.Join.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
-        <item name="android:layout_margin">12dp</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">14sp</item>
         <item name="backgroundTint">@color/white</item>
         <item name="strokeColor">@color/yellow</item>
         <item name="strokeWidth">1.5dp</item>
-        <item name="cornerRadius">22dp</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
+        <item name="android:fontFamily">@font/inter_bold</item>
     </style>
 
     <!-- Style for Joined Button (Solid Yellow) -->
@@ -110,6 +113,10 @@
         <item name="backgroundTint">@color/yellow</item>
         <item name="cornerRadius">24dp</item>
         <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
     </style>
 
     <!-- Style for Member Status (Outlined Blue) -->
@@ -118,9 +125,13 @@
         <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">14sp</item>
         <item name="strokeColor">@color/blue</item>
-        <item name="strokeWidth">2dp</item>
+        <item name="strokeWidth">1.5dp</item>
         <item name="cornerRadius">24dp</item>
         <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
     </style>
 
     <!-- Custom Styles for Tags using Chips -->
