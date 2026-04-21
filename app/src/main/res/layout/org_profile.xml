@@ -141,7 +141,7 @@
         <LinearLayout
             android:id="@+id/joinedStatusContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_marginTop="20dp"
             android:layout_marginHorizontal="24dp"
             android:orientation="horizontal"
@@ -152,7 +152,7 @@
                 android:id="@+id/joinedButton"
                 style="@style/Widget.Catcha.Button.Joined.Solid"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 android:text="Joined ▼" />
@@ -161,7 +161,7 @@
                 android:id="@+id/memberButton"
                 style="@style/Widget.Catcha.Button.Member.Outlined"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="Member" />
@@ -172,10 +172,19 @@
             android:id="@+id/joinButton"
             style="@style/Widget.Catcha.Button.Join.Outlined"
             android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="20dp"
             android:text="Join"
             app:layout_constraintTop_toBottomOf="@+id/statsContainer" />
+
+        <!-- Barrier to prevent overlapping when buttons toggle -->
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/actionButtonsBarrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="joinButton,joinedStatusContainer" />
 
         <!-- Events Section Header -->
         <TextView
@@ -189,7 +198,7 @@
             android:textColor="@color/blue"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/joinButton" />
+            app:layout_constraintTop_toBottomOf="@+id/actionButtonsBarrier" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/filterButton"
