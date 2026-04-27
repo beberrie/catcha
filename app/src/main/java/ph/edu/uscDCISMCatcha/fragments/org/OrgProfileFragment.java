@@ -1,9 +1,12 @@
-package ph.edu.uscDCISMCatcha.fragments.org;import android.os.Bundle;
+package ph.edu.uscDCISMCatcha.fragments.org;
+
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,6 +16,7 @@ public class OrgProfileFragment extends Fragment {
 
     private Button btnBack;
     private Button btnJoin;
+    private TextView tvOrgName;
     private LinearLayout joinedStatusContainer;
 
     @Nullable
@@ -22,7 +26,16 @@ public class OrgProfileFragment extends Fragment {
 
         btnBack = view.findViewById(R.id.backButton);
         btnJoin = view.findViewById(R.id.joinButton);
+        tvOrgName = view.findViewById(R.id.orgName);
         joinedStatusContainer = view.findViewById(R.id.joinedStatusContainer);
+
+        // Retrieve the organization name from arguments
+        if (getArguments() != null) {
+            String orgName = getArguments().getString("ORG_NAME");
+            if (orgName != null && tvOrgName != null) {
+                tvOrgName.setText(orgName);
+            }
+        }
 
         // Handle Back Navigation
         btnBack.setOnClickListener(v -> getParentFragmentManager().popBackStack());
