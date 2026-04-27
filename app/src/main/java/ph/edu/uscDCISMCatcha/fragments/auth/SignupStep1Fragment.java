@@ -13,16 +13,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.activities.auth.SignupActivity;
+import ph.edu.uscDCISMCatcha.viewmodel.SignupViewModel;
 
 public class SignupStep1Fragment extends Fragment {
+
+    private SignupViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_activity_signup_step1, container, false);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
         AutoCompleteTextView actvUniversity = view.findViewById(R.id.actvUniversity);
         Button btnNext = view.findViewById(R.id.btnNext);
@@ -40,7 +46,9 @@ public class SignupStep1Fragment extends Fragment {
             if (selectedUni.isEmpty()) {
                 Toast.makeText(requireContext(), "Please select a university", Toast.LENGTH_SHORT).show();
             } else {
-                ((SignupActivity) requireActivity()).navigateToStep2();
+                viewModel.setUniversity(selectedUni);
+                viewModel.setRole("User"); // Default role as per requirement
+                ((SignupActivity) requireActivity()).navigateToEmailStep();
             }
         });
 

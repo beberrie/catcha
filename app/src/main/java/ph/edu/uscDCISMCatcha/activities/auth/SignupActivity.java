@@ -13,7 +13,6 @@ import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep2Fragment;
 import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep3Fragment;
 import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep4Fragment;
 import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep5Fragment;
-import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep6Fragment;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -38,23 +37,23 @@ public class SignupActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void navigateToStep2() {
+    public void navigateToStep1() {
+        loadFragment(new SignupStep1Fragment(), true);
+    }
+
+    public void navigateToEmailStep() {
         loadFragment(new SignupStep2Fragment(), true);
     }
 
-    public void navigateToStep3() {
+    public void navigateToPersonalInfoStep() {
         loadFragment(new SignupStep3Fragment(), true);
     }
 
-    public void navigateToStep4() {
+    public void navigateToPasswordStep() {
         loadFragment(new SignupStep4Fragment(), true);
     }
 
-    public void navigateToStep5() {
+    public void navigateToUsernameStep() {
         loadFragment(new SignupStep5Fragment(), true);
-    }
-
-    public void navigateToStep6() {
-        loadFragment(new SignupStep6Fragment(), true);
     }
 }

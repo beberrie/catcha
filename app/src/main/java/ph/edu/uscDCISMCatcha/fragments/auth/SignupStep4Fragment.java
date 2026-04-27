@@ -19,7 +19,7 @@ import ph.edu.uscDCISMCatcha.activities.auth.SignupActivity;
 
 public class SignupStep4Fragment extends Fragment {
 
-    private TextInputEditText etFirstName, etLastName;
+    private TextInputEditText etPassword, etConfirmPassword;
     private Button btnNext;
     private TextView tvLoginLink;
 
@@ -28,21 +28,25 @@ public class SignupStep4Fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_activity_signup_step4, container, false);
 
-        etFirstName = view.findViewById(R.id.etFirstName);
-        etLastName = view.findViewById(R.id.etLastName);
+        etPassword = view.findViewById(R.id.etPassword);
+        etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
         btnNext = view.findViewById(R.id.btnNext);
         tvLoginLink = view.findViewById(R.id.tvLoginLink);
 
         tvLoginLink.setOnClickListener(v -> requireActivity().finish());
 
         btnNext.setOnClickListener(v -> {
-            String firstName = etFirstName.getText().toString().trim();
-            String lastName = etLastName.getText().toString().trim();
+            String password = etPassword.getText().toString();
+            String confirmPassword = etConfirmPassword.getText().toString();
 
-            if (firstName.isEmpty() || lastName.isEmpty()) {
+            if (password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            } else if (!password.equals(confirmPassword)) {
+                Toast.makeText(requireContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
+            } else if (password.length() < 6) {
+                Toast.makeText(requireContext(), "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
             } else {
-                ((SignupActivity) requireActivity()).navigateToStep5();
+                ((SignupActivity) requireActivity()).navigateToUsernameStep();
             }
         });
 
