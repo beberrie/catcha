@@ -29,10 +29,11 @@ public class SignupStep2Fragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.auth_activity_signup_step3, container, false);
+        View view = inflater.inflate(R.layout.auth_activity_signup_step2, container, false);
 
         viewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
+        etSchoolEmail = view.findViewById(R.id.etSchoolEmail);
         btnNext = view.findViewById(R.id.btnNext);
         tvLoginLink = view.findViewById(R.id.tvLoginLink);
 
