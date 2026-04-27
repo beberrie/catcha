@@ -67,119 +67,72 @@
         app:layout_constraintTop_toBottomOf="@+id/llLoginLinkContainer" />
 
     <TextView
-        android:id="@+id/tvStepLabel"
+        android:id="@+id/tvFirstNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/inter"
-        android:text="@string/signup_step3_label"
+        android:text="@string/first_name_label"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvStepTitle" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilSchoolEmail"
+        android:id="@+id/tilFirstName"
         style="@style/Widget.Catcha.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="@string/school_email_hint"
+        android:layout_marginTop="8dp"
+        android:hint="@string/first_name_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStepLabel">
+        app:layout_constraintTop_toBottomOf="@+id/tvFirstNameLabel">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSchoolEmail"
+            android:id="@+id/etFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
-            android:inputType="textEmailAddress" />
+            android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/tvOtpLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="28dp"
-        android:alpha="0.7"
-        android:fontFamily="@font/inter"
-        android:text="@string/signup_step3_otp_label"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilSchoolEmail" />
-
-    <LinearLayout
-        android:id="@+id/llOtpContainer"
+        android:id="@+id/tvLastNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.53"
+        android:fontFamily="@font/inter"
+        android:text="@string/last_name_label"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvOtpLabel">
+        app:layout_constraintTop_toBottomOf="@+id/tilFirstName" />
 
-        <EditText
-            android:id="@+id/etOtp1"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_otp_input"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilLastName"
+        style="@style/Widget.Catcha.TextInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="@string/last_name_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLastNameLabel">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etLastName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etOtp2"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_otp_input"
-            android:fontFamily="@font/inter"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etOtp3"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_otp_input"
-            android:fontFamily="@font/inter"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/etOtp4"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:background="@drawable/bg_otp_input"
-            android:fontFamily="@font/inter"
-            android:gravity="center"
-            android:inputType="number"
-            android:maxLength="1"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
+            android:inputType="textPersonName" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnNext"
         style="@style/Widget.Catcha.Button.Outlined"
         android:layout_marginTop="48dp"
-        android:text="Validate Email"
+        android:text="@string/next_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llOtpContainer" />
+        app:layout_constraintTop_toBottomOf="@+id/tilLastName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
