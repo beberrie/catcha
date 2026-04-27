@@ -67,74 +67,42 @@
         app:layout_constraintTop_toBottomOf="@+id/llLoginLinkContainer" />
 
     <TextView
-        android:id="@+id/tvPasswordLabel"
+        android:id="@+id/tvUsernameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/inter"
-        android:text="@string/password_hint"
+        android:text="@string/username_label"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvStepTitle" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilPassword"
+        android:id="@+id/tilUsername"
         style="@style/Widget.Catcha.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:hint="@string/password_hint"
+        android:hint="@string/username_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvPasswordLabel"
-        app:passwordToggleEnabled="true">
+        app:layout_constraintTop_toBottomOf="@+id/tvUsernameLabel">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <TextView
-        android:id="@+id/tvConfirmPasswordLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/inter"
-        android:text="@string/confirm_password_label"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilConfirmPassword"
-        style="@style/Widget.Catcha.TextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:hint="@string/confirm_password_hint"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvConfirmPasswordLabel"
-        app:passwordToggleEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etConfirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/inter"
-            android:inputType="textPassword" />
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btnNext"
-        style="@style/Widget.Catcha.Button.Outlined"
-        android:layout_marginTop="48dp"
-        android:text="@string/next_button"
+        android:id="@+id/btnFinish"
+        style="@style/Widget.Catcha.Button.Primary"
+        android:layout_marginTop="84dp"
+        android:text="@string/finish_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tilConfirmPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/tilUsername" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

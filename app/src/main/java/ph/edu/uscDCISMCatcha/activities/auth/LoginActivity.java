@@ -2,8 +2,6 @@ package ph.edu.uscDCISMCatcha.activities.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +17,6 @@ import ph.edu.uscDCISMCatcha.activities.HomeActivity;
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail, etPassword;
-    private AutoCompleteTextView actvRole;
     private Button btnLogin;
     private TextView tvSignupLink;
 
@@ -31,26 +28,19 @@ public class LoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        actvRole = findViewById(R.id.actvRole);
         btnLogin = findViewById(R.id.btnLogin);
         tvSignupLink = findViewById(R.id.tvSignupLink);
-
-        // role dropdown
-        String[] roles = getResources().getStringArray(R.array.login_roles);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, roles);
-        actvRole.setAdapter(adapter);
 
         // login button click - navigate to Home (placeholder logic)
         btnLogin.setOnClickListener(v -> {
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
-            String role = actvRole.getText().toString();
 
-            if (email.isEmpty() || password.isEmpty() || role.isEmpty()) {
+            if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
                 // for now, this navigate to HomeActivity
-                Toast.makeText(this, "Logging in as " + role, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
                 finish();
