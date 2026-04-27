@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.chip.Chip;
 import ph.edu.uscDCISMCatcha.R;
 
 public class OrgDashboardFragment extends Fragment {
@@ -20,12 +21,21 @@ public class OrgDashboardFragment extends Fragment {
 
         LinearLayout suggestedContainer = view.findViewById(R.id.suggestedOrgsContainer);
         LinearLayout allOrgsContainer = view.findViewById(R.id.allOrgsContainer);
+        Chip chipFilters = view.findViewById(R.id.chipFilters);
 
         // Add dummy data for suggested organizations
         addDummySuggestedOrgs(inflater, suggestedContainer);
 
         // Add dummy data for all organizations
         addDummyAllOrgs(inflater, allOrgsContainer);
+
+        // Setup filter button click
+        if (chipFilters != null) {
+            chipFilters.setOnClickListener(v -> {
+                OrgFiltersBottomSheet bottomSheet = new OrgFiltersBottomSheet();
+                bottomSheet.show(getParentFragmentManager(), "OrgFiltersBottomSheet");
+            });
+        }
 
         return view;
     }
