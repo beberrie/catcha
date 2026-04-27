@@ -38,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvHeader">
 
         <TextView
-            android:layout_width="108dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/inter"
             android:text="@string/no_account" />
@@ -102,7 +102,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tilPassword">
 
         <TextView
-            android:layout_width="116dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.6"
             android:fontFamily="@font/inter"
@@ -126,14 +126,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llForgotPasswordContainer"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="32dp"
         android:text="@string/login_button" />
 
     <TextView
         android:id="@+id/tvSkip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"

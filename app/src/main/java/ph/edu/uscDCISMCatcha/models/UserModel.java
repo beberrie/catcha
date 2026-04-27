@@ -1,12 +1,13 @@
 package ph.edu.uscDCISMCatcha.models;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.IgnoreExtraProperties;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.firestore.ServerTimestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class UserModel {
-    private String uid;
     private String firstName;
     private String lastName;
     private String username;
@@ -14,15 +15,15 @@ public class UserModel {
     private String university;
     private String department;
     private String role; // "Student", "OrgHandler", "Admin"
-    private String fcmToken;
-    private List<String> interests;
+    private Map<String, String> fcmTokens;
+    @ServerTimestamp
+    private Timestamp createdAt;
 
     public UserModel() {
-        this.interests = new ArrayList<>();
+        this.fcmTokens = new HashMap<>();
     }
 
-    public UserModel(String uid, String firstName, String lastName, String username, String email, String university, String department, String role) {
-        this.uid = uid;
+    public UserModel(String firstName, String lastName, String username, String email, String university, String department, String role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -30,12 +31,10 @@ public class UserModel {
         this.university = university;
         this.department = department;
         this.role = role;
-        this.interests = new ArrayList<>();
+        this.fcmTokens = new HashMap<>();
     }
 
     // Getters and Setters
-    public String getUid() { return uid; }
-    public void setUid(String uid) { this.uid = uid; }
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
     public String getLastName() { return lastName; }
@@ -50,8 +49,8 @@ public class UserModel {
     public void setDepartment(String department) { this.department = department; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-    public String getFcmToken() { return fcmToken; }
-    public void setFcmToken(String fcmToken) { this.fcmToken = fcmToken; }
-    public List<String> getInterests() { return interests; }
-    public void setInterests(List<String> interests) { this.interests = interests; }
+    public Map<String, String> getFcmTokens() { return fcmTokens; }
+    public void setFcmTokens(Map<String, String> fcmTokens) { this.fcmTokens = fcmTokens; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 }

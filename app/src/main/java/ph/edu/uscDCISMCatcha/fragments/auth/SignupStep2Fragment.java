@@ -37,19 +37,22 @@ public class SignupStep2Fragment extends Fragment {
         btnNext = view.findViewById(R.id.btnNext);
         tvLoginLink = view.findViewById(R.id.tvLoginLink);
 
+        // Pre-fill if already in viewModel
+        if (viewModel.getEmail().getValue() != null) {
+            etSchoolEmail.setText(viewModel.getEmail().getValue());
+        }
+
         tvLoginLink.setOnClickListener(v -> requireActivity().finish());
 
         btnNext.setOnClickListener(v -> {
             String email = etSchoolEmail.getText().toString().trim();
-
-            if (email.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter your email address", Toast.LENGTH_SHORT).show();
-            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(requireContext(), "Please enter a valid email address", Toast.LENGTH_SHORT).show();
-            } else {
-                viewModel.setEmail(email);
-                ((SignupActivity) requireActivity()).navigateToPersonalInfoStep();
+            if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(requireContext(), "Please enter a valid school email", Toast.LENGTH_SHORT).show();
+                return;
             }
+            
+            viewModel.setEmail(email);
+            ((SignupActivity) requireActivity()).navigateToPersonalInfoStep();
         });
 
         return view;

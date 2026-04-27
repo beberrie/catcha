@@ -11,22 +11,27 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.activities.auth.SignupActivity;
+import ph.edu.uscDCISMCatcha.viewmodel.SignupViewModel;
 
 public class SignupStep4Fragment extends Fragment {
 
     private TextInputEditText etPassword, etConfirmPassword;
     private Button btnNext;
     private TextView tvLoginLink;
+    private SignupViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.auth_activity_signup_step4, container, false);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
         etPassword = view.findViewById(R.id.etPassword);
         etConfirmPassword = view.findViewById(R.id.etConfirmPassword);
@@ -46,6 +51,7 @@ public class SignupStep4Fragment extends Fragment {
             } else if (password.length() < 6) {
                 Toast.makeText(requireContext(), "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
             } else {
+                viewModel.setPassword(password);
                 ((SignupActivity) requireActivity()).navigateToUsernameStep();
             }
         });
