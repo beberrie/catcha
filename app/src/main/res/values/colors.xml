@@ -15,4 +15,6 @@
     <!-- OPACITY COLORS -->
     <color name="softlight_blue_30">#4D556077</color>
     <color name="softlight_blue_35">#59556077</color>
+
+    <color name="gray">#555555</color>
 </resources>
