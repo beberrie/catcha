@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Catcha">
         <activity
+            android:name=".activities.OrgHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.admin.AdminHomeActivity"
             android:exported="false" />
         <activity

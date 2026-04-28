@@ -114,9 +114,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void navigateToDashboard(String role) {
         Intent intent;
-        if ("Admin".equals(role)) intent = new Intent(this, AdminHomeActivity.class);
-        else if ("OrgHandler".equals(role)) intent = new Intent(this, OrgHomeActivity.class);
-        else intent = new Intent(this, HomeActivity.class);
+        if ("Admin".equals(role)) {
+            intent = new Intent(this, AdminHomeActivity.class);
+        } else if ("OrgHandler".equals(role) || "Organization".equals(role) || "Org".equals(role)) {
+            // Redirects to OrgHomeActivity which is set up to load OrgHomePageFragment
+            intent = new Intent(this, OrgHomeActivity.class);
+        } else {
+            intent = new Intent(this, HomeActivity.class);
+        }
         startActivity(intent);
         finish();
     }
