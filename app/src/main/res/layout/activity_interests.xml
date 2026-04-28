@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="0dp">
+
+        <!-- Background Decoration -->
+        <ImageView
+            android:id="@+id/iv_catcha_cat"
+            android:layout_width="420dp"
+            android:layout_height="420dp"
+            android:src="@drawable/catcha_cat"
+            android:contentDescription="Catcha cat decoration"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="-90dp"
+            android:layout_marginBottom="-110dp" />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/catcha_icon"
+            android:contentDescription="Catcha icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_brand_typo"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/catcha_typo"
+            android:contentDescription="catcha"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_logo" />
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="32dp"
+            android:text="Welcome,"
+            android:textColor="@color/text_dark"
+            android:textSize="34sp"
+            android:fontFamily="@font/poppins_bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+        <TextView
+            android:id="@+id/tv_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:text="OUR DEAR ZEV !"
+            android:textColor="@color/text_dark"
+            android:textSize="34sp"
+            android:fontFamily="@font/poppins_extrabold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_welcome" />
+
+        <TextView
+            android:id="@+id/tv_interests_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="28dp"
+            android:text="Interests"
+            android:textColor="@color/text_dark"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_semibold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
+
+        <LinearLayout
+            android:id="@+id/container_all_interests"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="14dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_interests_label">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_creative_arts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:text="Creative &amp; Arts"
+                    style="@style/Widget.InterestChip" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_tech_innovation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Tech &amp; Innovation"
+                    style="@style/Widget.InterestChip" />
+
+            </LinearLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/sub_creative_arts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                app:flexWrap="wrap"
+                app:flexDirection="row"
+                app:alignItems="flex_start"
+                app:justifyContent="flex_start">
+
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Music" style="@style/Widget.SubChip" />
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Dance" style="@style/Widget.SubChip" />
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Theater/Acting" style="@style/Widget.SubChip" />
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Photography" style="@style/Widget.SubChip" />
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Visual Arts/Drawing" style="@style/Widget.SubChip" />
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Film/Video Editing" style="@style/Widget.SubChip" />
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/sub_tech_innovation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone"
+                app:flexWrap="wrap"
+                app:flexDirection="row"
+                app:alignItems="flex_start"
+                app:justifyContent="flex_start">
+
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 1" style="@style/Widget.SubChip" />
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 2" style="@style/Widget.SubChip" />
+                <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 3" style="@style/Widget.SubChip" />
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_academic_career"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp" android:text="Academic &amp; Career" style="@style/Widget.InterestChip" /> <com.google.android.material.chip.Chip android:id="@+id/chip_sports_wellness" android:layout_width="wrap_content" android:layout_height="40dp" android:text="Sports &amp; Wellness" style="@style/Widget.InterestChip" /> </LinearLayout> <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_academic_career" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:visibility="gone" app:flexWrap="wrap" app:flexDirection="row" app:alignItems="flex_start" app:justifyContent="flex_start"> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 1" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 2" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 3" style="@style/Widget.SubChip" /> </com.google.android.flexbox.FlexboxLayout> <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_sports_wellness" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:visibility="gone" app:flexWrap="wrap" app:flexDirection="row" app:alignItems="flex_start" app:justifyContent="flex_start"> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 1" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 2" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 3" style="@style/Widget.SubChip" /> </com.google.android.flexbox.FlexboxLayout> <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp"> <com.google.android.material.chip.Chip android:id="@+id/chip_community_service" android:layout_width="wrap_content" android:layout_height="40dp" android:text="Community &amp; Service" style="@style/Widget.InterestChip" /> </LinearLayout> <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_community_service" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:visibility="gone" app:flexWrap="wrap" app:flexDirection="row" app:alignItems="flex_start" app:justifyContent="flex_start"> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 1" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 2" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 3" style="@style/Widget.SubChip" /> </com.google.android.flexbox.FlexboxLayout> <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="10dp"> <com.google.android.material.chip.Chip android:id="@+id/chip_faith_culture" android:layout_width="wrap_content" android:layout_height="40dp" android:text="Faith &amp; Culture" style="@style/Widget.InterestChip" /> </LinearLayout> <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_faith_culture" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="10dp" android:visibility="gone" app:flexWrap="wrap" app:flexDirection="row" app:alignItems="flex_start" app:justifyContent="flex_start"> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 1" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 2" style="@style/Widget.SubChip" /> <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sub-category 3" style="@style/Widget.SubChip" /> </com.google.android.flexbox.FlexboxLayout> </LinearLayout> <com.google.android.material.button.MaterialButton android:id="@+id/btn_continue" android:layout_width="wrap_content" android:layout_height="48dp" android:layout_marginStart="20dp" android:layout_marginTop="24dp" android:text="Continue" android:textColor="@color/text_dark" android:textSize="15sp" android:fontFamily="@font/poppins_medium" android:paddingStart="24dp" android:paddingEnd="24dp" android:drawableEnd="@drawable/ic_arrow_right" android:drawablePadding="10dp" app:backgroundTint="@color/white" app:strokeColor="@color/text_dark" app:strokeWidth="1.5dp" app:cornerRadius="24dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/container_all_interests" /> <TextView android:id="@+id/tv_skip" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="20dp" android:layout_marginTop="8dp" android:text="Skip for now" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/poppins" android:padding="4dp" android:clickable="true" android:focusable="true" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/btn_continue" /> </androidx.constraintlayout.widget.ConstraintLayout> </ScrollView>

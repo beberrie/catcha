@@ -41,7 +41,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.core.splashscreen)
-    
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
