@@ -149,7 +149,6 @@
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.SmallComponent</item>
         <item name="chipStrokeWidth">0dp</item>
         <item name="android:textSize">9sp</item>
-        <item name="chipMinHeight">24dp</item>
     </style>
 
     <!--The buttons for interests page-->
