@@ -48,10 +48,12 @@ public class RegisterOrgActivity extends AppCompatActivity {
     }
 
     private void setupDropdowns() {
+        // Populating Universities from strings.xml
         String[] universities = getResources().getStringArray(R.array.universities);
         ArrayAdapter<String> uniAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, universities);
         actvUniversity.setAdapter(uniAdapter);
 
+        // Populating Categories from interest_categories in strings.xml
         String[] categories = getResources().getStringArray(R.array.interest_categories);
         ArrayAdapter<String> catAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, categories);
         actvCategory.setAdapter(catAdapter);
@@ -72,40 +74,51 @@ public class RegisterOrgActivity extends AppCompatActivity {
         btnRegisterOrg.setEnabled(false);
         btnRegisterOrg.setText("Processing...");
 
-        // 1. Find the User UID by Email
+        // 1. Find the User UID by Email in Firestore
         db.collection("users").whereEqualTo("email", email).get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                    QueryDocumentSnapshot userDoc = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
-                    String ownerUid = userDoc.getId();
-                    
-                    createOrganization(name, uni, desc, cat, ownerUid);
-                } else {
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Get the first user found with this email
+                        QueryDocumentSnapshot userDoc = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
+                        String ownerUid = userDoc.getId();
+
+                        createOrganization(name, uni, desc, cat, ownerUid);
+                    } else {
+                        btnRegisterOrg.setEnabled(true);
+                        btnRegisterOrg.setText("Create Organization");
+                        Toast.makeText(this, "User email not found. They must register an account first.", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
                     btnRegisterOrg.setEnabled(true);
                     btnRegisterOrg.setText("Create Organization");
-                    Toast.makeText(this, "User email not found. They must register first.", Toast.LENGTH_LONG).show();
-                }
-            });
+                    Toast.makeText(this, "Search error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void createOrganization(String name, String uni, String desc, String cat, String ownerUid) {
         String orgId = UUID.randomUUID().toString();
+        // Creating the Organization model object
         Organization newOrg = new Organization(name, uni, desc, cat, "", ownerUid);
 
-        // 2. Save the Organization
+        // 2. Save the Organization to Firestore
         db.collection("organizations").document(orgId).set(newOrg)
-            .addOnSuccessListener(aVoid -> {
-                // 3. Promote User to OrgHandler
-                db.collection("users").document(ownerUid).update("role", "OrgHandler")
-                    .addOnSuccessListener(aVoid2 -> {
-                        Toast.makeText(this, name + " created and owner promoted!", Toast.LENGTH_LONG).show();
-                        finish();
-                    });
-            })
-            .addOnFailureListener(e -> {
-                btnRegisterOrg.setEnabled(true);
-                btnRegisterOrg.setText("Create Organization");
-                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
+                .addOnSuccessListener(aVoid -> {
+                    // 3. Promote the User to OrgHandler role
+                    db.collection("users").document(ownerUid).update("role", "OrgHandler")
+                            .addOnSuccessListener(aVoid2 -> {
+                                Toast.makeText(this, name + " successfully registered!", Toast.LENGTH_LONG).show();
+                                finish(); // Close activity on success
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(this, "Org created, but failed to promote owner: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                finish();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    btnRegisterOrg.setEnabled(true);
+                    btnRegisterOrg.setText("Create Organization");
+                    Toast.makeText(this, "Creation error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }

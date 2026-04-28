@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,7 +20,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private TextView tvTotalOrgs, tvTotalEvents;
-    private CardView cardAddOrg, cardManageUsers;
+    private MaterialCardView cardAddOrg, cardManageUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         fetchStats();
 
+        // Redirect to RegisterOrgActivity when clicking "Register New Org"
         cardAddOrg.setOnClickListener(v -> {
             Intent intent = new Intent(AdminHomeActivity.this, RegisterOrgActivity.class);
             startActivity(intent);
