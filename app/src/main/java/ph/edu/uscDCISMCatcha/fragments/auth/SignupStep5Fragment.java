@@ -1,5 +1,6 @@
 package ph.edu.uscDCISMCatcha.fragments.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.activities.InterestsActivity;
 import ph.edu.uscDCISMCatcha.models.UserModel;
 import ph.edu.uscDCISMCatcha.viewmodel.SignupViewModel;
 
@@ -105,7 +107,10 @@ public class SignupStep5Fragment extends Fragment {
             .set(userProfile)
             .addOnSuccessListener(aVoid -> {
                 Toast.makeText(requireContext(), "Welcome to Catcha!", Toast.LENGTH_LONG).show();
-                // Successfully registered and logged in. Navigate to home.
+                // Navigate to InterestsActivity
+                Intent intent = new Intent(requireActivity(), InterestsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 requireActivity().finish();
             })
             .addOnFailureListener(e -> {

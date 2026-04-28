@@ -3,7 +3,9 @@ package ph.edu.uscDCISMCatcha.models;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @IgnoreExtraProperties
@@ -15,12 +17,16 @@ public class UserModel {
     private String university;
     private String department;
     private String role; // "Student", "OrgHandler", "Admin"
+    private boolean interestsSelected;
+    private List<String> interests;
     private Map<String, String> fcmTokens;
     @ServerTimestamp
     private Timestamp createdAt;
 
     public UserModel() {
         this.fcmTokens = new HashMap<>();
+        this.interests = new ArrayList<>();
+        this.interestsSelected = false;
     }
 
     public UserModel(String firstName, String lastName, String username, String email, String university, String department, String role) {
@@ -32,6 +38,8 @@ public class UserModel {
         this.department = department;
         this.role = role;
         this.fcmTokens = new HashMap<>();
+        this.interests = new ArrayList<>();
+        this.interestsSelected = false;
     }
 
     // Getters and Setters
@@ -49,6 +57,10 @@ public class UserModel {
     public void setDepartment(String department) { this.department = department; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    public boolean isInterestsSelected() { return interestsSelected; }
+    public void setInterestsSelected(boolean interestsSelected) { this.interestsSelected = interestsSelected; }
+    public List<String> getInterests() { return interests; }
+    public void setInterests(List<String> interests) { this.interests = interests; }
     public Map<String, String> getFcmTokens() { return fcmTokens; }
     public void setFcmTokens(Map<String, String> fcmTokens) { this.fcmTokens = fcmTokens; }
     public Timestamp getCreatedAt() { return createdAt; }

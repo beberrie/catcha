@@ -16,8 +16,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.activities.HomeActivity;
+import ph.edu.uscDCISMCatcha.activities.InterestsActivity;
 import ph.edu.uscDCISMCatcha.activities.OrgHomeActivity;
 import ph.edu.uscDCISMCatcha.activities.admin.AdminHomeActivity;
+import ph.edu.uscDCISMCatcha.models.UserModel;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -67,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        checkUserRoleAndNavigate();
+                        checkUserStatusAndNavigate();
                     } else {
                         btnLogin.setEnabled(true);
                         btnLogin.setText(R.string.login_button);
@@ -77,15 +79,24 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void checkUserRoleAndNavigate() {
+    private void checkUserStatusAndNavigate() {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) return;
 
-        // Bypassing email verification check as requested
         db.collection("users").document(user.getUid()).get()
                 .addOnSuccessListener(doc -> {
                     if (doc.exists()) {
-                        navigateToDashboard(doc.getString("role"));
+                        UserModel userProfile = doc.toObject(UserModel.class);
+                        if (userProfile != null) {
+                            if (!userProfile.isInterestsSelected() && "Student".equals(userProfile.getRole())) {
+                                // Redirect to Interests if not selected and is a student
+                                Intent intent = new Intent(this, InterestsActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                navigateToDashboard(userProfile.getRole());
+                            }
+                        }
                     } else {
                         Toast.makeText(this, "User profile not found.", Toast.LENGTH_SHORT).show();
                         mAuth.signOut();
@@ -117,7 +128,6 @@ public class LoginActivity extends AppCompatActivity {
         if ("Admin".equals(role)) {
             intent = new Intent(this, AdminHomeActivity.class);
         } else if ("OrgHandler".equals(role) || "Organization".equals(role) || "Org".equals(role)) {
-            // Redirects to OrgHomeActivity which is set up to load OrgHomePageFragment
             intent = new Intent(this, OrgHomeActivity.class);
         } else {
             intent = new Intent(this, HomeActivity.class);
