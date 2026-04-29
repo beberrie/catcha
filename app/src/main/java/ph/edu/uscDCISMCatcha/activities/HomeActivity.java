@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.fragments.home.TrendingEventsFragment;
 import ph.edu.uscDCISMCatcha.fragments.org.OrgDashboardFragment;
 
 public class HomeActivity extends AppCompatActivity {
@@ -48,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
             } else if (id == R.id.nav_orgs) {
                 loadFragment(new OrgDashboardFragment());
             } else if (id == R.id.nav_events) {
-                // loadFragment(new EventsFragment());
+                loadFragment(new TrendingEventsFragment());
             }
             return true;
         });
