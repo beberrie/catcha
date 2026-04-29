@@ -67,6 +67,13 @@ public class FirebaseRemoteDataSource {
         auth.signOut();
     }
 
+    // --- Event Creation ---
+    public Task<Void> createEvent(EventModel event) {
+        DocumentReference docRef = firestore.collection("events").document();
+        event.setEventId(docRef.getId());
+        return docRef.set(event);
+    }
+
     // --- RSVP Capacity Enforcement ---
     public Task<Void> rsvpToEvent(RSVPModel rsvp) {
         DocumentReference eventRef = firestore.collection("events").document(rsvp.getEventId());
@@ -85,11 +92,6 @@ public class FirebaseRemoteDataSource {
             if (maxCapacity > 0 && currentCount >= maxCapacity) {
                 throw new RuntimeException("Event is full!");
             }
-
-            // Check if user already RSVP'd
-            // Note: Transactions require reads before writes. 
-            // Better to handle "already rsvp'd" check via a separate query or composite ID.
-            // For simplicity in this example, we proceed with creation.
 
             transaction.set(rsvpRef, rsvp);
             transaction.update(eventRef, "currentRsvpCount", currentCount + 1);
@@ -123,7 +125,6 @@ public class FirebaseRemoteDataSource {
 
     // --- Schedule Conflict Alerts ---
     public Task<List<EventModel>> checkConflicts(String userId, EventModel targetEvent) {
-        // Fetch user's "Going" RSVPs
         return firestore.collection("rsvps")
                 .whereEqualTo("userId", userId)
                 .whereEqualTo("status", "Going")
@@ -132,40 +133,22 @@ public class FirebaseRemoteDataSource {
                     if (!task.isSuccessful()) return Tasks.forException(task.getException());
                     
                     List<String> eventIds = new ArrayList<>();
-                    if (task.getResult() != null) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            String eventId = doc.getString("eventId");
-                            if (eventId != null) eventIds.add(eventId);
-                        }
+                    for (DocumentSnapshot doc : task.getResult()) {
+                        eventIds.add(doc.getString("eventId"));
                     }
 
-                    if (eventIds.isEmpty()) {
-                        return Tasks.forResult((List<EventModel>) new ArrayList<EventModel>());
-                    }
+                    if (eventIds.isEmpty()) return Tasks.forResult(new ArrayList<EventModel>());
 
-                    // Fetch the actual events to compare timings
                     return firestore.collection("events")
                             .whereIn("eventId", eventIds)
-                            .get()
-                            .continueWith(eventsTask -> {
-                                List<EventModel> events = new ArrayList<>();
-                                if (eventsTask.isSuccessful() && eventsTask.getResult() != null) {
-                                    for (DocumentSnapshot doc : eventsTask.getResult()) {
-                                        EventModel event = doc.toObject(EventModel.class);
-                                        if (event != null) {
-                                            event.setEventId(doc.getId());
-                                            events.add(event);
-                                        }
-                                    }
-                                }
-                                return events;
-                            });
+                            .get();
                 })
                 .continueWith(task -> {
                     List<EventModel> conflicts = new ArrayList<>();
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (EventModel existingEvent : task.getResult()) {
-                            if (isOverlapping(existingEvent, targetEvent)) {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            EventModel existingEvent = doc.toObject(EventModel.class);
+                            if (existingEvent != null && isOverlapping(existingEvent, targetEvent)) {
                                 conflicts.add(existingEvent);
                             }
                         }
@@ -175,10 +158,6 @@ public class FirebaseRemoteDataSource {
     }
 
     private boolean isOverlapping(EventModel e1, EventModel e2) {
-        if (e1.getStartDateTime() == null || e1.getEndDateTime() == null ||
-            e2.getStartDateTime() == null || e2.getEndDateTime() == null) {
-            return false;
-        }
         return e1.getStartDateTime().getSeconds() < e2.getEndDateTime().getSeconds() &&
                e2.getStartDateTime().getSeconds() < e1.getEndDateTime().getSeconds();
     }
