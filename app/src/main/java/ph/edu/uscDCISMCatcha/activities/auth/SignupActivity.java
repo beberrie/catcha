@@ -1,11 +1,15 @@
 package ph.edu.uscDCISMCatcha.activities.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep1Fragment;
@@ -13,14 +17,22 @@ import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep2Fragment;
 import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep3Fragment;
 import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep4Fragment;
 import ph.edu.uscDCISMCatcha.fragments.auth.SignupStep5Fragment;
+import ph.edu.uscDCISMCatcha.viewmodel.SignupViewModel;
 
 public class SignupActivity extends AppCompatActivity {
+
+    private static final String TAG = "SignupActivity";
+    private FirebaseAuth mAuth;
+    private SignupViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.auth_activity_signup);
+
+        mAuth = FirebaseAuth.getInstance();
+        viewModel = new ViewModelProvider(this).get(SignupViewModel.class);
 
         // Load Step 1 by default
         if (savedInstanceState == null) {

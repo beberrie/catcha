@@ -44,6 +44,11 @@
 
     <string name="role_signup_hint">Select Role</string>
 
+    <string name="or_divider">OR</string>
+    <string name="verify_email_button">Verify Email</string>
+    <string name="verification_sent">Verification email sent! Please check your inbox.</string>
+    <string name="verification_pending">Please verify your email to continue.</string>
+
     <string-array name="login_roles">
         <item>Student</item>
         <item>Organization Handler</item>

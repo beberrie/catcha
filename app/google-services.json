@@ -12,7 +12,20 @@
           "package_name": "ph.edu.uscDCISMCatcha"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "254821082558-7v8dp533078o0pa7i9rpjvbiai9g2ep7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ph.edu.uscDCISMCatcha",
+            "certificate_hash": "26204e49027e973f343748d791cbae8cd0e6106a"
+          }
+        },
+        {
+          "client_id": "254821082558-rorji53u8qklomb5i910bb8vk0n5vo85.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB2sFtB3o7QJmJO6f2hPNnmEgIpJEKm9TQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254821082558-rorji53u8qklomb5i910bb8vk0n5vo85.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

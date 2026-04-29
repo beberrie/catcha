@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.chip.Chip;
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.fragments.home.UserProfileFragment;
 
 public class OrgDashboardFragment extends Fragment {
 
@@ -22,6 +25,11 @@ public class OrgDashboardFragment extends Fragment {
         LinearLayout suggestedContainer = view.findViewById(R.id.suggestedOrgsContainer);
         LinearLayout allOrgsContainer = view.findViewById(R.id.allOrgsContainer);
         Chip chipFilters = view.findViewById(R.id.chipFilters);
+
+        // Header Icons
+        ImageView ivUserAvatar = view.findViewById(R.id.ivUserAvatarHeader);
+        ImageView ivNotifications = view.findViewById(R.id.ivNotificationsHeader);
+        ImageView ivSearch = view.findViewById(R.id.ivSearchHeader);
 
         // Add dummy data for suggested organizations
         addDummySuggestedOrgs(inflater, suggestedContainer);
@@ -37,6 +45,30 @@ public class OrgDashboardFragment extends Fragment {
             });
         }
 
+        // Setup avatar click to go to profile
+        if (ivUserAvatar != null) {
+            ivUserAvatar.setOnClickListener(v -> {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new UserProfileFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+        }
+
+        // Setup notifications click
+        if (ivNotifications != null) {
+            ivNotifications.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Notifications coming soon!", Toast.LENGTH_SHORT).show();
+            });
+        }
+
+        // Setup search click
+        if (ivSearch != null) {
+            ivSearch.setOnClickListener(v -> {
+                Toast.makeText(getContext(), "Search functionality coming soon!", Toast.LENGTH_SHORT).show();
+            });
+        }
+
         return view;
     }
 
@@ -47,8 +79,7 @@ public class OrgDashboardFragment extends Fragment {
             TextView tvName = card.findViewById(R.id.tvOrgNameSuggest);
             if (tvName != null) tvName.setText(name);
             
-            // Set click listener to navigate to profile with the org name
-            card.setOnClickListener(v -> navigateToProfile(name));
+            card.setOnClickListener(v -> navigateToOrgProfile(name));
             
             container.addView(card);
         }
@@ -61,14 +92,13 @@ public class OrgDashboardFragment extends Fragment {
             TextView tvName = card.findViewById(R.id.tvOrgNameMain);
             if (tvName != null) tvName.setText(name);
 
-            // Set click listener to navigate to profile with the org name
-            card.setOnClickListener(v -> navigateToProfile(name));
+            card.setOnClickListener(v -> navigateToOrgProfile(name));
 
             container.addView(card);
         }
     }
 
-    private void navigateToProfile(String orgName) {
+    private void navigateToOrgProfile(String orgName) {
         OrgProfileFragment fragment = new OrgProfileFragment();
         Bundle args = new Bundle();
         args.putString("ORG_NAME", orgName);

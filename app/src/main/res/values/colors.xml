@@ -4,6 +4,7 @@
     <color name="black">#1A1A1A</color>
     <color name="white">#FFFFFFFF</color>
     <color name="off_white">#F7F7F7</color>
+    <color name="red">#E53935</color>
 
     <!-- BRANDING COLORS -->
     <color name="yellow">#EDC247</color>
@@ -15,4 +16,21 @@
     <!-- OPACITY COLORS -->
     <color name="softlight_blue_30">#4D556077</color>
     <color name="softlight_blue_35">#59556077</color>
+
+    <color name="gray">#555555</color>
+
+    <!-- Brand -->
+    <color name="brand_orange">#E8943A</color>
+
+    <!-- Text -->
+    <color name="text_dark">#1A1A1A</color>
+    <color name="text_secondary">#888888</color>
+
+    <!-- Chip states -->
+    <color name="chip_stroke">#CCCCCC</color>
+    <color name="chip_selected_bg">#1A1A1A</color>
+    <color name="chip_selected_text">#FFFFFF</color>
+
+    <!-- Misc -->
+    <color name="ripple_light">#1A000000</color>
 </resources>

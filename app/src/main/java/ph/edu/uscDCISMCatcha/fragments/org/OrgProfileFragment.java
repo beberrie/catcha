@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.chip.Chip;
 import ph.edu.uscDCISMCatcha.R;
 
 public class OrgProfileFragment extends Fragment {
@@ -18,6 +19,7 @@ public class OrgProfileFragment extends Fragment {
     private Button btnJoin;
     private TextView tvOrgName;
     private LinearLayout joinedStatusContainer;
+    private Chip filterButton;
 
     @Nullable
     @Override
@@ -28,6 +30,7 @@ public class OrgProfileFragment extends Fragment {
         btnJoin = view.findViewById(R.id.joinButton);
         tvOrgName = view.findViewById(R.id.orgName);
         joinedStatusContainer = view.findViewById(R.id.joinedStatusContainer);
+        filterButton = view.findViewById(R.id.filterButton);
 
         // Retrieve the organization name from arguments
         if (getArguments() != null) {
@@ -44,6 +47,12 @@ public class OrgProfileFragment extends Fragment {
         btnJoin.setOnClickListener(v -> {
             btnJoin.setVisibility(View.GONE);
             joinedStatusContainer.setVisibility(View.VISIBLE);
+        });
+
+        // Show Event Filters Bottom Sheet
+        filterButton.setOnClickListener(v -> {
+            EventFiltersBottomSheet bottomSheet = new EventFiltersBottomSheet();
+            bottomSheet.show(getChildFragmentManager(), "EventFiltersBottomSheet");
         });
 
         return view;
