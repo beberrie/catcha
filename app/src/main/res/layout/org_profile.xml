@@ -207,6 +207,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:text="Filters"
+            android:checkable="false"
+            app:checkedIconVisible="false"
             app:chipIcon="@android:drawable/ic_menu_sort_by_size"
             app:chipIconSize="14dp"
             app:chipIconVisible="true"
