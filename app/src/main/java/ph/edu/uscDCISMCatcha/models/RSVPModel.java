@@ -1,11 +1,13 @@
 package ph.edu.uscDCISMCatcha.models;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
 @IgnoreExtraProperties
 public class RSVPModel {
+    private String rsvpId;
     private String userId;
     private String eventId;
     private String eventTitle;
@@ -21,6 +23,10 @@ public class RSVPModel {
         this.eventTitle = eventTitle;
         this.status = status;
     }
+
+    @Exclude
+    public String getRsvpId() { return rsvpId; }
+    public void setRsvpId(String rsvpId) { this.rsvpId = rsvpId; }
 
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }

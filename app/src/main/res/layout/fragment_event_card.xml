@@ -28,11 +28,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
-
-            <!-- ───────────────────────────────────────────── -->
-            <!-- WHERE YOU INSERT THE TAG                      -->
-            <!-- ───────────────────────────────────────────── -->
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipStatus"
@@ -41,6 +38,17 @@
                 android:layout_height="wrap_content"
                 android:text="UPCOMING"
                 android:clickable="false" />
+
+            <TextView
+                android:id="@+id/tvCapacity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter"
+                android:gravity="end"
+                android:text="0/0 slots"
+                android:textColor="@color/softlight_blue"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
