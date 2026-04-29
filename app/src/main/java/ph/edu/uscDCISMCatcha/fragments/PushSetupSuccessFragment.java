@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentPushSetupSuccessBinding;
+import ph.edu.uscDCISMCatcha.fragments.org.OrgDashboardFragment;
 
 public class PushSetupSuccessFragment extends Fragment {
 
@@ -30,7 +31,7 @@ public class PushSetupSuccessFragment extends Fragment {
         binding.btnContinue.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, new HomeFragment())
+                        .replace(R.id.fragment_container, new OrgDashboardFragment())
                         .commit());
     }
 
