@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -25,6 +26,8 @@ public class EventFiltersBottomSheet extends BottomSheetDialogFragment {
     private LinearLayout activeFiltersContainer;
     private AutoCompleteTextView atvStartTime, atvEndTime;
     private Chip chipResetAll;
+    private Button btnSetTime;
+    private boolean isTimeSet = false;
 
     @Nullable
     @Override
@@ -43,12 +46,16 @@ public class EventFiltersBottomSheet extends BottomSheetDialogFragment {
         atvStartTime = view.findViewById(R.id.atvStartTime);
         atvEndTime = view.findViewById(R.id.atvEndTime);
         chipResetAll = view.findViewById(R.id.chipResetAll);
+        btnSetTime = view.findViewById(R.id.btnSetTime);
 
         setupTimeDropdowns();
 
         cgStatus.setOnCheckedStateChangeListener((group, checkedIds) -> updateActiveFilters());
-        atvStartTime.setOnItemClickListener((parent, v, position, id) -> updateActiveFilters());
-        atvEndTime.setOnItemClickListener((parent, v, position, id) -> updateActiveFilters());
+        
+        btnSetTime.setOnClickListener(v -> {
+            isTimeSet = true;
+            updateActiveFilters();
+        });
 
         btnCancel.setOnClickListener(v -> dismiss());
         btnShowResults.setOnClickListener(v -> dismiss());
@@ -59,29 +66,19 @@ public class EventFiltersBottomSheet extends BottomSheetDialogFragment {
 
     private void setupTimeDropdowns() {
         List<String> timeList = new ArrayList<>();
+        
+        // 12:00 AM to 11:00 PM (Hourly)
         String[] periods = {"AM", "PM"};
         
-        // 12:00 AM
         timeList.add("12:00 AM");
-        timeList.add("12:30 AM");
-        
-        // 1:00 AM to 11:30 AM
         for (int h = 1; h <= 11; h++) {
             timeList.add(h + ":00 AM");
-            timeList.add(h + ":30 AM");
         }
         
-        // 12:00 PM
         timeList.add("12:00 PM");
-        timeList.add("12:30 PM");
-        
-        // 1:00 PM to 11:30 PM
         for (int h = 1; h <= 11; h++) {
             timeList.add(h + ":00 PM");
-            timeList.add(h + ":30 PM");
         }
-        
-        timeList.add("11:59 PM");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, timeList);
         atvStartTime.setAdapter(adapter);
@@ -108,12 +105,13 @@ public class EventFiltersBottomSheet extends BottomSheetDialogFragment {
             count++;
         }
 
-        // Add Time Range Tag if changed from default or always? 
-        // Design shows it as active.
-        String startTime = atvStartTime.getText().toString();
-        String endTime = atvEndTime.getText().toString();
-        addActiveTag(startTime + " - " + endTime);
-        count++;
+        // Add Time Range Tag only if isTimeSet is true
+        if (isTimeSet) {
+            String startTime = atvStartTime.getText().toString();
+            String endTime = atvEndTime.getText().toString();
+            addActiveTag(startTime + " - " + endTime);
+            count++;
+        }
 
         btnShowResults.setText("Show (" + count + ")");
     }
@@ -126,7 +124,7 @@ public class EventFiltersBottomSheet extends BottomSheetDialogFragment {
         
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, getResources().getDisplayMetrics())
+                ViewGroup.LayoutParams.WRAP_CONTENT
         );
         params.setMarginStart((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources().getDisplayMetrics()));
         tag.setLayoutParams(params);
@@ -136,8 +134,9 @@ public class EventFiltersBottomSheet extends BottomSheetDialogFragment {
 
     private void resetFilters() {
         cgStatus.clearCheck();
-        atvStartTime.setText("12:00 AM", false);
-        atvEndTime.setText("11:59 PM", false);
+        atvStartTime.setText("", false);
+        atvEndTime.setText("", false);
+        isTimeSet = false;
         updateActiveFilters();
     }
 }
