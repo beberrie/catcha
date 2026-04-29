@@ -73,7 +73,7 @@
             android:layout_height="12dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="6dp"
-            android:src="@drawable/ic_location"
+            android:src="@drawable/ic_location_pin"
             app:layout_constraintStart_toEndOf="@id/ivEventImage"
             app:layout_constraintTop_toBottomOf="@id/tvEventTitle"
             app:tint="#E8A020" />

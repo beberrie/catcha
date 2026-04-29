@@ -16,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentPushSetupBinding;
+import ph.edu.uscDCISMCatcha.fragments.org.OrgDashboardFragment;
 
 public class PushSetupFragment extends Fragment {
 
@@ -58,14 +59,13 @@ public class PushSetupFragment extends Fragment {
                 .beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
                 .replace(R.id.fragment_container, new PushSetupSuccessFragment())
-
                 .commit();
     }
 
     private void navigateToHome() {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new HomeFragment())
+                .replace(R.id.fragment_container, new OrgDashboardFragment())
                 .commit();
     }
 
