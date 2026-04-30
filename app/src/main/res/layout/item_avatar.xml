@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_marginEnd="8dp">
+
+    <ImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_profile"
+        android:background="@drawable/circle_avatar_bg"
+        android:padding="2dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tvAvatarName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:textSize="10sp"
+        android:textColor="@color/blue"
+        android:maxWidth="50dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="Name" />
+
+</LinearLayout>
