@@ -131,29 +131,31 @@ public class FirebaseRemoteDataSource {
                 .get()
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) return Tasks.forException(task.getException());
-                    
+
                     List<String> eventIds = new ArrayList<>();
                     for (DocumentSnapshot doc : task.getResult()) {
                         eventIds.add(doc.getString("eventId"));
                     }
 
-                    if (eventIds.isEmpty()) return Tasks.forResult(new ArrayList<EventModel>());
+                    if (eventIds.isEmpty()) {
+                        return Tasks.forResult((List<EventModel>) new ArrayList<EventModel>());
+                    }
 
                     return firestore.collection("events")
                             .whereIn("eventId", eventIds)
-                            .get();
-                })
-                .continueWith(task -> {
-                    List<EventModel> conflicts = new ArrayList<>();
-                    if (task.isSuccessful()) {
-                        for (DocumentSnapshot doc : task.getResult()) {
-                            EventModel existingEvent = doc.toObject(EventModel.class);
-                            if (existingEvent != null && isOverlapping(existingEvent, targetEvent)) {
-                                conflicts.add(existingEvent);
-                            }
-                        }
-                    }
-                    return conflicts;
+                            .get()
+                            .continueWith(queryTask -> {
+                                List<EventModel> conflicts = new ArrayList<>();
+                                if (queryTask.isSuccessful() && queryTask.getResult() != null) {
+                                    for (DocumentSnapshot doc : queryTask.getResult()) {
+                                        EventModel existingEvent = doc.toObject(EventModel.class);
+                                        if (existingEvent != null && isOverlapping(existingEvent, targetEvent)) {
+                                            conflicts.add(existingEvent);
+                                        }
+                                    }
+                                }
+                                return conflicts;
+                            });
                 });
     }
 
