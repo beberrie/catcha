@@ -43,6 +43,17 @@
                 android:text="@string/status_upcoming"
                 android:clickable="false" />
 
+            <TextView
+                android:id="@+id/tvCapacity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/inter"
+                android:gravity="end"
+                android:text="0/0 slots"
+                android:textColor="@color/softlight_blue"
+                android:textSize="12sp" />
+
         </LinearLayout>
         <TextView
             android:id="@+id/tvEventTitle"

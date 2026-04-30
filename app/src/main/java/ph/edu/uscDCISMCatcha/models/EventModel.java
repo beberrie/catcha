@@ -1,11 +1,13 @@
 package ph.edu.uscDCISMCatcha.models;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
 @IgnoreExtraProperties
 public class EventModel {
+    private String eventId; // Added for easier document reference
     private String orgId;
     private String orgName;
     private String title;
@@ -16,6 +18,9 @@ public class EventModel {
     private String university;
     private String imageUrl;
     private String createdBy;
+    private int maxCapacity = 0; // 0 means unlimited if not specified
+    private int currentRsvpCount = 0;
+    
     @ServerTimestamp
     private Timestamp createdAt;
 
@@ -36,6 +41,10 @@ public class EventModel {
     }
 
     // Getters and Setters
+    @Exclude
+    public String getEventId() { return eventId; }
+    public void setEventId(String eventId) { this.eventId = eventId; }
+    
     public String getOrgId() { return orgId; }
     public void setOrgId(String orgId) { this.orgId = orgId; }
     public String getOrgName() { return orgName; }
@@ -58,4 +67,9 @@ public class EventModel {
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    public int getMaxCapacity() { return maxCapacity; }
+    public void setMaxCapacity(int maxCapacity) { this.maxCapacity = maxCapacity; }
+    public int getCurrentRsvpCount() { return currentRsvpCount; }
+    public void setCurrentRsvpCount(int currentRsvpCount) { this.currentRsvpCount = currentRsvpCount; }
 }

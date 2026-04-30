@@ -155,6 +155,7 @@ public class CreatePostFragment extends Fragment {
             String endTime     = binding.tvEndTime.getText().toString();
             String location    = binding.etLocation.getText().toString().trim();
             String description = binding.etDescription.getText().toString().trim();
+            String capacityStr = binding.etCapacity.getText().toString().trim();
             boolean autoReminders = binding.switchAutoReminders.isChecked();
 
             if (title.isEmpty()) {
@@ -167,7 +168,17 @@ public class CreatePostFragment extends Fragment {
                 return;
             }
 
-            viewModel.createEvent(title, date, time, endTime, location, description, autoReminders);
+            int capacity = 0;
+            if (!capacityStr.isEmpty()) {
+                try {
+                    capacity = Integer.parseInt(capacityStr);
+                } catch (NumberFormatException e) {
+                    binding.etCapacity.setError("Invalid number");
+                    return;
+                }
+            }
+
+            viewModel.createEvent(title, date, time, endTime, location, description, capacity, autoReminders);
         });
     }
 
@@ -176,6 +187,7 @@ public class CreatePostFragment extends Fragment {
         binding.etMessage.setText("");
         binding.etLocation.setText("");
         binding.etDescription.setText("");
+        binding.etCapacity.setText("");
         binding.tvDate.setText("Pick date");
         binding.tvTime.setText("Pick time");
         binding.tvEndTime.setText("Pick time");
