@@ -13,31 +13,30 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.chip.Chip;
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.fragments.PushSetupFragment;       // ✅ added
 import ph.edu.uscDCISMCatcha.fragments.home.UserProfileFragment;
 
 public class OrgDashboardFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.org_dashboard, container, false);
 
         LinearLayout suggestedContainer = view.findViewById(R.id.suggestedOrgsContainer);
-        LinearLayout allOrgsContainer = view.findViewById(R.id.allOrgsContainer);
-        Chip chipFilters = view.findViewById(R.id.chipFilters);
+        LinearLayout allOrgsContainer   = view.findViewById(R.id.allOrgsContainer);
+        Chip chipFilters                = view.findViewById(R.id.chipFilters);
 
-        // Header Icons
-        ImageView ivUserAvatar = view.findViewById(R.id.ivUserAvatarHeader);
+        ImageView ivUserAvatar    = view.findViewById(R.id.ivUserAvatarHeader);
         ImageView ivNotifications = view.findViewById(R.id.ivNotificationsHeader);
-        ImageView ivSearch = view.findViewById(R.id.ivSearchHeader);
+        ImageView ivSearch        = view.findViewById(R.id.ivSearchHeader);
 
-        // Add dummy data for suggested organizations
         addDummySuggestedOrgs(inflater, suggestedContainer);
 
-        // Add dummy data for all organizations
         addDummyAllOrgs(inflater, allOrgsContainer);
 
-        // Setup filter button click
+        // Filter button
         if (chipFilters != null) {
             chipFilters.setOnClickListener(v -> {
                 OrgFiltersBottomSheet bottomSheet = new OrgFiltersBottomSheet();
@@ -45,28 +44,26 @@ public class OrgDashboardFragment extends Fragment {
             });
         }
 
-        // Setup avatar click to go to profile
         if (ivUserAvatar != null) {
-            ivUserAvatar.setOnClickListener(v -> {
-                getParentFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new UserProfileFragment())
-                        .addToBackStack(null)
-                        .commit();
-            });
+            ivUserAvatar.setOnClickListener(v ->
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new UserProfileFragment())
+                            .addToBackStack(null)
+                            .commit());
         }
 
-        // Setup notifications click
         if (ivNotifications != null) {
-            ivNotifications.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Notifications coming soon!", Toast.LENGTH_SHORT).show();
-            });
+            ivNotifications.setOnClickListener(v ->
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new PushSetupFragment())
+                            .addToBackStack(null)
+                            .commit());
         }
 
-        // Setup search click
         if (ivSearch != null) {
-            ivSearch.setOnClickListener(v -> {
-                Toast.makeText(getContext(), "Search functionality coming soon!", Toast.LENGTH_SHORT).show();
-            });
+            ivSearch.setOnClickListener(v ->
+                    Toast.makeText(getContext(),
+                            "Search functionality coming soon!", Toast.LENGTH_SHORT).show());
         }
 
         return view;
@@ -78,9 +75,7 @@ public class OrgDashboardFragment extends Fragment {
             View card = inflater.inflate(R.layout.fragment_org_card_suggest, container, false);
             TextView tvName = card.findViewById(R.id.tvOrgNameSuggest);
             if (tvName != null) tvName.setText(name);
-            
             card.setOnClickListener(v -> navigateToOrgProfile(name));
-            
             container.addView(card);
         }
     }
@@ -91,9 +86,7 @@ public class OrgDashboardFragment extends Fragment {
             View card = inflater.inflate(R.layout.fragment_org_card_main, container, false);
             TextView tvName = card.findViewById(R.id.tvOrgNameMain);
             if (tvName != null) tvName.setText(name);
-
             card.setOnClickListener(v -> navigateToOrgProfile(name));
-
             container.addView(card);
         }
     }
