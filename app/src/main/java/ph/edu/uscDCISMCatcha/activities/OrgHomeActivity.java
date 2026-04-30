@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import ph.edu.uscDCISMCatcha.R;
-import ph.edu.uscDCISMCatcha.fragments.org.OrgHomePageFragment;
+import ph.edu.uscDCISMCatcha.fragments.org.OrgProfileFragment;
 
 public class OrgHomeActivity extends AppCompatActivity {
 
@@ -16,10 +16,11 @@ public class OrgHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.auth_activity_signup); // Using a container layout or activity_main
+        setContentView(R.layout.auth_activity_signup); // Using the layout with fragment_container
 
         if (savedInstanceState == null) {
-            loadFragment(new OrgHomePageFragment());
+            // TEMPORARY: Load OrgProfileFragment directly to test org_profile layout
+            loadFragment(new OrgProfileFragment());
         }
     }
 

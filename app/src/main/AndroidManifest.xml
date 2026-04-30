@@ -48,6 +48,11 @@
         <activity
             android:name=".activities.InterestsActivity"
             android:exported="false" />
+
+        <activity
+            android:name="ph.edu.uscDCISMCatcha.activities.EventDetailsActivity"
+            android:exported="false" />
+
         <activity
             android:name="ph.edu.uscDCISMCatcha.activities.MainActivity"
             android:exported="true"
