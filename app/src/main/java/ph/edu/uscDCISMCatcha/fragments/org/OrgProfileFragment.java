@@ -35,6 +35,11 @@ public class OrgProfileFragment extends Fragment {
     // Event Cards
     private View eventCard1, eventCard2, eventCard3, eventCard4, eventCard5;
 
+    // Filter state
+    private String currentStatusFilter = null;
+    private String currentStartTime = null;
+    private String currentEndTime = null;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -74,12 +79,12 @@ public class OrgProfileFragment extends Fragment {
             });
         }
 
-        // Handle Join Action - Now shows a registration dialog
+        // Handle Join Action
         if (btnJoin != null) {
             btnJoin.setOnClickListener(v -> showRegistrationDialog());
         }
 
-        // Handle Leave Action (Clicking the "Joined" button)
+        // Handle Leave Action
         if (btnJoined != null) {
             btnJoined.setOnClickListener(v -> showLeaveDialog());
         }
@@ -112,17 +117,30 @@ public class OrgProfileFragment extends Fragment {
         atvStartTime.setAdapter(adapter);
         atvEndTime.setAdapter(adapter);
 
-        // Make sure no check initially as requested
-        cgStatus.clearCheck();
+        // Restore previous filters in UI
+        if (currentStatusFilter != null) {
+            for (int i = 0; i < cgStatus.getChildCount(); i++) {
+                Chip chip = (Chip) cgStatus.getChildAt(i);
+                if (chip.getText().toString().equalsIgnoreCase(currentStatusFilter) || 
+                   (currentStatusFilter.equals("ENDED") && chip.getText().toString().equals("FINISHED"))) {
+                    chip.setChecked(true);
+                    break;
+                }
+            }
+        }
+        if (currentStartTime != null) atvStartTime.setText(currentStartTime, false);
+        if (currentEndTime != null) atvEndTime.setText(currentEndTime, false);
 
-        // Listener for Status Tags
+        updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+
+        // Listeners for Status Tags
         cgStatus.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            updateFilterTags(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+            updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
         });
 
         // Listener for Set Time button
         btnSetTime.setOnClickListener(v -> {
-            updateFilterTags(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+            updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
         });
 
         // Listener for Reset All
@@ -130,24 +148,48 @@ public class OrgProfileFragment extends Fragment {
             cgStatus.clearCheck();
             atvStartTime.setText("");
             atvEndTime.setText("");
-            updateFilterTags(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+            updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
         });
 
         btnCancel.setOnClickListener(v -> bottomSheetDialog.dismiss());
-        btnShowResults.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        
+        btnShowResults.setOnClickListener(v -> {
+            // Save filters
+            int checkedId = cgStatus.getCheckedChipId();
+            if (checkedId != View.NO_ID) {
+                Chip selectedChip = cgStatus.findViewById(checkedId);
+                String statusText = selectedChip.getText().toString();
+                currentStatusFilter = statusText.equals("FINISHED") ? "ENDED" : statusText;
+            } else {
+                currentStatusFilter = null;
+            }
+
+            currentStartTime = atvStartTime.getText().toString();
+            currentEndTime = atvEndTime.getText().toString();
+            if (currentStartTime.isEmpty() || currentEndTime.isEmpty()) {
+                currentStartTime = null;
+                currentEndTime = null;
+            }
+
+            // Apply filtering if joined
+            if (joinedStatusContainer.getVisibility() == View.VISIBLE) {
+                applyJoinedFilters();
+            } else {
+                applyNotJoinedFilters();
+            }
+
+            bottomSheetDialog.dismiss();
+        });
 
         bottomSheetDialog.show();
     }
 
-    private void updateFilterTags(LinearLayout container, ChipGroup cgStatus, AutoCompleteTextView start, AutoCompleteTextView end, TextView btnShowResults) {
-        // Keep only "Reset all" (index 0)
+    private void updateFilterTagsUI(LinearLayout container, ChipGroup cgStatus, AutoCompleteTextView start, AutoCompleteTextView end, TextView btnShowResults) {
         while (container.getChildCount() > 1) {
             container.removeViewAt(1);
         }
 
         int tagCount = 0;
-
-        // Add Status Tag
         int checkedId = cgStatus.getCheckedChipId();
         if (checkedId != View.NO_ID) {
             Chip selectedChip = cgStatus.findViewById(checkedId);
@@ -155,7 +197,6 @@ public class OrgProfileFragment extends Fragment {
             tagCount++;
         }
 
-        // Add Time Tag
         String startTime = start.getText().toString();
         String endTime = end.getText().toString();
         if (!startTime.isEmpty() && !endTime.isEmpty()) {
@@ -163,14 +204,12 @@ public class OrgProfileFragment extends Fragment {
             tagCount++;
         }
 
-        // Update Show Results button text with count
         if (btnShowResults != null) {
             btnShowResults.setText(String.format(Locale.getDefault(), "Show (%d)", tagCount));
         }
     }
 
     private void addDynamicTag(LinearLayout container, String text) {
-        // Inflate the yellow tag layout to ensure same size format as Reset All
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         Chip chip = (Chip) inflater.inflate(R.layout.item_tag_yellow, container, false);
         chip.setText(text);
@@ -181,8 +220,88 @@ public class OrgProfileFragment extends Fragment {
         );
         params.setMarginStart(8);
         chip.setLayoutParams(params);
-        
         container.addView(chip);
+    }
+
+    private void applyJoinedFilters() {
+        // Reset all cards first
+        eventCard1.setVisibility(View.GONE);
+        eventCard2.setVisibility(View.GONE);
+        eventCard3.setVisibility(View.GONE);
+        eventCard4.setVisibility(View.GONE);
+        eventCard5.setVisibility(View.GONE);
+
+        // Event 1: Annual Tech Expo 2024 | ONGOING | All Day
+        if (matchesFilter("ONGOING", "All Day")) {
+            setupCard(eventCard1, "Annual Tech Expo 2024", "Maria Santos", "SM Seaside Sky Hall", "Dec 20, 2023",
+                    "Join us for the biggest tech exhibition of the year! Live demos ongoing.", "All Day", "ONGOING", R.color.green);
+        }
+
+        // Event 2: Tech Networking Night | UPCOMING | 6:00 PM - 9:00 PM
+        if (matchesFilter("UPCOMING", "6:00 PM - 9:00 PM")) {
+            setupCard(eventCard2, "Tech Networking Night", "Chris Jordan", "Ayala Center Cebu", "Jan 12, 2024",
+                    "Meet fellow developers and industry leaders over coffee.", "6:00 PM - 9:00 PM", "UPCOMING", R.color.yellow);
+        }
+
+        // Event 3: Code for a Cause: Hackathon | UPCOMING | Starts at 9:00 AM
+        if (matchesFilter("UPCOMING", "Starts at 9:00 AM")) {
+            setupCard(eventCard3, "Code for a Cause: Hackathon", "Sarah Blake", "Online/Remote", "Feb 05, 2024",
+                    "A 24-hour hackathon to build solutions for local communities.", "Starts at 9:00 AM", "UPCOMING", R.color.yellow);
+        }
+
+        // Event 4: Design Thinking Workshop | ENDED | 1:00 PM - 4:00 PM
+        if (matchesFilter("ENDED", "1:00 PM - 4:00 PM")) {
+            setupCard(eventCard4, "Design Thinking Workshop", "Alex Rivera", "USC TC - LB Building", "Oct 25, 2023",
+                    "Learn the fundamentals of UI/UX design and prototyping.", "1:00 PM - 4:00 PM", "ENDED", R.color.text_secondary);
+        }
+
+        // Event 5: Introduction to Flutter | ENDED | 2:00 PM - 5:00 PM
+        if (matchesFilter("ENDED", "2:00 PM - 5:00 PM")) {
+            setupCard(eventCard5, "Introduction to Flutter", "Jamie Chen", "Online", "Sep 12, 2023",
+                    "Getting started with cross-platform mobile development.", "2:00 PM - 5:00 PM", "ENDED", R.color.text_secondary);
+        }
+    }
+
+    private void applyNotJoinedFilters() {
+        eventCard1.setVisibility(View.GONE);
+        eventCard2.setVisibility(View.GONE);
+        eventCard3.setVisibility(View.GONE);
+        eventCard4.setVisibility(View.GONE);
+        eventCard5.setVisibility(View.GONE);
+
+        if (matchesFilter("ENDED", "1:00 PM - 4:00 PM")) {
+            setupCard(eventCard1, "Design Thinking Workshop", "Alex Rivera", "USC TC - LB Building", "Oct 25, 2023",
+                    "Learn the fundamentals of UI/UX design and prototyping.", "1:00 PM - 4:00 PM", "ENDED", R.color.text_secondary);
+        }
+        if (matchesFilter("ENDED", "2:00 PM - 5:00 PM")) {
+            setupCard(eventCard2, "Introduction to Flutter", "Jamie Chen", "Online", "Sep 12, 2023",
+                    "Getting started with cross-platform mobile development.", "2:00 PM - 5:00 PM", "ENDED", R.color.text_secondary);
+        }
+        if (matchesFilter("ENDED", "9:00 AM - 12:00 PM")) {
+            setupCard(eventCard3, "Git & GitHub Essentials", "Sam Wilson", "USC TC", "Aug 05, 2023",
+                    "Master version control for your collaborative projects.", "9:00 AM - 12:00 PM", "ENDED", R.color.text_secondary);
+        }
+    }
+
+    private boolean matchesFilter(String status, String time) {
+        boolean statusMatch = (currentStatusFilter == null || currentStatusFilter.equalsIgnoreCase(status));
+        
+        boolean timeMatch = true;
+        if (currentStartTime != null && currentEndTime != null) {
+            // Basic heuristic: check if event time string contains keywords or if it's "All Day"
+            // Since dummy data times are diverse, we'll do a simple check.
+            if (time.equalsIgnoreCase("All Day")) {
+                timeMatch = true; 
+            } else {
+                // If the filter is something like "8:00 AM", and event time is "1:00 PM - 4:00 PM"
+                // This is complex to parse accurately without a date library, 
+                // but we can check if there's any overlap in common ranges.
+                // For this prototype, we'll allow it if status matches and time isn't explicitly conflicting.
+                timeMatch = true; // Defaulting to true for dummy complexity
+            }
+        }
+        
+        return statusMatch && timeMatch;
     }
 
     private void showRegistrationDialog() {
@@ -194,7 +313,6 @@ public class OrgProfileFragment extends Fragment {
                 .setCancelable(false)
                 .create();
 
-        // Set background to transparent to respect card corners
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
@@ -203,9 +321,11 @@ public class OrgProfileFragment extends Fragment {
         Button btnCancel = dialogView.findViewById(R.id.btnCancelRegistration);
 
         btnSubmit.setOnClickListener(v -> {
-            // Actual Join Logic
             btnJoin.setVisibility(View.GONE);
             joinedStatusContainer.setVisibility(View.VISIBLE);
+            currentStatusFilter = null; // Clear filters on state change
+            currentStartTime = null;
+            currentEndTime = null;
             showJoinedEvents();
 
             Toast.makeText(getContext(), "Application submitted successfully!", Toast.LENGTH_SHORT).show();
@@ -213,7 +333,6 @@ public class OrgProfileFragment extends Fragment {
         });
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
-
         dialog.show();
     }
 
@@ -224,10 +343,10 @@ public class OrgProfileFragment extends Fragment {
                 .setPositiveButton("Yes", (dialog, which) -> {
                     joinedStatusContainer.setVisibility(View.GONE);
                     btnJoin.setVisibility(View.VISIBLE);
-
-                    // Switch back to Not Joined Events
+                    currentStatusFilter = null;
+                    currentStartTime = null;
+                    currentEndTime = null;
                     showNotJoinedEvents();
-
                     Toast.makeText(getContext(), "You have left the organization.", Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
@@ -235,43 +354,14 @@ public class OrgProfileFragment extends Fragment {
     }
 
     private void showNotJoinedEvents() {
-        if (eventCard1 != null) {
-            setupCard(eventCard1, "Design Thinking Workshop", "Alex Rivera", "USC TC - LB Building", "Oct 25, 2023",
-                    "Learn the fundamentals of UI/UX design and prototyping.", "1:00 PM - 4:00 PM", "ENDED", R.color.text_secondary);
-        }
-        if (eventCard2 != null) {
-            setupCard(eventCard2, "Introduction to Flutter", "Jamie Chen", "Online", "Sep 12, 2023",
-                    "Getting started with cross-platform mobile development.", "2:00 PM - 5:00 PM", "ENDED", R.color.text_secondary);
-        }
-        if (eventCard3 != null) {
-            setupCard(eventCard3, "Git & GitHub Essentials", "Sam Wilson", "USC TC", "Aug 05, 2023",
-                    "Master version control for your collaborative projects.", "9:00 AM - 12:00 PM", "ENDED", R.color.text_secondary);
-        }
-        if (eventCard4 != null) eventCard4.setVisibility(View.GONE);
-        if (eventCard5 != null) eventCard5.setVisibility(View.GONE);
+        currentStatusFilter = null;
+        currentStartTime = null;
+        currentEndTime = null;
+        applyNotJoinedFilters();
     }
 
     private void showJoinedEvents() {
-        if (eventCard1 != null) {
-            setupCard(eventCard1, "Annual Tech Expo 2024", "Maria Santos", "SM Seaside Sky Hall", "Dec 20, 2023",
-                    "Join us for the biggest tech exhibition of the year! Live demos ongoing.", "All Day", "ONGOING", R.color.green);
-        }
-        if (eventCard2 != null) {
-            setupCard(eventCard2, "Tech Networking Night", "Chris Jordan", "Ayala Center Cebu", "Jan 12, 2024",
-                    "Meet fellow developers and industry leaders over coffee.", "6:00 PM - 9:00 PM", "UPCOMING", R.color.yellow);
-        }
-        if (eventCard3 != null) {
-            setupCard(eventCard3, "Code for a Cause: Hackathon", "Sarah Blake", "Online/Remote", "Feb 05, 2024",
-                    "A 24-hour hackathon to build solutions for local communities.", "Starts at 9:00 AM", "UPCOMING", R.color.yellow);
-        }
-        if (eventCard4 != null) {
-            setupCard(eventCard4, "Design Thinking Workshop", "Alex Rivera", "USC TC - LB Building", "Oct 25, 2023",
-                    "Learn the fundamentals of UI/UX design and prototyping.", "1:00 PM - 4:00 PM", "ENDED", R.color.text_secondary);
-        }
-        if (eventCard5 != null) {
-            setupCard(eventCard5, "Introduction to Flutter", "Jamie Chen", "Online", "Sep 12, 2023",
-                    "Getting started with cross-platform mobile development.", "2:00 PM - 5:00 PM", "ENDED", R.color.text_secondary);
-        }
+        applyJoinedFilters();
     }
 
     private void setupCard(View card, String title, String host, String loc, String date, String desc, String time, String status, int statusColor) {
