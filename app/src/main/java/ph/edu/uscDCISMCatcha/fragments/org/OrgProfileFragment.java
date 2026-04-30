@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -13,9 +15,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.activities.EventDetailsActivity;
+
+import java.util.Locale;
 
 public class OrgProfileFragment extends Fragment {
 
@@ -24,6 +30,7 @@ public class OrgProfileFragment extends Fragment {
     private Button btnJoined;
     private TextView tvOrgName;
     private LinearLayout joinedStatusContainer;
+    private Chip filterButton;
 
     // Event Cards
     private View eventCard1, eventCard2, eventCard3, eventCard4, eventCard5;
@@ -38,6 +45,7 @@ public class OrgProfileFragment extends Fragment {
         btnJoined = view.findViewById(R.id.joinedButton);
         tvOrgName = view.findViewById(R.id.orgName);
         joinedStatusContainer = view.findViewById(R.id.joinedStatusContainer);
+        filterButton = view.findViewById(R.id.filterButton);
 
         // Find the dummy cards
         eventCard1 = view.findViewById(R.id.eventCard1);
@@ -76,7 +84,105 @@ public class OrgProfileFragment extends Fragment {
             btnJoined.setOnClickListener(v -> showLeaveDialog());
         }
 
+        // Handle Filter Button
+        if (filterButton != null) {
+            filterButton.setOnClickListener(v -> showFilterBottomSheet());
+        }
+
         return view;
+    }
+
+    private void showFilterBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_event_filters, null);
+        bottomSheetDialog.setContentView(bottomSheetView);
+
+        TextView btnCancel = bottomSheetView.findViewById(R.id.btnCancel);
+        TextView btnShowResults = bottomSheetView.findViewById(R.id.btnShowResults);
+        LinearLayout activeFiltersContainer = bottomSheetView.findViewById(R.id.activeFiltersContainer);
+        Chip chipResetAll = bottomSheetView.findViewById(R.id.chipResetAll);
+        ChipGroup cgStatus = bottomSheetView.findViewById(R.id.cgStatus);
+        AutoCompleteTextView atvStartTime = bottomSheetView.findViewById(R.id.atvStartTime);
+        AutoCompleteTextView atvEndTime = bottomSheetView.findViewById(R.id.atvEndTime);
+        Button btnSetTime = bottomSheetView.findViewById(R.id.btnSetTime);
+
+        // Populate Time Choices
+        String[] timeChoices = {"8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, timeChoices);
+        atvStartTime.setAdapter(adapter);
+        atvEndTime.setAdapter(adapter);
+
+        // Make sure no check initially as requested
+        cgStatus.clearCheck();
+
+        // Listener for Status Tags
+        cgStatus.setOnCheckedStateChangeListener((group, checkedIds) -> {
+            updateFilterTags(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+        });
+
+        // Listener for Set Time button
+        btnSetTime.setOnClickListener(v -> {
+            updateFilterTags(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+        });
+
+        // Listener for Reset All
+        chipResetAll.setOnClickListener(v -> {
+            cgStatus.clearCheck();
+            atvStartTime.setText("");
+            atvEndTime.setText("");
+            updateFilterTags(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+        });
+
+        btnCancel.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        btnShowResults.setOnClickListener(v -> bottomSheetDialog.dismiss());
+
+        bottomSheetDialog.show();
+    }
+
+    private void updateFilterTags(LinearLayout container, ChipGroup cgStatus, AutoCompleteTextView start, AutoCompleteTextView end, TextView btnShowResults) {
+        // Keep only "Reset all" (index 0)
+        while (container.getChildCount() > 1) {
+            container.removeViewAt(1);
+        }
+
+        int tagCount = 0;
+
+        // Add Status Tag
+        int checkedId = cgStatus.getCheckedChipId();
+        if (checkedId != View.NO_ID) {
+            Chip selectedChip = cgStatus.findViewById(checkedId);
+            addDynamicTag(container, selectedChip.getText().toString());
+            tagCount++;
+        }
+
+        // Add Time Tag
+        String startTime = start.getText().toString();
+        String endTime = end.getText().toString();
+        if (!startTime.isEmpty() && !endTime.isEmpty()) {
+            addDynamicTag(container, startTime + " - " + endTime);
+            tagCount++;
+        }
+
+        // Update Show Results button text with count
+        if (btnShowResults != null) {
+            btnShowResults.setText(String.format(Locale.getDefault(), "Show (%d)", tagCount));
+        }
+    }
+
+    private void addDynamicTag(LinearLayout container, String text) {
+        // Inflate the yellow tag layout to ensure same size format as Reset All
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
+        Chip chip = (Chip) inflater.inflate(R.layout.item_tag_yellow, container, false);
+        chip.setText(text);
+        
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.setMarginStart(8);
+        chip.setLayoutParams(params);
+        
+        container.addView(chip);
     }
 
     private void showRegistrationDialog() {

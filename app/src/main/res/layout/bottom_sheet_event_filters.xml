@@ -175,7 +175,8 @@
                     android:text=""
                     android:textSize="12sp"
                     android:fontFamily="@font/inter"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -205,7 +206,8 @@
                     android:text=""
                     android:textSize="12sp"
                     android:fontFamily="@font/inter"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:backgroundTint="@color/white"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
