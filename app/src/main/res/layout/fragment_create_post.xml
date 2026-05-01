@@ -1,262 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    android:fillViewport="true">
+    android:orientation="vertical"
+    android:background="#FFFFFF">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:background="#1D1D2E"
+        android:padding="14dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_tab_container"
-            android:padding="3dp"
-            android:layout_marginBottom="18dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnTabAnnouncement"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="Announcement"
-                android:textAllCaps="false"
-                android:textSize="13sp"
-                android:textColor="#F5C842"
-                android:background="@drawable/bg_tab_selected"
-                android:stateListAnimator="@null" />
-
-            <Button
-                android:id="@+id/btnTabEvent"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="Event"
-                android:textAllCaps="false"
-                android:textSize="13sp"
-                android:textColor="#888888"
-                android:background="@android:color/transparent"
-                android:stateListAnimator="@null" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_back_arrow"
+            android:scaleType="fitCenter"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="2dp" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvNavTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="POSTING AS"
-            android:textSize="11sp"
-            android:textColor="#888888"
-            android:letterSpacing="0.05"
-            android:layout_marginBottom="6dp" />
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:text="Create post"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="#F5C842" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:fillViewport="true">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_field_outline_light"
-            android:padding="10dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:text="DC"
-                android:textSize="12sp"
-                android:textColor="#F5C842"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:background="@drawable/bg_avatar_dark" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DCISM Organization"
-                    android:textSize="13sp"
-                    android:textColor="#1A1A1A"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="312 followers"
-                    android:textSize="11sp"
-                    android:textColor="#888888" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TITLE"
-            android:textSize="11sp"
-            android:textColor="#888888"
-            android:letterSpacing="0.05"
-            android:layout_marginBottom="6dp" />
-
-        <EditText
-            android:id="@+id/etTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter title"
-            android:textSize="14sp"
-            android:textColor="#1A1A1A"
-            android:background="@drawable/bg_field_outline_dark"
-            android:padding="12dp"
-            android:layout_marginBottom="14dp"
-            android:inputType="textCapSentences"
-            android:imeOptions="actionNext" />
-
-        <LinearLayout
-            android:id="@+id/layoutAnnouncement"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="visible">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MESSAGE"
-                android:textSize="11sp"
-                android:textColor="#888888"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="6dp" />
-
-            <EditText
-                android:id="@+id/etMessage"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:hint="Write your announcement..."
-                android:textSize="13sp"
-                android:textColor="#1A1A1A"
-                android:gravity="top"
-                android:background="@drawable/bg_field_outline_light"
-                android:padding="12dp"
-                android:inputType="textMultiLine|textCapSentences"
-                android:layout_marginBottom="14dp" />
+            android:padding="16dp">
 
             <LinearLayout
-                android:id="@+id/layoutAttachImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_field_outline_light"
-                android:padding="12dp"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="14dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
+                android:background="@drawable/bg_tab_container"
+                android:padding="3dp"
+                android:layout_marginBottom="18dp"
+                android:orientation="horizontal">
 
-                <TextView
+                <Button
+                    android:id="@+id/btnTabAnnouncement"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:text="Attach image (optional)"
+                    android:text="Announcement"
+                    android:textAllCaps="false"
                     android:textSize="13sp"
-                    android:textColor="#AAAAAA" />
+                    android:textColor="#F5C842"
+                    android:backgroundTint="#1D1D2E"
+                    android:stateListAnimator="@null" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+"
-                    android:textSize="18sp"
-                    android:textColor="#AAAAAA" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#F5F5F5"
-                android:padding="12dp"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="20dp">
-
-                <LinearLayout
+                <Button
+                    android:id="@+id/btnTabEvent"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Send push notification"
-                        android:textSize="13sp"
-                        android:textColor="#1A1A1A"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Notify all followers instantly"
-                        android:textSize="11sp"
-                        android:textColor="#888888" />
-                </LinearLayout>
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switchPushNotification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true" />
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnBroadcast"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Broadcast to 312 followers"
-                android:textAllCaps="false"
-                android:textColor="#F5C842"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_btn_dark"
-                android:stateListAnimator="@null" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layoutEvent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:id="@+id/layoutCoverPhoto"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@drawable/bg_dashed_border"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:layout_marginBottom="14dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="+ Add cover photo"
+                    android:text="Event"
+                    android:textAllCaps="false"
                     android:textSize="13sp"
-                    android:textColor="#AAAAAA" />
+                    android:textColor="#888888"
+                    android:background="@android:color/transparent"
+                    android:stateListAnimator="@null" />
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DATE &amp; TIME"
+                android:text="POSTING AS"
                 android:textSize="11sp"
                 android:textColor="#888888"
                 android:letterSpacing="0.05"
@@ -266,175 +95,410 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="14dp">
-
-                <LinearLayout
-                    android:id="@+id/layoutPickDate"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_field_outline_light"
-                    android:padding="10dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginEnd="6dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <TextView
-                        android:id="@+id/tvDate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pick date"
-                        android:textSize="12sp"
-                        android:textColor="#1A1A1A" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/layoutPickTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_field_outline_light"
-                    android:padding="10dp"
-                    android:gravity="center_vertical"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
-
-                    <TextView
-                        android:id="@+id/tvTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pick time"
-                        android:textSize="12sp"
-                        android:textColor="#1A1A1A" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="END TIME"
-                android:textSize="11sp"
-                android:textColor="#888888"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="6dp" />
-
-            <LinearLayout
-                android:id="@+id/layoutPickEndTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:background="@drawable/bg_field_outline_light"
                 android:padding="10dp"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="14dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground">
+                android:layout_marginBottom="16dp">
 
                 <TextView
-                    android:id="@+id/tvEndTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pick end time"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:text="DC"
                     android:textSize="12sp"
-                    android:textColor="#1A1A1A" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LOCATION"
-                android:textSize="11sp"
-                android:textColor="#888888"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="6dp" />
-
-            <EditText
-                android:id="@+id/etLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="e.g. Gymnasium, Building A"
-                android:textSize="13sp"
-                android:textColor="#1A1A1A"
-                android:background="@drawable/bg_field_outline_light"
-                android:padding="12dp"
-                android:layout_marginBottom="14dp"
-                android:inputType="textCapWords"
-                android:imeOptions="actionNext" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="DESCRIPTION"
-                android:textSize="11sp"
-                android:textColor="#888888"
-                android:letterSpacing="0.05"
-                android:layout_marginBottom="6dp" />
-
-            <EditText
-                android:id="@+id/etDescription"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:hint="Describe the event..."
-                android:textSize="13sp"
-                android:textColor="#1A1A1A"
-                android:gravity="top"
-                android:background="@drawable/bg_field_outline_light"
-                android:padding="12dp"
-                android:inputType="textMultiLine|textCapSentences"
-                android:layout_marginBottom="14dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FAEEDA"
-                android:padding="12dp"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+                    android:textColor="#F5C842"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:background="@drawable/bg_avatar_dark" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginStart="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Auto reminders"
+                        android:text="DCISM Organization"
                         android:textSize="13sp"
-                        android:textColor="#412402"
+                        android:textColor="#1A1A1A"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Push at 24h and 1h before"
+                        android:text="312 followers"
                         android:textSize="11sp"
-                        android:textColor="#854F0B" />
+                        android:textColor="#888888" />
                 </LinearLayout>
-
-                <androidx.appcompat.widget.SwitchCompat
-                    android:id="@+id/switchAutoReminders"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnCreateEvent"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="Create event"
-                android:textAllCaps="false"
-                android:textColor="#F5C842"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_btn_dark"
-                android:stateListAnimator="@null" />
-        </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TITLE"
+                android:textSize="11sp"
+                android:textColor="#888888"
+                android:letterSpacing="0.05"
+                android:layout_marginBottom="6dp" />
 
-    </LinearLayout>
-</ScrollView>
+            <EditText
+                android:id="@+id/etTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter title"
+                android:textSize="14sp"
+                android:textColor="#1A1A1A"
+                android:background="@drawable/bg_field_outline_dark"
+                android:padding="12dp"
+                android:layout_marginBottom="14dp"
+                android:inputType="textCapSentences"
+                android:imeOptions="actionNext" />
+
+            <!-- ANNOUNCEMENT FIELDS -->
+            <LinearLayout
+                android:id="@+id/layoutAnnouncement"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MESSAGE"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/etMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:hint="Write your announcement..."
+                    android:textSize="13sp"
+                    android:textColor="#1A1A1A"
+                    android:gravity="top"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="12dp"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:layout_marginBottom="14dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutAttachImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="12dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Attach image (optional)"
+                        android:textSize="13sp"
+                        android:textColor="#AAAAAA" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+"
+                        android:textSize="18sp"
+                        android:textColor="#AAAAAA" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#F5F5F5"
+                    android:padding="12dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Send push notification"
+                            android:textSize="13sp"
+                            android:textColor="#1A1A1A"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Notify all followers instantly"
+                            android:textSize="11sp"
+                            android:textColor="#888888" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchPushNotification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        app:thumbTint="#1D1D2E"
+                        app:trackTint="#A9A9B2" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnBroadcast"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Broadcast to 312 followers"
+                    android:textAllCaps="false"
+                    android:textColor="#F5C842"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#1D1D2E"
+                    android:stateListAnimator="@null" />
+            </LinearLayout>
+
+            <!-- EVENT FIELDS -->
+            <LinearLayout
+                android:id="@+id/layoutEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/layoutCoverPhoto"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:background="@drawable/bg_dashed_border"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+ Add cover photo"
+                        android:textSize="13sp"
+                        android:textColor="#AAAAAA" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CAPACITY"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/etCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Maximum number of attendees (0 for unlimited)"
+                    android:textSize="13sp"
+                    android:textColor="#1A1A1A"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="12dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="number"
+                    android:imeOptions="actionNext" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DATE &amp; TIME"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="14dp">
+
+                    <LinearLayout
+                        android:id="@+id/layoutPickDate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_field_outline_light"
+                        android:padding="10dp"
+                        android:gravity="center_vertical"
+                        android:layout_marginEnd="6dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:id="@+id/tvDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pick date"
+                            android:textSize="12sp"
+                            android:textColor="#1A1A1A" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/layoutPickTime"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_field_outline_light"
+                        android:padding="10dp"
+                        android:gravity="center_vertical"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
+
+                        <TextView
+                            android:id="@+id/tvTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pick time"
+                            android:textSize="12sp"
+                            android:textColor="#1A1A1A" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="END TIME"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:id="@+id/layoutPickEndTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="10dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+
+                    <TextView
+                        android:id="@+id/tvEndTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pick end time"
+                        android:textSize="12sp"
+                        android:textColor="#1A1A1A" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOCATION"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/etLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="e.g. Gymnasium, Building A"
+                    android:textSize="13sp"
+                    android:textColor="#1A1A1A"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="12dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="textCapWords"
+                    android:imeOptions="actionNext" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DESCRIPTION"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/etDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:hint="Describe the event..."
+                    android:textSize="13sp"
+                    android:textColor="#1A1A1A"
+                    android:gravity="top"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="12dp"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:layout_marginBottom="14dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FAEEDA"
+                    android:padding="12dp"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Auto reminders"
+                            android:textSize="13sp"
+                            android:textColor="#412402"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Push at 24h and 1h before"
+                            android:textSize="11sp"
+                            android:textColor="#854F0B" />
+                    </LinearLayout>
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchAutoReminders"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnCreateEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Create event"
+                    android:textAllCaps="false"
+                    android:textColor="#F5C842"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_btn_dark"
+                    android:stateListAnimator="@null" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

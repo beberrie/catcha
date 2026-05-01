@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/off_white"
-    tools:context=".activities.admin.AdminHomeActivity">
+    tools:context=".ui.admin.AdminHomeActivity">
 
     <!-- Header Background -->
     <View

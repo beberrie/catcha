@@ -21,35 +21,40 @@
         android:theme="@style/Theme.Catcha">
 
         <activity
-            android:name="ph.edu.uscDCISMCatcha.activities.admin.RegisterOrgActivity"
+            android:name="ph.edu.uscDCISMCatcha.ui.admin.RegisterOrgActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="ph.edu.uscDCISMCatcha.activities.admin.AdminHomeActivity"
+            android:name="ph.edu.uscDCISMCatcha.ui.admin.AdminHomeActivity"
             android:exported="false" />
 
         <activity
-            android:name="ph.edu.uscDCISMCatcha.activities.OrgHomeActivity"
+            android:name="ph.edu.uscDCISMCatcha.ui.org.OrgHomeActivity"
             android:exported="false" />
 
         <activity
-            android:name="ph.edu.uscDCISMCatcha.activities.auth.SignupActivity"
+            android:name="ph.edu.uscDCISMCatcha.ui.auth.SignupActivity"
             android:exported="false" />
 
         <activity
-            android:name="ph.edu.uscDCISMCatcha.activities.auth.LoginActivity"
+            android:name="ph.edu.uscDCISMCatcha.ui.auth.LoginActivity"
             android:exported="false" />
 
         <activity
-            android:name="ph.edu.uscDCISMCatcha.activities.HomeActivity"
+            android:name="ph.edu.uscDCISMCatcha.ui.student.HomeActivity"
             android:exported="false" />
 
         <activity
-            android:name=".activities.InterestsActivity"
+            android:name=".ui.student.InterestsActivity"
             android:exported="false" />
+
         <activity
-            android:name="ph.edu.uscDCISMCatcha.activities.MainActivity"
+            android:name="ph.edu.uscDCISMCatcha.ui.student.EventDetailsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="ph.edu.uscDCISMCatcha.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>

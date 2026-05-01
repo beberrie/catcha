@@ -91,18 +91,15 @@
 
     <!-- Custom Style for Buttons in Organizations Pages-->
     <style name="Widget.Catcha.Button.Join.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
+        <item name="android:layout_margin">12dp</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">14sp</item>
         <item name="backgroundTint">@color/white</item>
         <item name="strokeColor">@color/yellow</item>
         <item name="strokeWidth">1.5dp</item>
-        <item name="cornerRadius">24dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:insetRight">0dp</item>
-        <item name="android:fontFamily">@font/inter_bold</item>
+        <item name="cornerRadius">22dp</item>
     </style>
 
     <!-- Style for Joined Button (Solid Yellow) -->
@@ -113,10 +110,6 @@
         <item name="backgroundTint">@color/yellow</item>
         <item name="cornerRadius">24dp</item>
         <item name="android:fontFamily">@font/inter_bold</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:insetRight">0dp</item>
     </style>
 
     <!-- Style for Member Status (Outlined Blue) -->
@@ -125,13 +118,9 @@
         <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">14sp</item>
         <item name="strokeColor">@color/blue</item>
-        <item name="strokeWidth">1.5dp</item>
+        <item name="strokeWidth">2dp</item>
         <item name="cornerRadius">24dp</item>
         <item name="android:fontFamily">@font/inter_bold</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:insetLeft">0dp</item>
-        <item name="android:insetRight">0dp</item>
     </style>
 
     <!-- Custom Styles for Tags using Chips -->
@@ -142,48 +131,13 @@
         <item name="chipStrokeWidth">0dp</item>
         <item name="android:textSize">9sp</item>
     </style>
-
     <style name="Widget.Catcha.Chip.Tag.Yellow" parent="Widget.Material3.Chip.Suggestion">
         <item name="chipBackgroundColor">@color/yellow</item>
         <item name="android:textColor">@color/white</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Catcha.SmallComponent</item>
         <item name="chipStrokeWidth">0dp</item>
         <item name="android:textSize">9sp</item>
-    </style>
-
-    <!--The buttons for interests page-->
-    <style name="Widget.InterestChip" parent="Widget.Material3.Chip.Filter">
-        <item name="android:textSize">13sp</item>
-        <item name="android:fontFamily">@font/poppins</item>
-        <item name="chipBackgroundColor">@color/chip_background_selector</item>
-        <item name="android:textColor">@color/chip_text_selector</item>
-        <item name="chipStrokeColor">@color/chip_stroke</item>
-        <item name="chipStrokeWidth">1dp</item>
-        <item name="chipCornerRadius">20dp</item>
-        <item name="chipMinHeight">40dp</item>
-        <item name="chipStartPadding">14dp</item>
-        <item name="chipEndPadding">14dp</item>
-        <item name="checkedIconVisible">false</item>
-        <item name="chipIconVisible">false</item>
-        <item name="android:checkable">true</item>
-        <item name="rippleColor">#1A000000</item>
-    </style>
-
-    <style name="Widget.SubChip" parent="Widget.Material3.Chip.Filter">
-        <item name="android:textSize">12sp</item>
-        <item name="android:fontFamily">@font/poppins</item>
-        <item name="chipBackgroundColor">@color/chip_background_selector</item>
-        <item name="android:textColor">@color/chip_text_selector</item>
-        <item name="chipStrokeColor">@color/chip_stroke</item>
-        <item name="chipStrokeWidth">1dp</item>
-        <item name="chipCornerRadius">18dp</item>
-        <item name="chipMinHeight">36dp</item>
-        <item name="chipStartPadding">12dp</item>
-        <item name="chipEndPadding">12dp</item>
-        <item name="checkedIconVisible">false</item>
-        <item name="chipIconVisible">false</item>
-        <item name="android:checkable">true</item>
-        <item name="rippleColor">#1A000000</item>
+        <item name="chipMinHeight">24dp</item>
     </style>
 
     <style name="ShapeAppearance.Catcha.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
@@ -200,6 +154,38 @@
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/catcha_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.Catcha</item>
+    </style>
+
+    <!--The buttons for interests page-->
+    <style name="Widget.InterestChip" parent="Widget.Material3.Chip.Filter">
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="chipBackgroundColor">@color/chip_background_selector</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipCornerRadius">20dp</item>
+        <item name="chipMinHeight">40dp</item>
+        <item name="chipStartPadding">14dp</item>
+        <item name="chipEndPadding">14dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipIconVisible">false</item>
+        <item name="android:checkable">true</item>
+        <item name="rippleColor">#1A000000</item>
+    </style>
+    <style name="Widget.SubChip" parent="Widget.Material3.Chip.Filter">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="chipBackgroundColor">@color/chip_background_selector</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipCornerRadius">18dp</item>
+        <item name="chipMinHeight">36dp</item>
+        <item name="chipStartPadding">12dp</item>
+        <item name="chipEndPadding">12dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipIconVisible">false</item>
+        <item name="android:checkable">true</item>
+        <item name="rippleColor">#1A000000</item>
     </style>
 
 </resources>
