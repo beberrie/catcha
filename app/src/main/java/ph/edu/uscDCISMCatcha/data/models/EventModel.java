@@ -19,7 +19,8 @@ public class EventModel {
     private String imageUrl;
     private String createdBy;
     private int maxCapacity = 0; // 0 means unlimited if not specified
-    private int currentRsvpCount = 0;
+    private int currentRsvpCount = 0; // Specifically for "Going"
+    private int interestedCount = 0;
     
     @ServerTimestamp
     private Timestamp createdAt;
@@ -72,4 +73,6 @@ public class EventModel {
     public void setMaxCapacity(int maxCapacity) { this.maxCapacity = maxCapacity; }
     public int getCurrentRsvpCount() { return currentRsvpCount; }
     public void setCurrentRsvpCount(int currentRsvpCount) { this.currentRsvpCount = currentRsvpCount; }
+    public int getInterestedCount() { return interestedCount; }
+    public void setInterestedCount(int interestedCount) { this.interestedCount = interestedCount; }
 }

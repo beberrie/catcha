@@ -20,7 +20,7 @@ import ph.edu.uscDCISMCatcha.data.models.Organization;
 
 public class RegisterOrgActivity extends AppCompatActivity {
 
-    private TextInputEditText etOrgName, etDescription, etOwnerEmail;
+    private TextInputEditText etOrgName, etDescription, etOwnerEmail, etSchool, etDepartment;
     private MaterialAutoCompleteTextView actvUniversity, actvCategory;
     private Button btnRegisterOrg;
     private FirebaseFirestore db;
@@ -34,6 +34,8 @@ public class RegisterOrgActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         etOrgName = findViewById(R.id.etOrgName);
+        etSchool = findViewById(R.id.etSchool);
+        etDepartment = findViewById(R.id.etDepartment);
         etDescription = findViewById(R.id.etDescription);
         etOwnerEmail = findViewById(R.id.etOwnerEmail);
         actvUniversity = findViewById(R.id.actvUniversity);
@@ -62,11 +64,13 @@ public class RegisterOrgActivity extends AppCompatActivity {
     private void validateAndRegister() {
         String name = etOrgName.getText().toString().trim();
         String uni = actvUniversity.getText().toString().trim();
+        String school = etSchool.getText().toString().trim();
+        String dept = etDepartment.getText().toString().trim();
         String desc = etDescription.getText().toString().trim();
         String cat = actvCategory.getText().toString().trim();
         String email = etOwnerEmail.getText().toString().trim();
 
-        if (name.isEmpty() || uni.isEmpty() || desc.isEmpty() || cat.isEmpty() || email.isEmpty()) {
+        if (name.isEmpty() || uni.isEmpty() || school.isEmpty() || dept.isEmpty() || desc.isEmpty() || cat.isEmpty() || email.isEmpty()) {
             Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -82,7 +86,7 @@ public class RegisterOrgActivity extends AppCompatActivity {
                         QueryDocumentSnapshot userDoc = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
                         String ownerUid = userDoc.getId();
 
-                        createOrganization(name, uni, desc, cat, ownerUid);
+                        createOrganization(name, uni, school, dept, desc, cat, ownerUid);
                     } else {
                         btnRegisterOrg.setEnabled(true);
                         btnRegisterOrg.setText("Create Organization");
@@ -96,10 +100,10 @@ public class RegisterOrgActivity extends AppCompatActivity {
                 });
     }
 
-    private void createOrganization(String name, String uni, String desc, String cat, String ownerUid) {
+    private void createOrganization(String name, String uni, String school, String dept, String desc, String cat, String ownerUid) {
         String orgId = UUID.randomUUID().toString();
         // Creating the Organization model object
-        Organization newOrg = new Organization(name, uni, desc, cat, "", ownerUid);
+        Organization newOrg = new Organization(name, uni, school, dept, desc, cat, "", ownerUid);
 
         // 2. Save the Organization to Firestore
         db.collection("organizations").document(orgId).set(newOrg)

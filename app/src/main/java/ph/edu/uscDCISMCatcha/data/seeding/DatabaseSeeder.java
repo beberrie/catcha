@@ -43,6 +43,8 @@ public class DatabaseSeeder {
         Organization org1 = new Organization(
                 "Computer Science Society",
                 "University of San Carlos",
+                "School of Engineering",
+                "DCISM",
                 "The official student organization of the DCISM.",
                 "Academic",
                 "https://example.com/css_logo.png",

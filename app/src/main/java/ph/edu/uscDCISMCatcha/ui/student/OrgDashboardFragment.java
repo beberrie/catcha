@@ -100,6 +100,11 @@ public class OrgDashboardFragment extends Fragment {
                 getLayoutInflater(), binding.allOrgsContainer, false);
 
         cardBinding.tvOrgNameMain.setText(org.getName());
+        
+        // Populate school and department tags
+        cardBinding.chipSchool.setText(org.getSchool());
+        cardBinding.chipDept.setText(org.getDepartment());
+
         if (org.getCategory() != null && !org.getCategory().isEmpty()) {
             cardBinding.chipCategory.setText(org.getCategory());
             cardBinding.chipCategory.setVisibility(View.VISIBLE);
