@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import ph.edu.uscDCISMCatcha.data.repository.FirebaseRemoteDataSource;
@@ -101,7 +102,7 @@ public class CreatePostViewModel extends ViewModel {
     }
 
     public void createEvent(String title, String date, String time, String endTime,
-                            String location, String description, int capacity, boolean autoReminders) {
+                            String location, String description, int capacity, List<String> categories) {
         
         if (!dataSource.isUserLoggedIn()) {
             statusMessage.setValue("Error: User not logged in");
@@ -128,6 +129,7 @@ public class CreatePostViewModel extends ViewModel {
             event.setOrgId(orgId);
             event.setOrgName(orgName);
             event.setCreatedBy(uid);
+            event.setCategories(categories);
 
             dataSource.createEvent(event).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -143,7 +145,7 @@ public class CreatePostViewModel extends ViewModel {
     }
 
     public void updateEvent(String id, String title, String date, String time, String endTime,
-                            String location, String description, int capacity) {
+                            String location, String description, int capacity, List<String> categories) {
         try {
             Date startD = dateTimeFormat.parse(date + " " + time);
             Date endD = dateTimeFormat.parse(date + " " + endTime);
@@ -154,7 +156,8 @@ public class CreatePostViewModel extends ViewModel {
                             "endDateTime", new Timestamp(endD),
                             "location", location,
                             "description", description,
-                            "maxCapacity", capacity)
+                            "maxCapacity", capacity,
+                            "categories", categories)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             statusMessage.setValue("Event updated successfully!");

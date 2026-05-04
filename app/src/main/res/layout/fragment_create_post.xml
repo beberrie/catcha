@@ -453,6 +453,22 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:layout_marginBottom="14dp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CATEGORIES"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    app:chipSpacingHorizontal="8dp" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

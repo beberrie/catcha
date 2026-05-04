@@ -5,7 +5,9 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @IgnoreExtraProperties
 public class EventModel implements Serializable {
@@ -23,6 +25,7 @@ public class EventModel implements Serializable {
     private int maxCapacity = 0; // 0 means unlimited if not specified
     private int currentRsvpCount = 0; // Specifically for "Going"
     private int interestedCount = 0;
+    private List<String> categories = new ArrayList<>();
     
     @ServerTimestamp
     private Date createdAt;
@@ -77,4 +80,7 @@ public class EventModel implements Serializable {
     public void setCurrentRsvpCount(int currentRsvpCount) { this.currentRsvpCount = currentRsvpCount; }
     public int getInterestedCount() { return interestedCount; }
     public void setInterestedCount(int interestedCount) { this.interestedCount = interestedCount; }
+
+    public List<String> getCategories() { return categories; }
+    public void setCategories(List<String> categories) { this.categories = categories; }
 }

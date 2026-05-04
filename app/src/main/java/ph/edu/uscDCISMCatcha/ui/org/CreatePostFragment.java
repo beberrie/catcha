@@ -13,8 +13,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import com.google.android.material.chip.Chip;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentCreatePostBinding;
@@ -44,6 +47,7 @@ public class CreatePostFragment extends Fragment {
 
         setupTabs();
         setupDateTimePickers();
+        setupCategories();
         setupButtons();
         observeViewModel();
 
@@ -113,8 +117,32 @@ public class CreatePostFragment extends Fragment {
                 if (event.getEndDateTime() != null) {
                     binding.tvEndTime.setText(timeFormat.format(event.getEndDateTime()));
                 }
+
+                if (event.getCategories() != null) {
+                    for (int i = 0; i < binding.cgCategories.getChildCount(); i++) {
+                        Chip chip = (Chip) binding.cgCategories.getChildAt(i);
+                        if (event.getCategories().contains(chip.getText().toString())) {
+                            chip.setChecked(true);
+                        }
+                    }
+                }
             }
         });
+    }
+
+    private void setupCategories() {
+        String[] categories = {
+                "Creative Arts", "Tech & Innovation", "Academic & Career",
+                "Sports & Wellness", "Community Service", "Faith & Culture"
+        };
+
+        for (String category : categories) {
+            Chip chip = new Chip(requireContext());
+            chip.setText(category);
+            chip.setCheckable(true);
+            chip.setClickable(true);
+            binding.cgCategories.addView(chip);
+        }
     }
 
     private void setupTabs() {
@@ -236,11 +264,22 @@ public class CreatePostFragment extends Fragment {
             }
 
             if (editId != null) {
-                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity);
+                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity, getSelectedCategories());
             } else {
-                viewModel.createEvent(title, date, time, endTime, location, description, capacity, binding.switchAutoReminders.isChecked());
+                viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories());
             }
         });
+    }
+
+    private List<String> getSelectedCategories() {
+        List<String> selected = new ArrayList<>();
+        for (int i = 0; i < binding.cgCategories.getChildCount(); i++) {
+            Chip chip = (Chip) binding.cgCategories.getChildAt(i);
+            if (chip.isChecked()) {
+                selected.add(chip.getText().toString());
+            }
+        }
+        return selected;
     }
 
     @Override
