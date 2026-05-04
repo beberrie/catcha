@@ -32,8 +32,20 @@ public class OrgHomePageFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupHeader();
         setupCreatePostCard();
-        setupFab();
+    }
+
+    private void setupHeader() {
+        // Navigate to Profile when avatar is clicked
+        binding.header.ivUserAvatarHeader.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                getParentFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new OrgHandlerProfileFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     private void setupCreatePostCard() {
@@ -52,16 +64,6 @@ public class OrgHomePageFragment extends Fragment {
         binding.btnShortcutAnnouncement.setOnClickListener(v -> openCreatePost(true));
         binding.btnShortcutEvent.setOnClickListener(v -> openCreatePost(false));
         binding.btnAttachImage.setOnClickListener(v -> openCreatePost(true));
-    }
-
-    private void setupFab() {
-        // Only show the Floating Action Button to organization members
-        if (isOrgMember) {
-            binding.fabCreatePost.setVisibility(View.VISIBLE);
-            binding.fabCreatePost.setOnClickListener(v -> openCreatePost(true));
-        } else {
-            binding.fabCreatePost.setVisibility(View.GONE);
-        }
     }
 
     private void openCreatePost(boolean startOnAnnouncement) {
