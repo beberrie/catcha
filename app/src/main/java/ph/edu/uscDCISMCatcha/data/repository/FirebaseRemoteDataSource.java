@@ -26,6 +26,8 @@ import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.data.models.RSVPModel;
 import ph.edu.uscDCISMCatcha.data.models.UserModel;
+import ph.edu.uscDCISMCatcha.utils.Constants;
+import ph.edu.uscDCISMCatcha.utils.DateUtils;
 
 public class FirebaseRemoteDataSource {
 
@@ -54,8 +56,8 @@ public class FirebaseRemoteDataSource {
     }
 
     public Task<Void> saveUserProfile(String uid, UserModel user) {
-        DocumentReference userRef = firestore.collection("users").document(uid);
-        DocumentReference metricsRef = firestore.collection("system_metrics").document("global");
+        DocumentReference userRef = firestore.collection(Constants.COL_USERS).document(uid);
+        DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
 
         return firestore.runTransaction(transaction -> {
             DocumentSnapshot snapshot = transaction.get(userRef);
@@ -69,7 +71,7 @@ public class FirebaseRemoteDataSource {
     }
 
     public Task<DocumentSnapshot> getUserProfile(String uid) {
-        return firestore.collection("users").document(uid).get();
+        return firestore.collection(Constants.COL_USERS).document(uid).get();
     }
 
     public Task<String> getUserRole(String uid) {
@@ -82,7 +84,7 @@ public class FirebaseRemoteDataSource {
     }
 
     public Task<QuerySnapshot> getOrganizationByOwner(String uid) {
-        return firestore.collection("organizations")
+        return firestore.collection(Constants.COL_ORGANIZATIONS)
                 .whereEqualTo("ownerUid", uid)
                 .limit(1)
                 .get();
@@ -94,9 +96,9 @@ public class FirebaseRemoteDataSource {
 
     // --- Organization Management ---
     public Task<Void> createOrganization(String orgId, Organization org) {
-        DocumentReference orgRef = firestore.collection("organizations").document(orgId);
-        DocumentReference metricsRef = firestore.collection("system_metrics").document("global");
-        DocumentReference userRef = firestore.collection("users").document(org.getOwnerUid());
+        DocumentReference orgRef = firestore.collection(Constants.COL_ORGANIZATIONS).document(orgId);
+        DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
+        DocumentReference userRef = firestore.collection(Constants.COL_USERS).document(org.getOwnerUid());
 
         return firestore.runTransaction(transaction -> {
             ensureMetricsInitialized(transaction, metricsRef);
@@ -109,9 +111,9 @@ public class FirebaseRemoteDataSource {
 
     // --- Event Creation ---
     public Task<Void> createEvent(EventModel event) {
-        DocumentReference docRef = firestore.collection("events").document();
+        DocumentReference docRef = firestore.collection(Constants.COL_EVENTS).document();
         event.setEventId(docRef.getId());
-        DocumentReference metricsRef = firestore.collection("system_metrics").document("global");
+        DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
         
         return firestore.runTransaction(transaction -> {
             ensureMetricsInitialized(transaction, metricsRef);
@@ -119,7 +121,7 @@ public class FirebaseRemoteDataSource {
             transaction.update(metricsRef, "totalEvents", FieldValue.increment(1));
             
             // Increment org-level event count
-            DocumentReference orgMetricsRef = firestore.collection("org_metrics").document(event.getOrgId());
+            DocumentReference orgMetricsRef = firestore.collection(Constants.COL_ORG_METRICS).document(event.getOrgId());
             ensureOrgMetricsInitialized(transaction, orgMetricsRef);
             transaction.update(orgMetricsRef, "totalEvents", FieldValue.increment(1));
             
@@ -129,18 +131,17 @@ public class FirebaseRemoteDataSource {
 
     // --- Announcement Creation ---
     public Task<Void> createAnnouncement(AnnouncementModel announcement) {
-        DocumentReference docRef = firestore.collection("announcements").document();
+        DocumentReference docRef = firestore.collection(Constants.COL_ANNOUNCEMENTS).document();
         announcement.setAnnouncementId(docRef.getId());
         return docRef.set(announcement);
     }
 
-    // --- RSVP Capacity Enforcement ---
     // --- RSVP Capacity Enforcement & Aggregation ---
     public Task<Void> rsvpToEvent(RSVPModel rsvp) {
         String rsvpId = rsvp.getUserId() + "_" + rsvp.getEventId();
-        DocumentReference rsvpRef = firestore.collection("rsvps").document(rsvpId);
-        DocumentReference eventRef = firestore.collection("events").document(rsvp.getEventId());
-        DocumentReference metricsRef = firestore.collection("system_metrics").document("global");
+        DocumentReference rsvpRef = firestore.collection(Constants.COL_RSVPS).document(rsvpId);
+        DocumentReference eventRef = firestore.collection(Constants.COL_EVENTS).document(rsvp.getEventId());
+        DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
         rsvp.setRsvpId(rsvpId);
 
         return firestore.runTransaction(transaction -> {
@@ -153,7 +154,7 @@ public class FirebaseRemoteDataSource {
             }
 
             String orgId = eventSnapshot.getString("orgId");
-            DocumentReference orgMetricsRef = firestore.collection("org_metrics").document(orgId);
+            DocumentReference orgMetricsRef = firestore.collection(Constants.COL_ORG_METRICS).document(orgId);
             ensureOrgMetricsInitialized(transaction, orgMetricsRef);
 
             String oldStatus = rsvpSnapshot.exists() ? rsvpSnapshot.getString("status") : null;
@@ -162,21 +163,21 @@ public class FirebaseRemoteDataSource {
             // Capacity and Count logic for Event
             if (!newStatus.equals(oldStatus)) {
                 // Update new status counts
-                if ("Going".equals(newStatus)) {
+                if (Constants.STATUS_GOING.equals(newStatus)) {
                     long maxCapacity = eventSnapshot.getLong("maxCapacity");
                     long currentCount = eventSnapshot.getLong("currentRsvpCount");
                     if (maxCapacity > 0 && currentCount >= maxCapacity) {
                         throw new RuntimeException("Event is full!");
                     }
                     transaction.update(eventRef, "currentRsvpCount", FieldValue.increment(1));
-                } else if ("Interested".equals(newStatus)) {
+                } else if (Constants.STATUS_INTERESTED.equals(newStatus)) {
                     transaction.update(eventRef, "interestedCount", FieldValue.increment(1));
                 }
 
                 // Update old status counts
-                if ("Going".equals(oldStatus)) {
+                if (Constants.STATUS_GOING.equals(oldStatus)) {
                     transaction.update(eventRef, "currentRsvpCount", FieldValue.increment(-1));
-                } else if ("Interested".equals(oldStatus)) {
+                } else if (Constants.STATUS_INTERESTED.equals(oldStatus)) {
                     transaction.update(eventRef, "interestedCount", FieldValue.increment(-1));
                 }
             }
@@ -195,10 +196,10 @@ public class FirebaseRemoteDataSource {
                 updateCategoricalMetrics(transaction, orgMetricsRef, oldStatus, -1);
                 updateCategoricalMetrics(transaction, orgMetricsRef, newStatus, 1);
                 
-                if ("Going".equals(oldStatus)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(-1));
-                if ("Interested".equals(oldStatus)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(-1));
-                if ("Going".equals(newStatus)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(1));
-                if ("Interested".equals(newStatus)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(1));
+                if (Constants.STATUS_GOING.equals(oldStatus)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(-1));
+                if (Constants.STATUS_INTERESTED.equals(oldStatus)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(-1));
+                if (Constants.STATUS_GOING.equals(newStatus)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(1));
+                if (Constants.STATUS_INTERESTED.equals(newStatus)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(1));
             }
 
             return null;
@@ -206,9 +207,9 @@ public class FirebaseRemoteDataSource {
     }
 
     public Task<Void> cancelRSVP(String rsvpId, String eventId) {
-        DocumentReference rsvpRef = firestore.collection("rsvps").document(rsvpId);
-        DocumentReference eventRef = firestore.collection("events").document(eventId);
-        DocumentReference metricsRef = firestore.collection("system_metrics").document("global");
+        DocumentReference rsvpRef = firestore.collection(Constants.COL_RSVPS).document(rsvpId);
+        DocumentReference eventRef = firestore.collection(Constants.COL_EVENTS).document(eventId);
+        DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
 
         return firestore.runTransaction(transaction -> {
             ensureMetricsInitialized(transaction, metricsRef);
@@ -223,22 +224,22 @@ public class FirebaseRemoteDataSource {
             }
 
             String orgId = eventSnapshot.getString("orgId");
-            DocumentReference orgMetricsRef = firestore.collection("org_metrics").document(orgId);
+            DocumentReference orgMetricsRef = firestore.collection(Constants.COL_ORG_METRICS).document(orgId);
 
             // Delete RSVP
             transaction.delete(rsvpRef);
             
             // Update Event Counts
-            if ("Going".equals(status)) {
+            if (Constants.STATUS_GOING.equals(status)) {
                 transaction.update(eventRef, "currentRsvpCount", FieldValue.increment(-1));
-            } else if ("Interested".equals(status)) {
+            } else if (Constants.STATUS_INTERESTED.equals(status)) {
                 transaction.update(eventRef, "interestedCount", FieldValue.increment(-1));
             }
             
             // Update Global Metrics
             transaction.update(metricsRef, "totalRsvps", FieldValue.increment(-1));
-            if ("Going".equals(status)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(-1));
-            if ("Interested".equals(status)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(-1));
+            if (Constants.STATUS_GOING.equals(status)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(-1));
+            if (Constants.STATUS_INTERESTED.equals(status)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(-1));
             
             updateDailyMetrics(transaction, status, -1);
             updateCategoricalMetrics(transaction, orgMetricsRef, status, -1);
@@ -275,7 +276,7 @@ public class FirebaseRemoteDataSource {
 
     private void updateDailyMetrics(Transaction transaction, String status, long delta) throws com.google.firebase.firestore.FirebaseFirestoreException {
         String dateStr = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        DocumentReference dailyRef = firestore.collection("daily_metrics").document(dateStr);
+        DocumentReference dailyRef = firestore.collection(Constants.COL_DAILY_METRICS).document(dateStr);
         DocumentSnapshot dailySnapshot = transaction.get(dailyRef);
         
         if (!dailySnapshot.exists()) {
@@ -287,39 +288,39 @@ public class FirebaseRemoteDataSource {
         }
         
         transaction.update(dailyRef, "totalRsvps", FieldValue.increment(delta));
-        if ("Going".equals(status)) {
+        if (Constants.STATUS_GOING.equals(status)) {
             transaction.update(dailyRef, "totalGoing", FieldValue.increment(delta));
-        } else if ("Interested".equals(status)) {
+        } else if (Constants.STATUS_INTERESTED.equals(status)) {
             transaction.update(dailyRef, "totalInterested", FieldValue.increment(delta));
         }
     }
 
     private void updateCategoricalMetrics(Transaction transaction, DocumentReference metricsRef, String status, long delta) {
         transaction.update(metricsRef, "totalRsvps", FieldValue.increment(delta));
-        if ("Going".equals(status)) {
+        if (Constants.STATUS_GOING.equals(status)) {
             transaction.update(metricsRef, "totalGoing", FieldValue.increment(delta));
-        } else if ("Interested".equals(status)) {
+        } else if (Constants.STATUS_INTERESTED.equals(status)) {
             transaction.update(metricsRef, "totalInterested", FieldValue.increment(delta));
         }
     }
 
     public Task<DocumentSnapshot> getGlobalMetrics() {
-        return firestore.collection("system_metrics").document("global").get();
+        return firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS).get();
     }
 
     public Query getDailyMetrics() {
-        return firestore.collection("daily_metrics").orderBy("__name__", Query.Direction.DESCENDING);
+        return firestore.collection(Constants.COL_DAILY_METRICS).orderBy("__name__", Query.Direction.DESCENDING);
     }
 
     public Task<DocumentSnapshot> getOrgMetrics(String orgId) {
-        return firestore.collection("org_metrics").document(orgId).get();
+        return firestore.collection(Constants.COL_ORG_METRICS).document(orgId).get();
     }
 
     // --- Schedule Conflict Alerts ---
     public Task<List<EventModel>> checkConflicts(String userId, EventModel targetEvent) {
-        return firestore.collection("rsvps")
+        return firestore.collection(Constants.COL_RSVPS)
                 .whereEqualTo("userId", userId)
-                .whereEqualTo("status", "Going")
+                .whereEqualTo("status", Constants.STATUS_GOING)
                 .get()
                 .continueWithTask(task -> {
                     if (!task.isSuccessful()) return Tasks.forException(task.getException());
@@ -333,7 +334,7 @@ public class FirebaseRemoteDataSource {
                         return Tasks.forResult((List<EventModel>) new ArrayList<EventModel>());
                     }
 
-                    return firestore.collection("events")
+                    return firestore.collection(Constants.COL_EVENTS)
                             .whereIn("eventId", eventIds)
                             .get()
                             .continueWith(queryTask -> {
@@ -341,7 +342,7 @@ public class FirebaseRemoteDataSource {
                                 if (queryTask.isSuccessful() && queryTask.getResult() != null) {
                                     for (DocumentSnapshot doc : queryTask.getResult()) {
                                         EventModel existingEvent = doc.toObject(EventModel.class);
-                                        if (existingEvent != null && isOverlapping(existingEvent, targetEvent)) {
+                                        if (existingEvent != null && DateUtils.isOverlapping(existingEvent, targetEvent)) {
                                             conflicts.add(existingEvent);
                                         }
                                     }
@@ -349,12 +350,5 @@ public class FirebaseRemoteDataSource {
                                 return conflicts;
                             });
                 });
-    }
-
-    private boolean isOverlapping(EventModel e1, EventModel e2) {
-        if (e1.getStartDateTime() == null || e1.getEndDateTime() == null || 
-            e2.getStartDateTime() == null || e2.getEndDateTime() == null) return false;
-        return e1.getStartDateTime().getSeconds() < e2.getEndDateTime().getSeconds() &&
-               e2.getStartDateTime().getSeconds() < e1.getEndDateTime().getSeconds();
     }
 }

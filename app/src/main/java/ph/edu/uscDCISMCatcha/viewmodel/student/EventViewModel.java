@@ -9,6 +9,7 @@ import java.util.List;
 import ph.edu.uscDCISMCatcha.data.repository.FirebaseRemoteDataSource;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.RSVPModel;
+import ph.edu.uscDCISMCatcha.utils.Constants;
 
 public class EventViewModel extends ViewModel {
 
@@ -34,7 +35,7 @@ public class EventViewModel extends ViewModel {
         RSVPModel rsvp = new RSVPModel(userId, event.getEventId(), event.getTitle(), status);
 
         // First check for conflicts if status is "Going"
-        if ("Going".equals(status)) {
+        if (Constants.STATUS_GOING.equals(status)) {
             dataSource.checkConflicts(userId, event).addOnCompleteListener(task -> {
                 if (task.isSuccessful() && !task.getResult().isEmpty()) {
                     _conflicts.setValue(task.getResult());
