@@ -30,12 +30,14 @@
             <!-- Create Post Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/createPostCard"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                android:backgroundTint="@color/white"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
