@@ -185,8 +185,8 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
             String eventStatus = "UPCOMING"; // Default
             long now = System.currentTimeMillis();
             if (event.getStartDateTime() != null && event.getEndDateTime() != null) {
-                long start = event.getStartDateTime().toDate().getTime();
-                long end = event.getEndDateTime().toDate().getTime();
+                long start = event.getStartDateTime().getTime();
+                long end = event.getEndDateTime().getTime();
                 if (now < start) eventStatus = "UPCOMING";
                 else if (now <= end) eventStatus = "ONGOING";
                 else eventStatus = "FINISHED";
@@ -201,7 +201,7 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
                 Date filterEnd = timeFormat.parse(endT);
 
                 // Get only time part of event start
-                Date eventDate = event.getStartDateTime().toDate();
+                Date eventDate = event.getStartDateTime();
                 String eventTimeStr = timeFormat.format(eventDate);
                 Date eventTime = timeFormat.parse(eventTimeStr);
 

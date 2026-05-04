@@ -75,6 +75,7 @@ public class DatabaseSeeder {
                 "https://example.com/hackathon.png",
                 user1Id
         );
+        event1.setCreatedAt(now); // Added to ensure it shows up in queries ordered by createdAt
         batch.set(db.collection("events").document(event1Id), event1);
 
         // 5. Seed Sample RSVP
@@ -82,18 +83,24 @@ public class DatabaseSeeder {
         RSVPModel rsvp = new RSVPModel(user1Id, event1Id, "Hackathon 2024", "Going");
         batch.set(db.collection("rsvps").document(rsvpId), rsvp);
 
-        // 6. Seed Sample Announcements
+        // 6. Seed Sample Announcements (Moved to top-level collection and added timestamps)
         String announce1Id = "sample_announce_1";
         AnnouncementModel announce1 = new AnnouncementModel("Welcome!", "Welcome to the CSS Organization. Stay tuned for more updates!", user1Id);
-        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announce1Id), announce1);
+        announce1.setOrgName("Computer Science Society");
+        announce1.setTimestamp(new Date());
+        batch.set(db.collection("announcements").document(announce1Id), announce1);
 
         String announce2Id = "sample_announce_2";
         AnnouncementModel announce2 = new AnnouncementModel("General Assembly", "We will have our first General Assembly this Friday at 4 PM in the DCISM Lab.", user1Id);
-        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announce2Id), announce2);
+        announce2.setOrgName("Computer Science Society");
+        announce2.setTimestamp(new Date());
+        batch.set(db.collection("announcements").document(announce2Id), announce2);
 
         String announce3Id = "sample_announce_3";
         AnnouncementModel announce3 = new AnnouncementModel("Hackathon Registration", "Registration for Hackathon 2024 is now open! Visit the CSS office for more details.", user1Id);
-        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announce3Id), announce3);
+        announce3.setOrgName("Computer Science Society");
+        announce3.setTimestamp(new Date());
+        batch.set(db.collection("announcements").document(announce3Id), announce3);
 
         // Commit all changes
         batch.commit().addOnCompleteListener(task -> {

@@ -107,11 +107,11 @@ public class CreatePostFragment extends Fragment {
                 binding.etCapacity.setText(String.valueOf(event.getMaxCapacity()));
                 
                 if (event.getStartDateTime() != null) {
-                    binding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
-                    binding.tvTime.setText(timeFormat.format(event.getStartDateTime().toDate()));
+                    binding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+                    binding.tvTime.setText(timeFormat.format(event.getStartDateTime()));
                 }
                 if (event.getEndDateTime() != null) {
-                    binding.tvEndTime.setText(timeFormat.format(event.getEndDateTime().toDate()));
+                    binding.tvEndTime.setText(timeFormat.format(event.getEndDateTime()));
                 }
             }
         });
