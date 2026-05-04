@@ -23,6 +23,7 @@
             android:layout_height="110dp">
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivOrgBanner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="10dp"
@@ -54,8 +55,8 @@
             android:paddingBottom="4dp"
             android:text="Title of the Org"
             android:textColor="#444444"
-            android:textSize="12sp"
-            android:fontFamily="@font/inter" />
+            android:textSize="14sp"
+            android:fontFamily="@font/inter_bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,17 +71,19 @@
             <!-- ───────────────────────────────────────────── -->
 
             <com.google.android.material.chip.Chip
+                android:id="@+id/chipCategory"
                 style="@style/Widget.Catcha.Chip.Tag.Blue"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:clickable="false"
                 android:focusable="false"
-                android:text="SAS" />
+                android:text="Category" />
 
             <TextView
+                android:id="@+id/tvMemberCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+# members"
+                android:text="0 members"
                 android:textColor="#888888"
                 android:textSize="9sp"
                 android:layout_marginHorizontal="8dp"
@@ -88,6 +91,7 @@
 
             <!-- REPLACE src with member avatar -->
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivMemberPreview"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@android:drawable/ic_menu_gallery"
@@ -104,6 +108,7 @@
 
         <!-- Join button -->
         <Button
+            android:id="@+id/btnJoin"
             style="@style/Widget.Catcha.Button.Join.Outlined"
             android:layout_width="match_parent"
             android:layout_height="48dp"
