@@ -130,7 +130,7 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
                     if (error != null || doc == null || !doc.exists()) return;
 
                     Organization org = doc.toObject(Organization.class);
-                    if (org != null) {
+                    if (org != null && binding != null) {
                         binding.orgName.setText(org.getName());
                     }
                 });
@@ -225,12 +225,26 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         cardBinding.tvDescription.setText(event.getDescription());
         
         if (event.getStartDateTime() != null) {
-            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
-            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime().toDate()));
+            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime()));
         }
 
         cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 
                 event.getCurrentRsvpCount(), event.getMaxCapacity()));
+
+        cardBinding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EventDetailsActivity.class);
+            intent.putExtra("EVENT_TITLE", event.getTitle());
+            intent.putExtra("EVENT_HOST", event.getOrgName());
+            intent.putExtra("EVENT_LOCATION", event.getLocation());
+            if (event.getStartDateTime() != null) {
+                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime()));
+            }
+            intent.putExtra("EVENT_DESCRIPTION", event.getDescription());
+            intent.putExtra("EVENT_STATUS", "UPCOMING"); // Simplified status
+            intent.putExtra("EVENT_STATUS_COLOR", R.color.yellow);
+            startActivity(intent);
+        });
 
         binding.eventsContainer.addView(cardBinding.getRoot());
     }

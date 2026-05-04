@@ -5,15 +5,17 @@ import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
+import java.util.Date;
+
 @IgnoreExtraProperties
-public class AnnouncementModel {
-    private String announcementId;
+public class AnnouncementModel implements Serializable {
     private String title;
     private String content;
     private String authorUid;
     private String orgName;
     @ServerTimestamp
-    private Timestamp timestamp;
+    private Date timestamp;
 
     public AnnouncementModel() {}
 

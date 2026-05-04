@@ -20,7 +20,7 @@ public class AdminHomeActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private TextView tvTotalOrgs, tvTotalEvents;
-    private MaterialCardView cardAddOrg, cardManageUsers;
+    private MaterialCardView cardAddOrg, cardViewOrgs, cardManageUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         tvTotalOrgs = findViewById(R.id.tvTotalOrgs);
         tvTotalEvents = findViewById(R.id.tvTotalEvents);
         cardAddOrg = findViewById(R.id.cardAddOrg);
+        cardViewOrgs = findViewById(R.id.cardViewOrgs);
         cardManageUsers = findViewById(R.id.cardManageUsers);
 
         fetchStats();
@@ -41,6 +42,12 @@ public class AdminHomeActivity extends AppCompatActivity {
         // Redirect to RegisterOrgActivity when clicking "Register New Org"
         cardAddOrg.setOnClickListener(v -> {
             Intent intent = new Intent(AdminHomeActivity.this, RegisterOrgActivity.class);
+            startActivity(intent);
+        });
+
+        // Redirect to AdminOrgListActivity when clicking "Organization List"
+        cardViewOrgs.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminHomeActivity.this, AdminOrgListActivity.class);
             startActivity(intent);
         });
 

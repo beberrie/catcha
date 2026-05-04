@@ -121,8 +121,8 @@ public class CreatePostViewModel extends ViewModel {
             event.setTitle(title);
             event.setDescription(description);
             event.setLocation(location);
-            event.setStartDateTime(new Timestamp(startD));
-            event.setEndDateTime(new Timestamp(endD));
+            event.setStartDateTime(startD);
+            event.setEndDateTime(endD);
             event.setMaxCapacity(capacity);
             event.setCurrentRsvpCount(0);
             event.setOrgId(orgId);

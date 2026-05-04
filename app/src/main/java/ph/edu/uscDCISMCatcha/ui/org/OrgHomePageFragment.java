@@ -89,11 +89,13 @@ public class OrgHomePageFragment extends Fragment {
                         return;
                     }
 
-                    binding.announcementsContainer.removeAllViews();
-                    if (value != null) {
-                        for (QueryDocumentSnapshot doc : value) {
-                            AnnouncementModel announcement = doc.toObject(AnnouncementModel.class);
-                            addAnnouncementCard(announcement, doc.getId());
+                    if (binding != null) {
+                        binding.announcementsContainer.removeAllViews();
+                        if (value != null) {
+                            for (QueryDocumentSnapshot doc : value) {
+                                AnnouncementModel announcement = doc.toObject(AnnouncementModel.class);
+                                addAnnouncementCard(announcement, doc.getId());
+                            }
                         }
                     }
                 });
@@ -106,7 +108,7 @@ public class OrgHomePageFragment extends Fragment {
         cardBinding.tvAnnouncementTitle.setText(announcement.getTitle());
         cardBinding.tvAnnouncementContent.setText(announcement.getContent());
         if (announcement.getTimestamp() != null) {
-            cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp().toDate()));
+            cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp()));
         }
 
         cardBinding.btnEditAnnouncement.setOnClickListener(v -> openCreatePost(true, docId));
@@ -127,11 +129,13 @@ public class OrgHomePageFragment extends Fragment {
                         return;
                     }
 
-                    binding.eventsContainer.removeAllViews();
-                    if (value != null) {
-                        for (QueryDocumentSnapshot doc : value) {
-                            EventModel event = doc.toObject(EventModel.class);
-                            addEventCard(event, doc.getId());
+                    if (binding != null) {
+                        binding.eventsContainer.removeAllViews();
+                        if (value != null) {
+                            for (QueryDocumentSnapshot doc : value) {
+                                EventModel event = doc.toObject(EventModel.class);
+                                addEventCard(event, doc.getId());
+                            }
                         }
                     }
                 });
@@ -144,7 +148,7 @@ public class OrgHomePageFragment extends Fragment {
         cardBinding.tvEventTitle.setText(event.getTitle());
         cardBinding.tvLocation.setText(event.getLocation());
         if (event.getStartDateTime() != null) {
-            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
+            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
         }
         
         cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 

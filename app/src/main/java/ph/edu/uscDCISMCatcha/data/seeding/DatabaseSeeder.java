@@ -2,7 +2,6 @@ package ph.edu.uscDCISMCatcha.data.seeding;
 
 import android.util.Log;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -43,6 +42,8 @@ public class DatabaseSeeder {
         Organization org1 = new Organization(
                 "Computer Science Society",
                 "University of San Carlos",
+                "School of Engineering",
+                "DCISM",
                 "The official student organization of the DCISM.",
                 "Academic",
                 "https://example.com/css_logo.png",
@@ -68,8 +69,8 @@ public class DatabaseSeeder {
                 "Hackathon 2024",
                 "Annual coding competition for all students.",
                 "DCISM Lobby",
-                new Timestamp(now),
-                new Timestamp(nextWeek),
+                now,
+                nextWeek,
                 "University of San Carlos",
                 "https://example.com/hackathon.png",
                 user1Id

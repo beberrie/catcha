@@ -63,8 +63,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             binding.tvLocation.setText(event.getLocation());
 
             if (event.getStartDateTime() != null) {
-                binding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
-                binding.tvTime.setText(timeFormat.format(event.getStartDateTime().toDate()));
+                binding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+                binding.tvTime.setText(timeFormat.format(event.getStartDateTime()));
             }
 
             // --- Capacity Binding ---
