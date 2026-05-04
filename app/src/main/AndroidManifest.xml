@@ -21,6 +21,10 @@
         android:theme="@style/Theme.Catcha">
 
         <activity
+            android:name="ph.edu.uscDCISMCatcha.ui.admin.AdminOrgListActivity"
+            android:exported="false" />
+
+        <activity
             android:name="ph.edu.uscDCISMCatcha.ui.admin.RegisterOrgActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

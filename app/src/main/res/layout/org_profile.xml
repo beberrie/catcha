@@ -6,6 +6,7 @@
     android:background="@color/white">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -75,10 +76,11 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvFollowersCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="@string/org_followers_count"
+                        android:text="0"
                         android:textColor="@color/blue"
                         android:textSize="16sp" />
 
@@ -103,10 +105,11 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvEventsCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins_bold"
-                        android:text="@string/org_events_count"
+                        android:text="0"
                         android:textColor="@color/blue"
                         android:textSize="16sp" />
 
@@ -187,16 +190,16 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/actionButtonsBarrier" />
 
+            <!-- Filters button -->
             <com.google.android.material.chip.Chip
                 android:id="@+id/filterButton"
                 style="@style/Widget.Catcha.Filter.Outlined"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:text="@string/org_filters_label"
+                android:text="Filters"
                 android:checkable="false"
                 app:checkedIconVisible="false"
-                app:elevation="0dp"
                 app:chipIcon="@android:drawable/ic_menu_sort_by_size"
                 app:chipIconSize="14dp"
                 app:chipIconVisible="true"
@@ -214,31 +217,51 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="24dp"
                 app:layout_constraintTop_toBottomOf="@+id/eventsHeader">
-
-                <!-- Dynamic Event Card Placeholders -->
-                <include
-                    android:id="@+id/eventCard1"
-                    layout="@layout/fragment_event_card" />
-
-                <include
-                    android:id="@+id/eventCard2"
-                    layout="@layout/fragment_event_card" />
-
-                <include
-                    android:id="@+id/eventCard3"
-                    layout="@layout/fragment_event_card" />
-
-                <include
-                    android:id="@+id/eventCard4"
-                    layout="@layout/fragment_event_card" />
-
-                <include
-                    android:id="@+id/eventCard5"
-                    layout="@layout/fragment_event_card" />
-
+                <!-- Dynamic Event Cards will be added here -->
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tvNoEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="32dp"
+                android:text="No events found for this organization."
+                android:textColor="#AAAAAA"
+                android:textSize="13sp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/eventsContainer" />
+
+            <!-- Join to See Events Placeholder -->
+            <LinearLayout
+                android:id="@+id/layoutJoinToSeeEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="48dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/tvNoEvents">
+
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/ic_events"
+                    app:tint="#DDDDDD" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Join this organization to see all their events"
+                    android:textColor="#AAAAAA"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/inter"
+                    android:gravity="center" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLimitsReached"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -246,7 +269,8 @@
                 android:text="@string/org_limits_reached"
                 android:textColor="#AAAAAA"
                 android:textSize="13sp"
-                app:layout_constraintTop_toBottomOf="@id/eventsContainer" />
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/layoutJoinToSeeEvents" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -270,7 +294,6 @@
         app:iconTint="@color/blue"
         app:backgroundTint="@color/white"
         app:cornerRadius="22dp"
-        android:stateListAnimator="@null"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

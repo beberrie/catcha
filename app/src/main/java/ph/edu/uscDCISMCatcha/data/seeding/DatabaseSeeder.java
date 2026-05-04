@@ -2,7 +2,6 @@ package ph.edu.uscDCISMCatcha.data.seeding;
 
 import android.util.Log;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -43,6 +42,8 @@ public class DatabaseSeeder {
         Organization org1 = new Organization(
                 "Computer Science Society",
                 "University of San Carlos",
+                "School of Engineering",
+                "DCISM",
                 "The official student organization of the DCISM.",
                 "Academic",
                 "https://example.com/css_logo.png",
@@ -68,12 +69,13 @@ public class DatabaseSeeder {
                 "Hackathon 2024",
                 "Annual coding competition for all students.",
                 "DCISM Lobby",
-                new Timestamp(now),
-                new Timestamp(nextWeek),
+                now,
+                nextWeek,
                 "University of San Carlos",
                 "https://example.com/hackathon.png",
                 user1Id
         );
+        event1.setCreatedAt(now); // Added to ensure it shows up in queries ordered by createdAt
         batch.set(db.collection("events").document(event1Id), event1);
 
         // 5. Seed Sample RSVP
@@ -81,10 +83,24 @@ public class DatabaseSeeder {
         RSVPModel rsvp = new RSVPModel(user1Id, event1Id, "Hackathon 2024", "Going");
         batch.set(db.collection("rsvps").document(rsvpId), rsvp);
 
-        // 6. Seed Sample Announcement
-        String announceId = "sample_announce_1";
-        AnnouncementModel announcement = new AnnouncementModel("Welcome!", "Welcome to the CSS Organization.", user1Id);
-        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announceId), announcement);
+        // 6. Seed Sample Announcements (Moved to top-level collection and added timestamps)
+        String announce1Id = "sample_announce_1";
+        AnnouncementModel announce1 = new AnnouncementModel("Welcome!", "Welcome to the CSS Organization. Stay tuned for more updates!", user1Id);
+        announce1.setOrgName("Computer Science Society");
+        announce1.setTimestamp(new Date());
+        batch.set(db.collection("announcements").document(announce1Id), announce1);
+
+        String announce2Id = "sample_announce_2";
+        AnnouncementModel announce2 = new AnnouncementModel("General Assembly", "We will have our first General Assembly this Friday at 4 PM in the DCISM Lab.", user1Id);
+        announce2.setOrgName("Computer Science Society");
+        announce2.setTimestamp(new Date());
+        batch.set(db.collection("announcements").document(announce2Id), announce2);
+
+        String announce3Id = "sample_announce_3";
+        AnnouncementModel announce3 = new AnnouncementModel("Hackathon Registration", "Registration for Hackathon 2024 is now open! Visit the CSS office for more details.", user1Id);
+        announce3.setOrgName("Computer Science Society");
+        announce3.setTimestamp(new Date());
+        batch.set(db.collection("announcements").document(announce3Id), announce3);
 
         // Commit all changes
         batch.commit().addOnCompleteListener(task -> {

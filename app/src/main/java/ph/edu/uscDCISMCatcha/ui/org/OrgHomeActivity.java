@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import ph.edu.uscDCISMCatcha.R;
-import ph.edu.uscDCISMCatcha.ui.student.OrgProfileFragment;
 
 public class OrgHomeActivity extends AppCompatActivity {
 
@@ -19,12 +18,20 @@ public class OrgHomeActivity extends AppCompatActivity {
         setContentView(R.layout.auth_activity_signup); // Using the layout with fragment_container
 
         if (savedInstanceState == null) {
-            // TEMPORARY: Load OrgProfileFragment directly to test org_profile layout
-            loadFragment(new OrgProfileFragment());
+            // Load OrgHomePageFragment by default
+            loadFragment(new OrgHomePageFragment());
         }
     }
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    // Helper to load without backstack for initial fragment
+    private void loadInitialFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.commit();

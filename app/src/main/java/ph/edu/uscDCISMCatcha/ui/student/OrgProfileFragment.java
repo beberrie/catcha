@@ -6,301 +6,252 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.data.models.EventModel;
+import ph.edu.uscDCISMCatcha.data.models.MembershipModel;
+import ph.edu.uscDCISMCatcha.data.models.Organization;
+import ph.edu.uscDCISMCatcha.databinding.FragmentEventCardBinding;
+import ph.edu.uscDCISMCatcha.databinding.OrgProfileBinding;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
-public class OrgProfileFragment extends Fragment {
+public class OrgProfileFragment extends Fragment implements EventFiltersBottomSheet.OnFiltersAppliedListener {
 
-    private Button btnBack;
-    private Button btnJoin;
-    private Button btnJoined;
-    private TextView tvOrgName;
-    private LinearLayout joinedStatusContainer;
-    private Chip filterButton;
+    private OrgProfileBinding binding;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private String orgId;
+    private boolean isMember = false;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy • hh:mm a", Locale.getDefault());
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-    // Event Cards
-    private View eventCard1, eventCard2, eventCard3, eventCard4, eventCard5;
-
-    // Filter state
-    private String currentStatusFilter = null;
-    private String currentStartTime = null;
-    private String currentEndTime = null;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        if (getArguments() != null) {
+            orgId = getArguments().getString("ORG_ID");
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.org_profile, container, false);
+        binding = OrgProfileBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        btnBack = view.findViewById(R.id.backButton);
-        btnJoin = view.findViewById(R.id.joinButton);
-        btnJoined = view.findViewById(R.id.joinedButton);
-        tvOrgName = view.findViewById(R.id.orgName);
-        joinedStatusContainer = view.findViewById(R.id.joinedStatusContainer);
-        filterButton = view.findViewById(R.id.filterButton);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        // Find the dummy cards
-        eventCard1 = view.findViewById(R.id.eventCard1);
-        eventCard2 = view.findViewById(R.id.eventCard2);
-        eventCard3 = view.findViewById(R.id.eventCard3);
-        eventCard4 = view.findViewById(R.id.eventCard4);
-        eventCard5 = view.findViewById(R.id.eventCard5);
+        setupClickListeners();
+        
+        if (orgId != null) {
+            fetchOrganizationDetails();
+            checkMembershipStatus();
+        } else {
+            String orgName = getArguments() != null ? getArguments().getString("ORG_NAME") : "Organization";
+            binding.orgName.setText(orgName);
+        }
+    }
 
-        // Initial State: Not Joined - Show Only Past Events
-        showNotJoinedEvents();
-
-        // Retrieve the organization name from arguments
-        if (getArguments() != null) {
-            String orgName = getArguments().getString("ORG_NAME");
-            if (orgName != null && tvOrgName != null) {
-                tvOrgName.setText(orgName);
+    private void setupClickListeners() {
+        binding.backButton.setOnClickListener(v -> {
+            if (getActivity() != null) {
+                getActivity().onBackPressed();
             }
+        });
+
+        binding.joinButton.setOnClickListener(v -> showRegistrationDialog());
+
+        binding.joinedButton.setOnClickListener(v -> showLeaveDialog());
+
+        binding.filterButton.setOnClickListener(v -> {
+            if (!isMember) {
+                Toast.makeText(getContext(), "Join the organization to filter events!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            EventFiltersBottomSheet filterSheet = new EventFiltersBottomSheet();
+            filterSheet.setOnFiltersAppliedListener(this);
+            filterSheet.show(getChildFragmentManager(), "EventFilters");
+        });
+    }
+
+    private void checkMembershipStatus() {
+        if (mAuth.getCurrentUser() == null) return;
+
+        String uid = mAuth.getCurrentUser().getUid();
+        db.collection("memberships")
+                .whereEqualTo("userId", uid)
+                .whereEqualTo("orgId", orgId)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) return;
+
+                    isMember = (value != null && !value.isEmpty());
+                    updateMembershipUI();
+
+                    if (isMember) {
+                        fetchOrganizationEvents(null, null, null);
+                    } else {
+                        binding.eventsContainer.removeAllViews();
+                        binding.layoutJoinToSeeEvents.setVisibility(View.VISIBLE);
+                        binding.tvNoEvents.setVisibility(View.GONE);
+                        binding.tvLimitsReached.setVisibility(View.GONE);
+                    }
+                });
+    }
+
+    private void updateMembershipUI() {
+        if (isMember) {
+            binding.joinButton.setVisibility(View.GONE);
+            binding.joinedStatusContainer.setVisibility(View.VISIBLE);
+        } else {
+            binding.joinButton.setVisibility(View.VISIBLE);
+            binding.joinedStatusContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void fetchOrganizationDetails() {
+        db.collection("organizations").document(orgId)
+                .addSnapshotListener((doc, error) -> {
+                    if (error != null || doc == null || !doc.exists()) return;
+
+                    Organization org = doc.toObject(Organization.class);
+                    if (org != null && binding != null) {
+                        binding.orgName.setText(org.getName());
+                    }
+                });
+    }
+
+    private void fetchOrganizationEvents(@Nullable String status, @Nullable String startTimeStr, @Nullable String endTimeStr) {
+        binding.layoutJoinToSeeEvents.setVisibility(View.GONE);
+
+        Query query = db.collection("events")
+                .whereEqualTo("orgId", orgId);
+
+        // Firestore client-side filtering or multiple where clauses if indexed
+        // For simplicity and because we use SnapshotListener, we'll fetch and filter if needed
+        // or just apply basic ordering.
+        query.orderBy("startDateTime", Query.Direction.ASCENDING)
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        binding.tvNoEvents.setVisibility(View.VISIBLE);
+                        binding.tvLimitsReached.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    binding.eventsContainer.removeAllViews();
+                    int visibleCount = 0;
+
+                    if (value != null && !value.isEmpty()) {
+                        for (QueryDocumentSnapshot doc : value) {
+                            EventModel event = doc.toObject(EventModel.class);
+
+                            if (shouldShowEvent(event, status, startTimeStr, endTimeStr)) {
+                                addEventCard(event);
+                                visibleCount++;
+                            }
+                        }
+                    }
+
+                    if (visibleCount == 0) {
+                        binding.tvNoEvents.setVisibility(View.VISIBLE);
+                        binding.tvLimitsReached.setVisibility(View.GONE);
+                    } else {
+                        binding.tvNoEvents.setVisibility(View.GONE);
+                        binding.tvLimitsReached.setVisibility(View.VISIBLE); // Now we show it if there ARE events
+                    }
+                    binding.tvEventsCount.setText(String.valueOf(visibleCount));
+                });
+    }
+
+    private boolean shouldShowEvent(EventModel event, String status, String startT, String endT) {
+        // Filter by Status
+        if (status != null && !status.isEmpty()) {
+            // Simplified status check
+            String eventStatus = "UPCOMING"; // Default
+            long now = System.currentTimeMillis();
+            if (event.getStartDateTime() != null && event.getEndDateTime() != null) {
+                long start = event.getStartDateTime().getTime();
+                long end = event.getEndDateTime().getTime();
+                if (now < start) eventStatus = "UPCOMING";
+                else if (now <= end) eventStatus = "ONGOING";
+                else eventStatus = "FINISHED";
+            }
+            if (!eventStatus.equalsIgnoreCase(status)) return false;
         }
 
-        // Handle Back Navigation
-        if (btnBack != null) {
-            btnBack.setOnClickListener(v -> {
-                if (getActivity() != null) {
-                    getActivity().onBackPressed();
+        // Filter by Time
+        if (startT != null && endT != null && event.getStartDateTime() != null) {
+            try {
+                Date filterStart = timeFormat.parse(startT);
+                Date filterEnd = timeFormat.parse(endT);
+
+                // Get only time part of event start
+                Date eventDate = event.getStartDateTime();
+                String eventTimeStr = timeFormat.format(eventDate);
+                Date eventTime = timeFormat.parse(eventTimeStr);
+
+                if (eventTime.before(filterStart) || eventTime.after(filterEnd)) {
+                    return false;
                 }
-            });
-        }
-
-        // Handle Join Action
-        if (btnJoin != null) {
-            btnJoin.setOnClickListener(v -> showRegistrationDialog());
-        }
-
-        // Handle Leave Action
-        if (btnJoined != null) {
-            btnJoined.setOnClickListener(v -> showLeaveDialog());
-        }
-
-        // Handle Filter Button
-        if (filterButton != null) {
-            filterButton.setOnClickListener(v -> showFilterBottomSheet());
-        }
-
-        return view;
-    }
-
-    private void showFilterBottomSheet() {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
-        View bottomSheetView = getLayoutInflater().inflate(R.layout.bottom_sheet_event_filters, null);
-        bottomSheetDialog.setContentView(bottomSheetView);
-
-        TextView btnCancel = bottomSheetView.findViewById(R.id.btnCancel);
-        TextView btnShowResults = bottomSheetView.findViewById(R.id.btnShowResults);
-        LinearLayout activeFiltersContainer = bottomSheetView.findViewById(R.id.activeFiltersContainer);
-        Chip chipResetAll = bottomSheetView.findViewById(R.id.chipResetAll);
-        ChipGroup cgStatus = bottomSheetView.findViewById(R.id.cgStatus);
-        AutoCompleteTextView atvStartTime = bottomSheetView.findViewById(R.id.atvStartTime);
-        AutoCompleteTextView atvEndTime = bottomSheetView.findViewById(R.id.atvEndTime);
-        Button btnSetTime = bottomSheetView.findViewById(R.id.btnSetTime);
-
-        // Populate Time Choices
-        String[] timeChoices = {"8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, timeChoices);
-        atvStartTime.setAdapter(adapter);
-        atvEndTime.setAdapter(adapter);
-
-        // Restore previous filters in UI
-        if (currentStatusFilter != null) {
-            for (int i = 0; i < cgStatus.getChildCount(); i++) {
-                Chip chip = (Chip) cgStatus.getChildAt(i);
-                if (chip.getText().toString().equalsIgnoreCase(currentStatusFilter) || 
-                   (currentStatusFilter.equals("ENDED") && chip.getText().toString().equals("FINISHED"))) {
-                    chip.setChecked(true);
-                    break;
-                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
-        if (currentStartTime != null) atvStartTime.setText(currentStartTime, false);
-        if (currentEndTime != null) atvEndTime.setText(currentEndTime, false);
 
-        updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+        return true;
+    }
 
-        // Listeners for Status Tags
-        cgStatus.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
+    private void addEventCard(EventModel event) {
+        FragmentEventCardBinding cardBinding = FragmentEventCardBinding.inflate(
+                getLayoutInflater(), binding.eventsContainer, false);
+
+        cardBinding.tvEventTitle.setText(event.getTitle());
+        cardBinding.tvLocation.setText(event.getLocation());
+        cardBinding.tvDescription.setText(event.getDescription());
+        
+        if (event.getStartDateTime() != null) {
+            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime()));
+        }
+
+        cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 
+                event.getCurrentRsvpCount(), event.getMaxCapacity()));
+
+        cardBinding.getRoot().setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), EventDetailsActivity.class);
+            intent.putExtra("EVENT_TITLE", event.getTitle());
+            intent.putExtra("EVENT_HOST", event.getOrgName());
+            intent.putExtra("EVENT_LOCATION", event.getLocation());
+            if (event.getStartDateTime() != null) {
+                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime()));
+            }
+            intent.putExtra("EVENT_DESCRIPTION", event.getDescription());
+            intent.putExtra("EVENT_STATUS", "UPCOMING"); // Simplified status
+            intent.putExtra("EVENT_STATUS_COLOR", R.color.yellow);
+            startActivity(intent);
         });
 
-        // Listener for Set Time button
-        btnSetTime.setOnClickListener(v -> {
-            updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
-        });
-
-        // Listener for Reset All
-        chipResetAll.setOnClickListener(v -> {
-            cgStatus.clearCheck();
-            atvStartTime.setText("");
-            atvEndTime.setText("");
-            updateFilterTagsUI(activeFiltersContainer, cgStatus, atvStartTime, atvEndTime, btnShowResults);
-        });
-
-        btnCancel.setOnClickListener(v -> bottomSheetDialog.dismiss());
-        
-        btnShowResults.setOnClickListener(v -> {
-            // Save filters
-            int checkedId = cgStatus.getCheckedChipId();
-            if (checkedId != View.NO_ID) {
-                Chip selectedChip = cgStatus.findViewById(checkedId);
-                String statusText = selectedChip.getText().toString();
-                currentStatusFilter = statusText.equals("FINISHED") ? "ENDED" : statusText;
-            } else {
-                currentStatusFilter = null;
-            }
-
-            currentStartTime = atvStartTime.getText().toString();
-            currentEndTime = atvEndTime.getText().toString();
-            if (currentStartTime.isEmpty() || currentEndTime.isEmpty()) {
-                currentStartTime = null;
-                currentEndTime = null;
-            }
-
-            // Apply filtering if joined
-            if (joinedStatusContainer.getVisibility() == View.VISIBLE) {
-                applyJoinedFilters();
-            } else {
-                applyNotJoinedFilters();
-            }
-
-            bottomSheetDialog.dismiss();
-        });
-
-        bottomSheetDialog.show();
+        binding.eventsContainer.addView(cardBinding.getRoot());
     }
 
-    private void updateFilterTagsUI(LinearLayout container, ChipGroup cgStatus, AutoCompleteTextView start, AutoCompleteTextView end, TextView btnShowResults) {
-        while (container.getChildCount() > 1) {
-            container.removeViewAt(1);
-        }
-
-        int tagCount = 0;
-        int checkedId = cgStatus.getCheckedChipId();
-        if (checkedId != View.NO_ID) {
-            Chip selectedChip = cgStatus.findViewById(checkedId);
-            addDynamicTag(container, selectedChip.getText().toString());
-            tagCount++;
-        }
-
-        String startTime = start.getText().toString();
-        String endTime = end.getText().toString();
-        if (!startTime.isEmpty() && !endTime.isEmpty()) {
-            addDynamicTag(container, startTime + " - " + endTime);
-            tagCount++;
-        }
-
-        if (btnShowResults != null) {
-            btnShowResults.setText(String.format(Locale.getDefault(), "Show (%d)", tagCount));
-        }
-    }
-
-    private void addDynamicTag(LinearLayout container, String text) {
-        LayoutInflater inflater = LayoutInflater.from(requireContext());
-        Chip chip = (Chip) inflater.inflate(R.layout.item_tag_yellow, container, false);
-        chip.setText(text);
-        
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
-        params.setMarginStart(8);
-        chip.setLayoutParams(params);
-        container.addView(chip);
-    }
-
-    private void applyJoinedFilters() {
-        // Reset all cards first
-        eventCard1.setVisibility(View.GONE);
-        eventCard2.setVisibility(View.GONE);
-        eventCard3.setVisibility(View.GONE);
-        eventCard4.setVisibility(View.GONE);
-        eventCard5.setVisibility(View.GONE);
-
-        // Event 1: Annual Tech Expo 2024 | ONGOING | All Day
-        if (matchesFilter("ONGOING", "All Day")) {
-            setupCard(eventCard1, "Annual Tech Expo 2024", "Maria Santos", "SM Seaside Sky Hall", "Dec 20, 2023",
-                    "Join us for the biggest tech exhibition of the year! Live demos ongoing.", "All Day", "ONGOING", R.color.green);
-        }
-
-        // Event 2: Tech Networking Night | UPCOMING | 6:00 PM - 9:00 PM
-        if (matchesFilter("UPCOMING", "6:00 PM - 9:00 PM")) {
-            setupCard(eventCard2, "Tech Networking Night", "Chris Jordan", "Ayala Center Cebu", "Jan 12, 2024",
-                    "Meet fellow developers and industry leaders over coffee.", "6:00 PM - 9:00 PM", "UPCOMING", R.color.yellow);
-        }
-
-        // Event 3: Code for a Cause: Hackathon | UPCOMING | Starts at 9:00 AM
-        if (matchesFilter("UPCOMING", "Starts at 9:00 AM")) {
-            setupCard(eventCard3, "Code for a Cause: Hackathon", "Sarah Blake", "Online/Remote", "Feb 05, 2024",
-                    "A 24-hour hackathon to build solutions for local communities.", "Starts at 9:00 AM", "UPCOMING", R.color.yellow);
-        }
-
-        // Event 4: Design Thinking Workshop | ENDED | 1:00 PM - 4:00 PM
-        if (matchesFilter("ENDED", "1:00 PM - 4:00 PM")) {
-            setupCard(eventCard4, "Design Thinking Workshop", "Alex Rivera", "USC TC - LB Building", "Oct 25, 2023",
-                    "Learn the fundamentals of UI/UX design and prototyping.", "1:00 PM - 4:00 PM", "ENDED", R.color.text_secondary);
-        }
-
-        // Event 5: Introduction to Flutter | ENDED | 2:00 PM - 5:00 PM
-        if (matchesFilter("ENDED", "2:00 PM - 5:00 PM")) {
-            setupCard(eventCard5, "Introduction to Flutter", "Jamie Chen", "Online", "Sep 12, 2023",
-                    "Getting started with cross-platform mobile development.", "2:00 PM - 5:00 PM", "ENDED", R.color.text_secondary);
-        }
-    }
-
-    private void applyNotJoinedFilters() {
-        eventCard1.setVisibility(View.GONE);
-        eventCard2.setVisibility(View.GONE);
-        eventCard3.setVisibility(View.GONE);
-        eventCard4.setVisibility(View.GONE);
-        eventCard5.setVisibility(View.GONE);
-
-        if (matchesFilter("ENDED", "1:00 PM - 4:00 PM")) {
-            setupCard(eventCard1, "Design Thinking Workshop", "Alex Rivera", "USC TC - LB Building", "Oct 25, 2023",
-                    "Learn the fundamentals of UI/UX design and prototyping.", "1:00 PM - 4:00 PM", "ENDED", R.color.text_secondary);
-        }
-        if (matchesFilter("ENDED", "2:00 PM - 5:00 PM")) {
-            setupCard(eventCard2, "Introduction to Flutter", "Jamie Chen", "Online", "Sep 12, 2023",
-                    "Getting started with cross-platform mobile development.", "2:00 PM - 5:00 PM", "ENDED", R.color.text_secondary);
-        }
-        if (matchesFilter("ENDED", "9:00 AM - 12:00 PM")) {
-            setupCard(eventCard3, "Git & GitHub Essentials", "Sam Wilson", "USC TC", "Aug 05, 2023",
-                    "Master version control for your collaborative projects.", "9:00 AM - 12:00 PM", "ENDED", R.color.text_secondary);
-        }
-    }
-
-    private boolean matchesFilter(String status, String time) {
-        boolean statusMatch = (currentStatusFilter == null || currentStatusFilter.equalsIgnoreCase(status));
-        
-        boolean timeMatch = true;
-        if (currentStartTime != null && currentEndTime != null) {
-            // Basic heuristic: check if event time string contains keywords or if it's "All Day"
-            // Since dummy data times are diverse, we'll do a simple check.
-            if (time.equalsIgnoreCase("All Day")) {
-                timeMatch = true; 
-            } else {
-                // If the filter is something like "8:00 AM", and event time is "1:00 PM - 4:00 PM"
-                // This is complex to parse accurately without a date library, 
-                // but we can check if there's any overlap in common ranges.
-                // For this prototype, we'll allow it if status matches and time isn't explicitly conflicting.
-                timeMatch = true; // Defaulting to true for dummy complexity
-            }
-        }
-        
-        return statusMatch && timeMatch;
+    @Override
+    public void onFiltersApplied(String status, String startTime, String endTime) {
+        fetchOrganizationEvents(status, startTime, endTime);
     }
 
     private void showRegistrationDialog() {
@@ -316,18 +267,11 @@ public class OrgProfileFragment extends Fragment {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
 
-        Button btnSubmit = dialogView.findViewById(R.id.btnSubmitRegistration);
-        Button btnCancel = dialogView.findViewById(R.id.btnCancelRegistration);
+        View btnSubmit = dialogView.findViewById(R.id.btnSubmitRegistration);
+        View btnCancel = dialogView.findViewById(R.id.btnCancelRegistration);
 
         btnSubmit.setOnClickListener(v -> {
-            btnJoin.setVisibility(View.GONE);
-            joinedStatusContainer.setVisibility(View.VISIBLE);
-            currentStatusFilter = null; // Clear filters on state change
-            currentStartTime = null;
-            currentEndTime = null;
-            showJoinedEvents();
-
-            Toast.makeText(getContext(), "Application submitted successfully!", Toast.LENGTH_SHORT).show();
+            joinOrganization();
             dialog.dismiss();
         });
 
@@ -335,67 +279,47 @@ public class OrgProfileFragment extends Fragment {
         dialog.show();
     }
 
+    private void joinOrganization() {
+        if (mAuth.getCurrentUser() == null) return;
+
+        String uid = mAuth.getCurrentUser().getUid();
+        MembershipModel membership = new MembershipModel(uid, orgId, binding.orgName.getText().toString(), "Member", "Active");
+
+        db.collection("memberships").add(membership)
+                .addOnSuccessListener(doc -> Toast.makeText(getContext(), "Joined successfully!", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
     private void showLeaveDialog() {
         new AlertDialog.Builder(getContext())
                 .setTitle("Leaving?")
                 .setMessage("Are you sure you want to leave this organization?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    joinedStatusContainer.setVisibility(View.GONE);
-                    btnJoin.setVisibility(View.VISIBLE);
-                    currentStatusFilter = null;
-                    currentStartTime = null;
-                    currentEndTime = null;
-                    showNotJoinedEvents();
-                    Toast.makeText(getContext(), "You have left the organization.", Toast.LENGTH_SHORT).show();
+                    leaveOrganization();
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
-    private void showNotJoinedEvents() {
-        currentStatusFilter = null;
-        currentStartTime = null;
-        currentEndTime = null;
-        applyNotJoinedFilters();
+    private void leaveOrganization() {
+        if (mAuth.getCurrentUser() == null) return;
+
+        String uid = mAuth.getCurrentUser().getUid();
+        db.collection("memberships")
+                .whereEqualTo("userId", uid)
+                .whereEqualTo("orgId", orgId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        doc.getReference().delete();
+                    }
+                    Toast.makeText(getContext(), "You have left the organization.", Toast.LENGTH_SHORT).show();
+                });
     }
 
-    private void showJoinedEvents() {
-        applyJoinedFilters();
-    }
-
-    private void setupCard(View card, String title, String host, String loc, String date, String desc, String time, String status, int statusColor) {
-        card.setVisibility(View.VISIBLE);
-        setCardData(card, title, host, loc, date, desc, time, status, statusColor);
-
-        card.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), EventDetailsActivity.class);
-            intent.putExtra("EVENT_TITLE", title);
-            intent.putExtra("EVENT_HOST", host);
-            intent.putExtra("EVENT_LOCATION", loc);
-            intent.putExtra("EVENT_DATETIME", date + " • " + time);
-            intent.putExtra("EVENT_DESCRIPTION", desc);
-            intent.putExtra("EVENT_STATUS", status);
-            intent.putExtra("EVENT_STATUS_COLOR", statusColor);
-            startActivity(intent);
-        });
-    }
-
-    private void setCardData(View card, String title, String host, String loc, String date, String desc, String time, String status, int statusColor) {
-        TextView tvTitle = card.findViewById(R.id.tvEventTitle);
-        TextView tvLoc = card.findViewById(R.id.tvLocation);
-        TextView tvDate = card.findViewById(R.id.tvDate);
-        TextView tvDesc = card.findViewById(R.id.tvDescription);
-        TextView tvTime = card.findViewById(R.id.tvTime);
-        Chip chipStatus = card.findViewById(R.id.chipStatus);
-
-        if (tvTitle != null) tvTitle.setText(title);
-        if (tvLoc != null) tvLoc.setText(loc);
-        if (tvDate != null) tvDate.setText(date);
-        if (tvDesc != null) tvDesc.setText(desc);
-        if (tvTime != null) tvTime.setText(time);
-        if (chipStatus != null) {
-            chipStatus.setText(status);
-            chipStatus.setChipBackgroundColorResource(statusColor);
-        }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

@@ -6,16 +6,23 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.ui.admin.AdminHomeActivity;
+import ph.edu.uscDCISMCatcha.ui.org.OrgHomeActivity;
 
 public class InterestsActivity extends AppCompatActivity {
     // Main interest chips
@@ -33,10 +40,16 @@ public class InterestsActivity extends AppCompatActivity {
     private FlexboxLayout currentOpenSub = null;
     private Chip currentCheckedChip = null;
 
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interests);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         chipCreativeArts     = findViewById(R.id.chip_creative_arts);
         chipTechInnovation   = findViewById(R.id.chip_tech_innovation);
@@ -70,20 +83,49 @@ public class InterestsActivity extends AppCompatActivity {
         setupSubChips(subCommunityService);
         setupSubChips(subFaithCulture);
 
-        btnContinue.setOnClickListener(v -> {
-            Intent intent = new Intent(InterestsActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        });
-
-        tvSkip.setOnClickListener(v -> {
-            Intent intent = new Intent(InterestsActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        });
+        btnContinue.setOnClickListener(v -> saveInterestsAndNavigate());
+        tvSkip.setOnClickListener(v -> saveInterestsAndNavigate());
 
         updateValidation();
     }
+
+    private void saveInterestsAndNavigate() {
+        String uid = mAuth.getUid();
+        if (uid == null) {
+            navigateToDashboard("Student");
+            return;
+        }
+
+        btnContinue.setEnabled(false);
+        btnContinue.setText("Saving...");
+
+        db.collection("users").document(uid)
+                .update("interests", new ArrayList<>(selectedInterests), "interestsSelected", true)
+                .addOnCompleteListener(task -> {
+                    db.collection("users").document(uid).get()
+                            .addOnSuccessListener(doc -> {
+                                String role = doc.getString("role");
+                                navigateToDashboard(role);
+                            })
+                            .addOnFailureListener(e -> {
+                                navigateToDashboard("Student");
+                            });
+                });
+    }
+
+    private void navigateToDashboard(String role) {
+        Intent intent;
+        if ("Admin".equalsIgnoreCase(role)) {
+            intent = new Intent(this, AdminHomeActivity.class);
+        } else if ("OrgHandler".equalsIgnoreCase(role) || "Organization".equalsIgnoreCase(role) || "Org".equalsIgnoreCase(role)) {
+            intent = new Intent(this, OrgHomeActivity.class);
+        } else {
+            intent = new Intent(this, HomeActivity.class);
+        }
+        startActivity(intent);
+        finish();
+    }
+
     private void setupChip(Chip chip, FlexboxLayout subContainer) {
         if (chip == null) return;
         chip.setOnClickListener(v -> {
