@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.ui.student;
+package ph.edu.uscDCISMCatcha.ui.org;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.OrgHomePageBinding;
-import ph.edu.uscDCISMCatcha.ui.org.CreatePostFragment;
 
 public class OrgHomePageFragment extends Fragment {
 

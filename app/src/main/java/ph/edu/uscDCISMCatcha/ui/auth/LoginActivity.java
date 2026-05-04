@@ -54,6 +54,15 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Auto-login check
+        if (mAuth.getCurrentUser() != null) {
+            checkUserStatusAndNavigate();
+        }
+    }
+
     private void loginUser() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString();
@@ -88,13 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                     if (doc.exists()) {
                         UserModel userProfile = doc.toObject(UserModel.class);
                         if (userProfile != null) {
-                            if (!userProfile.isInterestsSelected() && "Student".equals(userProfile.getRole())) {
+                            String role = userProfile.getRole();
+                            if (!userProfile.isInterestsSelected() && "Student".equalsIgnoreCase(role)) {
                                 // Redirect to Interests if not selected and is a student
                                 Intent intent = new Intent(this, InterestsActivity.class);
                                 startActivity(intent);
                                 finish();
                             } else {
-                                navigateToDashboard(userProfile.getRole());
+                                navigateToDashboard(role);
                             }
                         }
                     } else {
@@ -125,9 +135,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void navigateToDashboard(String role) {
         Intent intent;
-        if ("Admin".equals(role)) {
+        if ("Admin".equalsIgnoreCase(role)) {
             intent = new Intent(this, AdminHomeActivity.class);
-        } else if ("OrgHandler".equals(role) || "Organization".equals(role) || "Org".equals(role)) {
+        } else if ("OrgHandler".equalsIgnoreCase(role) || "Organization".equalsIgnoreCase(role) || "Org".equalsIgnoreCase(role)) {
             intent = new Intent(this, OrgHomeActivity.class);
         } else {
             intent = new Intent(this, HomeActivity.class);

@@ -20,7 +20,7 @@ public class OrgHomeActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             // TEMPORARY: Load OrgProfileFragment directly to test org_profile layout
-            loadFragment(new OrgProfileFragment());
+            loadFragment(new OrgHomePageFragment());
         }
     }
 
