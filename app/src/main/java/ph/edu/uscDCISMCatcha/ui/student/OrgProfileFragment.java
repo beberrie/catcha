@@ -86,7 +86,7 @@ public class OrgProfileFragment extends Fragment {
                     if (error != null || doc == null || !doc.exists()) return;
 
                     Organization org = doc.toObject(Organization.class);
-                    if (org != null) {
+                    if (org != null && binding != null) {
                         binding.orgName.setText(org.getName());
                         // Profile/Banner image loading logic would go here (e.g., Glide/Picasso)
                     }
@@ -99,21 +99,23 @@ public class OrgProfileFragment extends Fragment {
                 .orderBy("startDateTime", Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        binding.tvNoEvents.setVisibility(View.VISIBLE);
+                        if (binding != null) binding.tvNoEvents.setVisibility(View.VISIBLE);
                         return;
                     }
 
-                    binding.eventsContainer.removeAllViews();
-                    if (value != null && !value.isEmpty()) {
-                        binding.tvNoEvents.setVisibility(View.GONE);
-                        binding.tvEventsCount.setText(String.valueOf(value.size()));
-                        for (QueryDocumentSnapshot doc : value) {
-                            EventModel event = doc.toObject(EventModel.class);
-                            addEventCard(event);
+                    if (binding != null) {
+                        binding.eventsContainer.removeAllViews();
+                        if (value != null && !value.isEmpty()) {
+                            binding.tvNoEvents.setVisibility(View.GONE);
+                            binding.tvEventsCount.setText(String.valueOf(value.size()));
+                            for (QueryDocumentSnapshot doc : value) {
+                                EventModel event = doc.toObject(EventModel.class);
+                                addEventCard(event);
+                            }
+                        } else {
+                            binding.tvNoEvents.setVisibility(View.VISIBLE);
+                            binding.tvEventsCount.setText("0");
                         }
-                    } else {
-                        binding.tvNoEvents.setVisibility(View.VISIBLE);
-                        binding.tvEventsCount.setText("0");
                     }
                 });
     }
@@ -127,8 +129,8 @@ public class OrgProfileFragment extends Fragment {
         cardBinding.tvDescription.setText(event.getDescription());
         
         if (event.getStartDateTime() != null) {
-            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
-            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime().toDate()));
+            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime()));
         }
 
         cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 
@@ -140,7 +142,7 @@ public class OrgProfileFragment extends Fragment {
             intent.putExtra("EVENT_HOST", event.getOrgName());
             intent.putExtra("EVENT_LOCATION", event.getLocation());
             if (event.getStartDateTime() != null) {
-                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime().toDate()));
+                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime()));
             }
             intent.putExtra("EVENT_DESCRIPTION", event.getDescription());
             intent.putExtra("EVENT_STATUS", "UPCOMING"); // Simplified status

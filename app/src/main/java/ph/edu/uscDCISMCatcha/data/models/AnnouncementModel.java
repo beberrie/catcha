@@ -1,16 +1,18 @@
 package ph.edu.uscDCISMCatcha.data.models;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
+import java.util.Date;
+
 @IgnoreExtraProperties
-public class AnnouncementModel {
+public class AnnouncementModel implements Serializable {
     private String title;
     private String content;
     private String authorUid;
     @ServerTimestamp
-    private Timestamp timestamp;
+    private Date timestamp;
 
     public AnnouncementModel() {}
 
@@ -26,6 +28,6 @@ public class AnnouncementModel {
     public void setContent(String content) { this.content = content; }
     public String getAuthorUid() { return authorUid; }
     public void setAuthorUid(String authorUid) { this.authorUid = authorUid; }
-    public Timestamp getTimestamp() { return timestamp; }
-    public void setTimestamp(Timestamp timestamp) { this.timestamp = timestamp; }
+    public Date getTimestamp() { return timestamp; }
+    public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 }

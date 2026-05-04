@@ -1,20 +1,22 @@
 package ph.edu.uscDCISMCatcha.data.models;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.io.Serializable;
+import java.util.Date;
+
 @IgnoreExtraProperties
-public class EventModel {
+public class EventModel implements Serializable {
     private String eventId; // Added for easier document reference
     private String orgId;
     private String orgName;
     private String title;
     private String description;
     private String location;
-    private Timestamp startDateTime;
-    private Timestamp endDateTime;
+    private Date startDateTime;
+    private Date endDateTime;
     private String university;
     private String imageUrl;
     private String createdBy;
@@ -23,12 +25,12 @@ public class EventModel {
     private int interestedCount = 0;
     
     @ServerTimestamp
-    private Timestamp createdAt;
+    private Date createdAt;
 
     public EventModel() {}
 
     public EventModel(String orgId, String orgName, String title, String description, String location, 
-                      Timestamp startDateTime, Timestamp endDateTime, String university, String imageUrl, String createdBy) {
+                      Date startDateTime, Date endDateTime, String university, String imageUrl, String createdBy) {
         this.orgId = orgId;
         this.orgName = orgName;
         this.title = title;
@@ -56,18 +58,18 @@ public class EventModel {
     public void setDescription(String description) { this.description = description; }
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
-    public Timestamp getStartDateTime() { return startDateTime; }
-    public void setStartDateTime(Timestamp startDateTime) { this.startDateTime = startDateTime; }
-    public Timestamp getEndDateTime() { return endDateTime; }
-    public void setEndDateTime(Timestamp endDateTime) { this.endDateTime = endDateTime; }
+    public Date getStartDateTime() { return startDateTime; }
+    public void setStartDateTime(Date startDateTime) { this.startDateTime = startDateTime; }
+    public Date getEndDateTime() { return endDateTime; }
+    public void setEndDateTime(Date endDateTime) { this.endDateTime = endDateTime; }
     public String getUniversity() { return university; }
     public void setUniversity(String university) { this.university = university; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
     public int getMaxCapacity() { return maxCapacity; }
     public void setMaxCapacity(int maxCapacity) { this.maxCapacity = maxCapacity; }

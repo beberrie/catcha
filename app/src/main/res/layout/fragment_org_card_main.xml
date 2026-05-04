@@ -29,6 +29,35 @@
                 android:scaleType="centerCrop"
                 android:src="@android:drawable/ic_menu_gallery"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.Catcha.SmallComponent" />
+
+            <!-- Admin Actions -->
+            <LinearLayout
+                android:id="@+id/adminActions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|top"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageButton
+                    android:id="@+id/btnEditOrg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circle_white"
+                    android:src="@android:drawable/ic_menu_edit"
+                    app:tint="@color/blue" />
+
+                <ImageButton
+                    android:id="@+id/btnDeleteOrg"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/bg_circle_white"
+                    android:src="@android:drawable/ic_menu_delete"
+                    app:tint="@color/red" />
+            </LinearLayout>
         </FrameLayout>
 
         <View

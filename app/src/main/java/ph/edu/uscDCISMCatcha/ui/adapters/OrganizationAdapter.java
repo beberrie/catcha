@@ -3,6 +3,7 @@ package ph.edu.uscDCISMCatcha.ui.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,9 +19,26 @@ import ph.edu.uscDCISMCatcha.data.models.Organization;
 public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapter.OrgViewHolder> {
 
     private final List<Organization> orgList;
+    private final boolean isAdmin;
+    private OnOrgActionListener listener;
+
+    public interface OnOrgActionListener {
+        void onEdit(Organization org);
+        void onDelete(Organization org);
+        void onJoin(Organization org);
+    }
 
     public OrganizationAdapter(List<Organization> orgList) {
+        this(orgList, false);
+    }
+
+    public OrganizationAdapter(List<Organization> orgList, boolean isAdmin) {
         this.orgList = orgList;
+        this.isAdmin = isAdmin;
+    }
+
+    public void setOnOrgActionListener(OnOrgActionListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -33,7 +51,7 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     @Override
     public void onBindViewHolder(@NonNull OrgViewHolder holder, int position) {
         Organization org = orgList.get(position);
-        holder.bind(org);
+        holder.bind(org, isAdmin, listener);
     }
 
     @Override
@@ -44,6 +62,9 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
     static class OrgViewHolder extends RecyclerView.ViewHolder {
         TextView tvOrgName, tvDescription;
         Chip chipSchool, chipDept;
+        View adminActions;
+        ImageButton btnEdit, btnDelete;
+        View btnJoin;
 
         public OrgViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -51,13 +72,13 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
             tvDescription = itemView.findViewById(R.id.tvDescriptionMain);
             chipSchool = itemView.findViewById(R.id.chipSchool);
             chipDept = itemView.findViewById(R.id.chipDept);
-
-            // Hide the join button if used in Admin side, or just leave it for now.
-            View joinButton = itemView.findViewById(R.id.joinButton);
-            if (joinButton != null) joinButton.setVisibility(View.GONE);
+            adminActions = itemView.findViewById(R.id.adminActions);
+            btnEdit = itemView.findViewById(R.id.btnEditOrg);
+            btnDelete = itemView.findViewById(R.id.btnDeleteOrg);
+            btnJoin = itemView.findViewById(R.id.btnJoin);
         }
 
-        public void bind(Organization org) {
+        public void bind(Organization org, boolean isAdmin, OnOrgActionListener listener) {
             tvOrgName.setText(org.getName());
             if (tvDescription != null) tvDescription.setText(org.getDescription());
 
@@ -76,6 +97,31 @@ public class OrganizationAdapter extends RecyclerView.Adapter<OrganizationAdapte
                     chipDept.setText(org.getDepartment());
                 } else {
                     chipDept.setVisibility(View.GONE);
+                }
+            }
+
+            if (isAdmin) {
+                if (adminActions != null) adminActions.setVisibility(View.VISIBLE);
+                if (btnJoin != null) btnJoin.setVisibility(View.GONE);
+
+                if (btnEdit != null) {
+                    btnEdit.setOnClickListener(v -> {
+                        if (listener != null) listener.onEdit(org);
+                    });
+                }
+
+                if (btnDelete != null) {
+                    btnDelete.setOnClickListener(v -> {
+                        if (listener != null) listener.onDelete(org);
+                    });
+                }
+            } else {
+                if (adminActions != null) adminActions.setVisibility(View.GONE);
+                if (btnJoin != null) {
+                    btnJoin.setVisibility(View.VISIBLE);
+                    btnJoin.setOnClickListener(v -> {
+                        if (listener != null) listener.onJoin(org);
+                    });
                 }
             }
         }

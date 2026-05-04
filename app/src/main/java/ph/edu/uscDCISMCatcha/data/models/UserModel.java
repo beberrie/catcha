@@ -1,15 +1,17 @@
 package ph.edu.uscDCISMCatcha.data.models;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
+
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @IgnoreExtraProperties
-public class UserModel {
+public class UserModel implements Serializable {
     private String firstName;
     private String lastName;
     private String username;
@@ -21,7 +23,7 @@ public class UserModel {
     private List<String> interests;
     private Map<String, String> fcmTokens;
     @ServerTimestamp
-    private Timestamp createdAt;
+    private Date createdAt;
 
     public UserModel() {
         this.fcmTokens = new HashMap<>();
@@ -63,6 +65,6 @@ public class UserModel {
     public void setInterests(List<String> interests) { this.interests = interests; }
     public Map<String, String> getFcmTokens() { return fcmTokens; }
     public void setFcmTokens(Map<String, String> fcmTokens) { this.fcmTokens = fcmTokens; }
-    public Timestamp getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 }

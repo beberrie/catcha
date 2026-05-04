@@ -1,10 +1,13 @@
 package ph.edu.uscDCISMCatcha.ui.admin;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +23,7 @@ import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.ui.adapters.OrganizationAdapter;
 
-public class AdminOrgListActivity extends AppCompatActivity {
+public class AdminOrgListActivity extends AppCompatActivity implements OrganizationAdapter.OnOrgActionListener {
 
     private AutoCompleteTextView actvUniversity;
     private RecyclerView rvOrganizations;
@@ -28,6 +31,7 @@ public class AdminOrgListActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private List<Organization> organizationList;
     private OrganizationAdapter adapter;
+    private String currentUniversity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,8 @@ public class AdminOrgListActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         organizationList = new ArrayList<>();
-        adapter = new OrganizationAdapter(organizationList);
+        adapter = new OrganizationAdapter(organizationList, true); // Pass true for isAdmin
+        adapter.setOnOrgActionListener(this);
 
         actvUniversity = findViewById(R.id.actvUniversity);
         rvOrganizations = findViewById(R.id.rvOrganizations);
@@ -56,8 +61,8 @@ public class AdminOrgListActivity extends AppCompatActivity {
         actvUniversity.setAdapter(uniAdapter);
 
         actvUniversity.setOnItemClickListener((parent, view, position, id) -> {
-            String selectedUni = (String) parent.getItemAtPosition(position);
-            fetchOrganizations(selectedUni);
+            currentUniversity = (String) parent.getItemAtPosition(position);
+            fetchOrganizations(currentUniversity);
         });
     }
 
@@ -69,6 +74,7 @@ public class AdminOrgListActivity extends AppCompatActivity {
                     organizationList.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Organization org = document.toObject(Organization.class);
+                        org.setId(document.getId());
                         organizationList.add(org);
                     }
                     adapter.notifyDataSetChanged();
@@ -81,5 +87,44 @@ public class AdminOrgListActivity extends AppCompatActivity {
                         rvOrganizations.setVisibility(View.VISIBLE);
                     }
                 });
+    }
+
+    @Override
+    public void onEdit(Organization org) {
+        Intent intent = new Intent(this, RegisterOrgActivity.class);
+        intent.putExtra("ORGANIZATION", org);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDelete(Organization org) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Organization")
+                .setMessage("Are you sure you want to delete " + org.getName() + "? This action cannot be undone.")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    db.collection("organizations").document(org.getId()).delete()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(this, "Organization deleted", Toast.LENGTH_SHORT).show();
+                                if (currentUniversity != null) {
+                                    fetchOrganizations(currentUniversity);
+                                }
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, "Error deleting organization", Toast.LENGTH_SHORT).show());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    @Override
+    public void onJoin(Organization org) {
+        // Not used in Admin side
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (currentUniversity != null) {
+            fetchOrganizations(currentUniversity);
+        }
     }
 }
