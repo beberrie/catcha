@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -15,6 +16,7 @@ import java.util.Locale;
 import ph.edu.uscDCISMCatcha.data.repository.FirebaseRemoteDataSource;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
+import ph.edu.uscDCISMCatcha.data.models.Organization;
 
 public class CreatePostViewModel extends ViewModel {
 
@@ -23,16 +25,30 @@ public class CreatePostViewModel extends ViewModel {
     private final MutableLiveData<String> statusMessage = new MutableLiveData<>();
     private final MutableLiveData<AnnouncementModel> existingAnnouncement = new MutableLiveData<>();
     private final MutableLiveData<EventModel> existingEvent = new MutableLiveData<>();
+    private final MutableLiveData<Organization> organization = new MutableLiveData<>();
     private final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault());
 
     public CreatePostViewModel() {
         this.dataSource = new FirebaseRemoteDataSource();
         this.db = FirebaseFirestore.getInstance();
+        loadOrganizationInfo();
     }
 
     public LiveData<String> getStatusMessage() { return statusMessage; }
     public LiveData<AnnouncementModel> getExistingAnnouncement() { return existingAnnouncement; }
     public LiveData<EventModel> getExistingEvent() { return existingEvent; }
+    public LiveData<Organization> getOrganization() { return organization; }
+
+    private void loadOrganizationInfo() {
+        if (dataSource.isUserLoggedIn()) {
+            String uid = dataSource.getCurrentUser().getUid();
+            dataSource.getOrganizationByOwner(uid).addOnSuccessListener(queryDocumentSnapshots -> {
+                if (!queryDocumentSnapshots.isEmpty()) {
+                    organization.setValue(queryDocumentSnapshots.getDocuments().get(0).toObject(Organization.class));
+                }
+            });
+        }
+    }
 
     public void fetchAnnouncement(String id) {
         db.collection("announcements").document(id).get().addOnSuccessListener(doc -> {
@@ -56,8 +72,14 @@ public class CreatePostViewModel extends ViewModel {
             return;
         }
 
-        AnnouncementModel announcement = new AnnouncementModel(title, message, dataSource.getCurrentUser().getUid());
-        db.collection("announcements").add(announcement).addOnCompleteListener(task -> {
+        String uid = dataSource.getCurrentUser().getUid();
+        Organization org = organization.getValue();
+        String orgName = (org != null) ? org.getName() : "Organization";
+
+        AnnouncementModel announcement = new AnnouncementModel(title, message, uid);
+        announcement.setOrgName(orgName);
+
+        dataSource.createAnnouncement(announcement).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 statusMessage.setValue("Announcement created successfully!");
             } else {
@@ -89,6 +111,11 @@ public class CreatePostViewModel extends ViewModel {
         try {
             Date startD = dateTimeFormat.parse(date + " " + time);
             Date endD = dateTimeFormat.parse(date + " " + endTime);
+            String uid = dataSource.getCurrentUser().getUid();
+            Organization org = organization.getValue();
+
+            String orgName = (org != null) ? org.getName() : "Organization";
+            String orgId = uid; // Fallback
 
             EventModel event = new EventModel();
             event.setTitle(title);
@@ -98,9 +125,9 @@ public class CreatePostViewModel extends ViewModel {
             event.setEndDateTime(new Timestamp(endD));
             event.setMaxCapacity(capacity);
             event.setCurrentRsvpCount(0);
-            event.setOrgId(dataSource.getCurrentUser().getUid());
-            event.setOrgName("Organization"); // Should ideally be fetched
-            event.setCreatedBy(dataSource.getCurrentUser().getUid());
+            event.setOrgId(orgId);
+            event.setOrgName(orgName);
+            event.setCreatedBy(uid);
 
             dataSource.createEvent(event).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {

@@ -19,8 +19,13 @@ import ph.edu.uscDCISMCatcha.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class    EventFiltersBottomSheet extends BottomSheetDialogFragment {
+public class EventFiltersBottomSheet extends BottomSheetDialogFragment {
 
+    public interface OnFiltersAppliedListener {
+        void onFiltersApplied(String status, String startTime, String endTime);
+    }
+
+    private OnFiltersAppliedListener listener;
     private TextView btnCancel, btnShowResults;
     private ChipGroup cgStatus;
     private LinearLayout activeFiltersContainer;
@@ -28,6 +33,10 @@ public class    EventFiltersBottomSheet extends BottomSheetDialogFragment {
     private Chip chipResetAll;
     private Button btnSetTime;
     private boolean isTimeSet = false;
+
+    public void setOnFiltersAppliedListener(OnFiltersAppliedListener listener) {
+        this.listener = listener;
+    }
 
     @Nullable
     @Override
@@ -58,7 +67,22 @@ public class    EventFiltersBottomSheet extends BottomSheetDialogFragment {
         });
 
         btnCancel.setOnClickListener(v -> dismiss());
-        btnShowResults.setOnClickListener(v -> dismiss());
+        btnShowResults.setOnClickListener(v -> {
+            if (listener != null) {
+                String status = null;
+                int checkedId = cgStatus.getCheckedChipId();
+                if (checkedId != View.NO_ID) {
+                    Chip selectedChip = cgStatus.findViewById(checkedId);
+                    status = selectedChip.getText().toString();
+                }
+                
+                String startTime = isTimeSet ? atvStartTime.getText().toString() : null;
+                String endTime = isTimeSet ? atvEndTime.getText().toString() : null;
+                
+                listener.onFiltersApplied(status, startTime, endTime);
+            }
+            dismiss();
+        });
         chipResetAll.setOnClickListener(v -> resetFilters());
 
         updateActiveFilters();
@@ -67,7 +91,6 @@ public class    EventFiltersBottomSheet extends BottomSheetDialogFragment {
     private void setupTimeDropdowns() {
         List<String> timeList = new ArrayList<>();
         
-        // 12:00 AM to 11:00 PM (Hourly)
         String[] periods = {"AM", "PM"};
         
         timeList.add("12:00 AM");
@@ -84,20 +107,17 @@ public class    EventFiltersBottomSheet extends BottomSheetDialogFragment {
         atvStartTime.setAdapter(adapter);
         atvEndTime.setAdapter(adapter);
         
-        // Disable manual typing
         atvStartTime.setInputType(0);
         atvEndTime.setInputType(0);
     }
 
     private void updateActiveFilters() {
-        // Remove all except Reset All chip (first child)
         while (activeFiltersContainer.getChildCount() > 1) {
             activeFiltersContainer.removeViewAt(1);
         }
 
         int count = 0;
 
-        // Add Status Tag
         int checkedId = cgStatus.getCheckedChipId();
         if (checkedId != View.NO_ID) {
             Chip selectedChip = cgStatus.findViewById(checkedId);
@@ -105,7 +125,6 @@ public class    EventFiltersBottomSheet extends BottomSheetDialogFragment {
             count++;
         }
 
-        // Add Time Range Tag only if isTimeSet is true
         if (isTimeSet) {
             String startTime = atvStartTime.getText().toString();
             String endTime = atvEndTime.getText().toString();

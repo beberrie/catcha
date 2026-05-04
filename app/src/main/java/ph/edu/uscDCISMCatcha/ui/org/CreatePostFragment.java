@@ -81,6 +81,17 @@ public class CreatePostFragment extends Fragment {
             }
         });
 
+        viewModel.getOrganization().observe(getViewLifecycleOwner(), org -> {
+            if (org != null) {
+                binding.tvOrgName.setText(org.getName());
+                binding.tvOrgSub.setText(org.getCategory() != null ? org.getCategory() : "Organization");
+                if (org.getName() != null && !org.getName().isEmpty()) {
+                    binding.tvOrgInitial.setText(String.valueOf(org.getName().charAt(0)).toUpperCase());
+                }
+                binding.btnBroadcast.setText("Broadcast as " + org.getName());
+            }
+        });
+
         viewModel.getExistingAnnouncement().observe(getViewLifecycleOwner(), announcement -> {
             if (announcement != null) {
                 binding.etTitle.setText(announcement.getTitle());
