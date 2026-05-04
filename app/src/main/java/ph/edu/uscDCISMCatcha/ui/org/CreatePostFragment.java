@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import ph.edu.uscDCISMCatcha.R;
@@ -24,6 +25,9 @@ public class CreatePostFragment extends Fragment {
     private FragmentCreatePostBinding binding;
     private CreatePostViewModel viewModel;
     private boolean isAnnouncementTab = true;
+    private String editId = null;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -38,25 +42,79 @@ public class CreatePostFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(CreatePostViewModel.class);
 
+        setupTabs();
+        setupDateTimePickers();
+        setupButtons();
+        observeViewModel();
+
+        Bundle args = getArguments();
+        if (args != null) {
+            boolean startOnAnnouncement = args.getBoolean("startOnAnnouncement", true);
+            editId = args.getString("EDIT_ID");
+            switchTab(startOnAnnouncement);
+
+            if (editId != null) {
+                binding.tvNavTitle.setText(startOnAnnouncement ? "Edit Announcement" : "Edit Event");
+                binding.btnBroadcast.setText("Update Announcement");
+                binding.btnCreateEvent.setText("Update Event");
+                
+                // Hide tabs when editing to prevent confusion
+                binding.layoutTabs.setVisibility(View.GONE);
+
+                if (startOnAnnouncement) {
+                    viewModel.fetchAnnouncement(editId);
+                } else {
+                    viewModel.fetchEvent(editId);
+                }
+            }
+        }
+    }
+
+    private void observeViewModel() {
         viewModel.getStatusMessage().observe(getViewLifecycleOwner(), message -> {
             if (message != null) {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                 if (message.contains("successfully")) {
-                    clearInputs();
+                    requireActivity().getSupportFragmentManager().popBackStack();
                 }
                 viewModel.clearStatus();
             }
         });
 
-        setupTabs();
-        setupDateTimePickers();
-        setupButtons();
+        viewModel.getOrganization().observe(getViewLifecycleOwner(), org -> {
+            if (org != null) {
+                binding.tvOrgName.setText(org.getName());
+                binding.tvOrgSub.setText(org.getCategory() != null ? org.getCategory() : "Organization");
+                if (org.getName() != null && !org.getName().isEmpty()) {
+                    binding.tvOrgInitial.setText(String.valueOf(org.getName().charAt(0)).toUpperCase());
+                }
+                binding.btnBroadcast.setText("Broadcast as " + org.getName());
+            }
+        });
 
-        Bundle args = getArguments();
-        if (args != null) {
-            boolean startOnAnnouncement = args.getBoolean("startOnAnnouncement", true);
-            switchTab(startOnAnnouncement);
-        }
+        viewModel.getExistingAnnouncement().observe(getViewLifecycleOwner(), announcement -> {
+            if (announcement != null) {
+                binding.etTitle.setText(announcement.getTitle());
+                binding.etMessage.setText(announcement.getContent());
+            }
+        });
+
+        viewModel.getExistingEvent().observe(getViewLifecycleOwner(), event -> {
+            if (event != null) {
+                binding.etTitle.setText(event.getTitle());
+                binding.etLocation.setText(event.getLocation());
+                binding.etDescription.setText(event.getDescription());
+                binding.etCapacity.setText(String.valueOf(event.getMaxCapacity()));
+                
+                if (event.getStartDateTime() != null) {
+                    binding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
+                    binding.tvTime.setText(timeFormat.format(event.getStartDateTime().toDate()));
+                }
+                if (event.getEndDateTime() != null) {
+                    binding.tvEndTime.setText(timeFormat.format(event.getEndDateTime().toDate()));
+                }
+            }
+        });
     }
 
     private void setupTabs() {
@@ -70,7 +128,9 @@ public class CreatePostFragment extends Fragment {
     private void switchTab(boolean showAnnouncement) {
         isAnnouncementTab = showAnnouncement;
 
-        binding.tvNavTitle.setText(showAnnouncement ? "Create post" : "Create event");
+        if (editId == null) {
+            binding.tvNavTitle.setText(showAnnouncement ? "Create post" : "Create event");
+        }
 
         if (showAnnouncement) {
             binding.btnTabAnnouncement.setBackgroundResource(R.drawable.bg_tab_selected);
@@ -124,30 +184,29 @@ public class CreatePostFragment extends Fragment {
     }
 
     private void setupButtons() {
-
         binding.btnBack.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
-        // Broadcast button
         binding.btnBroadcast.setOnClickListener(v -> {
             String title   = binding.etTitle.getText().toString().trim();
             String message = binding.etMessage.getText().toString().trim();
-            boolean sendPush = binding.switchPushNotification.isChecked();
 
             if (title.isEmpty()) {
                 binding.etTitle.setError("Required");
                 return;
             }
             if (message.isEmpty()) {
-                Toast.makeText(requireContext(),
-                        "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            viewModel.postAnnouncement(title, message, sendPush);
+            if (editId != null) {
+                viewModel.updateAnnouncement(editId, title, message);
+            } else {
+                viewModel.postAnnouncement(title, message, binding.switchPushNotification.isChecked());
+            }
         });
 
-        // Create event button
         binding.btnCreateEvent.setOnClickListener(v -> {
             String title       = binding.etTitle.getText().toString().trim();
             String date        = binding.tvDate.getText().toString();
@@ -156,15 +215,13 @@ public class CreatePostFragment extends Fragment {
             String location    = binding.etLocation.getText().toString().trim();
             String description = binding.etDescription.getText().toString().trim();
             String capacityStr = binding.etCapacity.getText().toString().trim();
-            boolean autoReminders = binding.switchAutoReminders.isChecked();
 
             if (title.isEmpty()) {
                 binding.etTitle.setError("Required");
                 return;
             }
             if (date.equals("Pick date") || time.equals("Pick time") || location.isEmpty()) {
-                Toast.makeText(requireContext(),
-                        "Fill in all required fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Fill in all required fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -178,22 +235,12 @@ public class CreatePostFragment extends Fragment {
                 }
             }
 
-            viewModel.createEvent(title, date, time, endTime, location, description, capacity, autoReminders);
+            if (editId != null) {
+                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity);
+            } else {
+                viewModel.createEvent(title, date, time, endTime, location, description, capacity, binding.switchAutoReminders.isChecked());
+            }
         });
-    }
-
-    private void clearInputs() {
-        binding.etTitle.setText("");
-        binding.etMessage.setText("");
-        binding.etLocation.setText("");
-        binding.etDescription.setText("");
-        binding.etCapacity.setText("");
-        binding.tvDate.setText("Pick date");
-        binding.tvTime.setText("Pick time");
-        binding.tvEndTime.setText("Pick time");
-        binding.switchPushNotification.setChecked(false);
-        binding.switchAutoReminders.setChecked(false);
-        binding.etTitle.requestFocus();
     }
 
     @Override

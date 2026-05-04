@@ -10,6 +10,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.data.models.RSVPModel;
@@ -79,6 +81,13 @@ public class FirebaseRemoteDataSource {
         });
     }
 
+    public Task<QuerySnapshot> getOrganizationByOwner(String uid) {
+        return firestore.collection("organizations")
+                .whereEqualTo("ownerUid", uid)
+                .limit(1)
+                .get();
+    }
+
     public void signOut() {
         auth.signOut();
     }
@@ -118,6 +127,14 @@ public class FirebaseRemoteDataSource {
         });
     }
 
+    // --- Announcement Creation ---
+    public Task<Void> createAnnouncement(AnnouncementModel announcement) {
+        DocumentReference docRef = firestore.collection("announcements").document();
+        announcement.setAnnouncementId(docRef.getId());
+        return docRef.set(announcement);
+    }
+
+    // --- RSVP Capacity Enforcement ---
     // --- RSVP Capacity Enforcement & Aggregation ---
     public Task<Void> rsvpToEvent(RSVPModel rsvp) {
         String rsvpId = rsvp.getUserId() + "_" + rsvp.getEventId();

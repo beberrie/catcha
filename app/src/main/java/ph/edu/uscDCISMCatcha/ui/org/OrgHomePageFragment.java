@@ -71,10 +71,10 @@ public class OrgHomePageFragment extends Fragment {
     private void setupCreatePostCard() {
         binding.ivUserAvatar.setImageResource(R.drawable.bg_avatar_dark);
 
-        binding.btnOpenCreatePost.setOnClickListener(v -> openCreatePost(true));
-        binding.btnShortcutAnnouncement.setOnClickListener(v -> openCreatePost(true));
-        binding.btnShortcutEvent.setOnClickListener(v -> openCreatePost(false));
-        binding.btnAttachImage.setOnClickListener(v -> openCreatePost(true));
+        binding.btnOpenCreatePost.setOnClickListener(v -> openCreatePost(true, null));
+        binding.btnShortcutAnnouncement.setOnClickListener(v -> openCreatePost(true, null));
+        binding.btnShortcutEvent.setOnClickListener(v -> openCreatePost(false, null));
+        binding.btnAttachImage.setOnClickListener(v -> openCreatePost(true, null));
     }
 
     private void fetchAnnouncements() {
@@ -111,6 +111,7 @@ public class OrgHomePageFragment extends Fragment {
             cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp()));
         }
 
+        cardBinding.btnEditAnnouncement.setOnClickListener(v -> openCreatePost(true, docId));
         cardBinding.btnDeleteAnnouncement.setOnClickListener(v -> showDeleteConfirmation("announcements", docId));
 
         binding.announcementsContainer.addView(cardBinding.getRoot());
@@ -153,6 +154,7 @@ public class OrgHomePageFragment extends Fragment {
         cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 
                 event.getCurrentRsvpCount(), event.getMaxCapacity()));
 
+        cardBinding.btnEditEvent.setOnClickListener(v -> openCreatePost(false, docId));
         cardBinding.btnDeleteEvent.setOnClickListener(v -> showDeleteConfirmation("events", docId));
 
         binding.eventsContainer.addView(cardBinding.getRoot());
@@ -161,7 +163,7 @@ public class OrgHomePageFragment extends Fragment {
     private void showDeleteConfirmation(String collection, String docId) {
         new AlertDialog.Builder(getContext())
                 .setTitle("Delete Post")
-                .setMessage("Are you sure you want to delete this post?")
+                .setMessage("Are you sure you want to delete this post? This action cannot be undone.")
                 .setPositiveButton("Delete", (dialog, which) -> deletePost(collection, docId))
                 .setNegativeButton("Cancel", null)
                 .show();
@@ -169,13 +171,16 @@ public class OrgHomePageFragment extends Fragment {
 
     private void deletePost(String collection, String docId) {
         db.collection(collection).document(docId).delete()
-                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Post deleted", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Post deleted successfully", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Error deleting post", Toast.LENGTH_SHORT).show());
     }
 
-    private void openCreatePost(boolean startOnAnnouncement) {
+    private void openCreatePost(boolean startOnAnnouncement, @Nullable String editId) {
         Bundle args = new Bundle();
         args.putBoolean("startOnAnnouncement", startOnAnnouncement);
+        if (editId != null) {
+            args.putString("EDIT_ID", editId);
+        }
 
         CreatePostFragment fragment = new CreatePostFragment();
         fragment.setArguments(args);

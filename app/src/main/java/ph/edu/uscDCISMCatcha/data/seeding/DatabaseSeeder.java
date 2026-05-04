@@ -82,10 +82,18 @@ public class DatabaseSeeder {
         RSVPModel rsvp = new RSVPModel(user1Id, event1Id, "Hackathon 2024", "Going");
         batch.set(db.collection("rsvps").document(rsvpId), rsvp);
 
-        // 6. Seed Sample Announcement
-        String announceId = "sample_announce_1";
-        AnnouncementModel announcement = new AnnouncementModel("Welcome!", "Welcome to the CSS Organization.", user1Id);
-        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announceId), announcement);
+        // 6. Seed Sample Announcements
+        String announce1Id = "sample_announce_1";
+        AnnouncementModel announce1 = new AnnouncementModel("Welcome!", "Welcome to the CSS Organization. Stay tuned for more updates!", user1Id);
+        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announce1Id), announce1);
+
+        String announce2Id = "sample_announce_2";
+        AnnouncementModel announce2 = new AnnouncementModel("General Assembly", "We will have our first General Assembly this Friday at 4 PM in the DCISM Lab.", user1Id);
+        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announce2Id), announce2);
+
+        String announce3Id = "sample_announce_3";
+        AnnouncementModel announce3 = new AnnouncementModel("Hackathon Registration", "Registration for Hackathon 2024 is now open! Visit the CSS office for more details.", user1Id);
+        batch.set(db.collection("organizations").document(org1Id).collection("announcements").document(announce3Id), announce3);
 
         // Commit all changes
         batch.commit().addOnCompleteListener(task -> {

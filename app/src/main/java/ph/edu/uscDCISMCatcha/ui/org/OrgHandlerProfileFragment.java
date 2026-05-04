@@ -1,5 +1,6 @@
 package ph.edu.uscDCISMCatcha.ui.org;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,7 +29,7 @@ public class OrgHandlerProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setupToolbar();
-        binding.btnLogout.setOnClickListener(v -> logout());
+        binding.btnLogout.setOnClickListener(v -> showLogoutConfirmation());
     }
 
     private void setupToolbar() {
@@ -37,6 +38,15 @@ public class OrgHandlerProfileFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    private void showLogoutConfirmation() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to logout?")
+                .setPositiveButton("Logout", (dialog, which) -> logout())
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void logout() {
