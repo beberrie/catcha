@@ -18,6 +18,7 @@ public class Organization implements Serializable {
     private String description;
     private String category;
     private String profileImageUrl;
+    private String bannerImageUrl;
     private String ownerUid;
     @ServerTimestamp
     private Date createdAt;
@@ -55,6 +56,8 @@ public class Organization implements Serializable {
     public void setCategory(String category) { this.category = category; }
     public String getProfileImageUrl() { return profileImageUrl; }
     public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }
+    public String getBannerImageUrl() { return bannerImageUrl; }
+    public void setBannerImageUrl(String bannerImageUrl) { this.bannerImageUrl = bannerImageUrl; }
     public String getOwnerUid() { return ownerUid; }
     public void setOwnerUid(String ownerUid) { this.ownerUid = ownerUid; }
     public Date getCreatedAt() { return createdAt; }

@@ -1,15 +1,20 @@
 package ph.edu.uscDCISMCatcha.ui.admin;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,17 +25,44 @@ import java.util.UUID;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
+import ph.edu.uscDCISMCatcha.data.repository.FirebaseRemoteDataSource;
 
 public class RegisterOrgActivity extends AppCompatActivity {
 
     private TextInputEditText etOrgName, etDescription, etOwnerEmail, etSchool, etDepartment;
+    private TextInputEditText etProfileImageUrl, etBannerImageUrl;
     private MaterialAutoCompleteTextView actvUniversity, actvCategory;
     private Button btnRegisterOrg;
     private TextView tvTitle;
     private TextInputLayout tilOwnerEmail;
+    private ImageView ivProfilePreview, ivBannerPreview;
+    
     private FirebaseFirestore db;
+    private FirebaseRemoteDataSource dataSource;
     private Organization existingOrg;
     private boolean isEditMode = false;
+    
+    private Uri profileUri, bannerUri;
+
+    private final ActivityResultLauncher<String> profilePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    profileUri = uri;
+                    Glide.with(this).load(uri).into(ivProfilePreview);
+                }
+            }
+    );
+
+    private final ActivityResultLauncher<String> bannerPickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    bannerUri = uri;
+                    Glide.with(this).load(uri).into(ivBannerPreview);
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +71,7 @@ public class RegisterOrgActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_register_org);
 
         db = FirebaseFirestore.getInstance();
+        dataSource = new FirebaseRemoteDataSource();
 
         tvTitle = findViewById(R.id.tvTitle);
         etOrgName = findViewById(R.id.etOrgName);
@@ -46,14 +79,21 @@ public class RegisterOrgActivity extends AppCompatActivity {
         etDepartment = findViewById(R.id.etDepartment);
         etDescription = findViewById(R.id.etDescription);
         etOwnerEmail = findViewById(R.id.etOwnerEmail);
-        tilOwnerEmail = (TextInputLayout) etOwnerEmail.getParent().getParent(); // Getting TextInputLayout
+        etProfileImageUrl = findViewById(R.id.etProfileImageUrl);
+        etBannerImageUrl = findViewById(R.id.etBannerImageUrl);
+        tilOwnerEmail = findViewById(R.id.tilOwnerEmail);
         actvUniversity = findViewById(R.id.actvUniversity);
         actvCategory = findViewById(R.id.actvCategory);
         btnRegisterOrg = findViewById(R.id.btnRegisterOrg);
+        ivProfilePreview = findViewById(R.id.ivProfilePreview);
+        ivBannerPreview = findViewById(R.id.ivBannerPreview);
 
         setupDropdowns();
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+
+        findViewById(R.id.btnPickProfile).setOnClickListener(v -> profilePickerLauncher.launch("image/*"));
+        findViewById(R.id.btnPickBanner).setOnClickListener(v -> bannerPickerLauncher.launch("image/*"));
 
         // Check if we are in Edit Mode
         if (getIntent().hasExtra("ORGANIZATION")) {
@@ -65,10 +105,8 @@ public class RegisterOrgActivity extends AppCompatActivity {
         }
 
         btnRegisterOrg.setOnClickListener(v -> {
-            if (isEditMode) {
-                updateOrganization();
-            } else {
-                validateAndRegister();
+            if (validateInputs()) {
+                uploadImagesAndSubmit();
             }
         });
     }
@@ -83,9 +121,16 @@ public class RegisterOrgActivity extends AppCompatActivity {
         etDepartment.setText(existingOrg.getDepartment());
         etDescription.setText(existingOrg.getDescription());
         actvCategory.setText(existingOrg.getCategory(), false);
-        
-        // Hide owner email in edit mode as we don't support changing owner here yet for simplicity,
-        // or just disable it.
+        etProfileImageUrl.setText(existingOrg.getProfileImageUrl());
+        etBannerImageUrl.setText(existingOrg.getBannerImageUrl());
+
+        if (existingOrg.getProfileImageUrl() != null && !existingOrg.getProfileImageUrl().isEmpty()) {
+            Glide.with(this).load(existingOrg.getProfileImageUrl()).into(ivProfilePreview);
+        }
+        if (existingOrg.getBannerImageUrl() != null && !existingOrg.getBannerImageUrl().isEmpty()) {
+            Glide.with(this).load(existingOrg.getBannerImageUrl()).into(ivBannerPreview);
+        }
+
         tilOwnerEmail.setVisibility(View.GONE);
     }
 
@@ -99,7 +144,7 @@ public class RegisterOrgActivity extends AppCompatActivity {
         actvCategory.setAdapter(catAdapter);
     }
 
-    private void validateAndRegister() {
+    private boolean validateInputs() {
         String name = etOrgName.getText().toString().trim();
         String uni = actvUniversity.getText().toString().trim();
         String school = etSchool.getText().toString().trim();
@@ -108,11 +153,62 @@ public class RegisterOrgActivity extends AppCompatActivity {
         String cat = actvCategory.getText().toString().trim();
         String email = etOwnerEmail.getText().toString().trim();
 
-        if (name.isEmpty() || uni.isEmpty() || school.isEmpty() || dept.isEmpty() || desc.isEmpty() || cat.isEmpty() || email.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+        if (name.isEmpty() || uni.isEmpty() || school.isEmpty() || dept.isEmpty() || desc.isEmpty() || cat.isEmpty()) {
+            Toast.makeText(this, "Organization details are required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (!isEditMode && email.isEmpty()) {
+            Toast.makeText(this, "Owner email is required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void uploadImagesAndSubmit() {
+        if (profileUri != null) {
+            btnRegisterOrg.setEnabled(false);
+            btnRegisterOrg.setText("Uploading Profile...");
+            dataSource.uploadImage(profileUri, "org_profiles")
+                    .addOnSuccessListener(url -> {
+                        etProfileImageUrl.setText(url);
+                        profileUri = null;
+                        uploadImagesAndSubmit();
+                    })
+                    .addOnFailureListener(this::handleUploadError);
             return;
         }
 
+        if (bannerUri != null) {
+            btnRegisterOrg.setEnabled(false);
+            btnRegisterOrg.setText("Uploading Banner...");
+            dataSource.uploadImage(bannerUri, "org_banners")
+                    .addOnSuccessListener(url -> {
+                        etBannerImageUrl.setText(url);
+                        bannerUri = null;
+                        uploadImagesAndSubmit();
+                    })
+                    .addOnFailureListener(this::handleUploadError);
+            return;
+        }
+
+        if (isEditMode) {
+            updateOrganization();
+        } else {
+            validateAndRegister();
+        }
+    }
+
+    private void handleUploadError(Exception e) {
+        btnRegisterOrg.setEnabled(true);
+        btnRegisterOrg.setText(isEditMode ? "Update Organization" : "Create Organization");
+        Toast.makeText(this, "Upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    private void validateAndRegister() {
+        String email = etOwnerEmail.getText().toString().trim();
+        
         btnRegisterOrg.setEnabled(false);
         btnRegisterOrg.setText("Processing...");
 
@@ -121,7 +217,17 @@ public class RegisterOrgActivity extends AppCompatActivity {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
                         QueryDocumentSnapshot userDoc = (QueryDocumentSnapshot) task.getResult().getDocuments().get(0);
                         String ownerUid = userDoc.getId();
-                        createOrganization(name, uni, school, dept, desc, cat, ownerUid);
+
+                        String name = etOrgName.getText().toString().trim();
+                        String uni = actvUniversity.getText().toString().trim();
+                        String school = etSchool.getText().toString().trim();
+                        String dept = etDepartment.getText().toString().trim();
+                        String desc = etDescription.getText().toString().trim();
+                        String cat = actvCategory.getText().toString().trim();
+                        String profileUrl = etProfileImageUrl.getText().toString().trim();
+                        String bannerUrl = etBannerImageUrl.getText().toString().trim();
+
+                        createOrganization(name, uni, school, dept, desc, cat, ownerUid, profileUrl, bannerUrl);
                     } else {
                         btnRegisterOrg.setEnabled(true);
                         btnRegisterOrg.setText("Create Organization");
@@ -135,9 +241,11 @@ public class RegisterOrgActivity extends AppCompatActivity {
                 });
     }
 
-    private void createOrganization(String name, String uni, String school, String dept, String desc, String cat, String ownerUid) {
+    private void createOrganization(String name, String uni, String school, String dept, String desc, String cat, String ownerUid, String profileUrl, String bannerUrl) {
         String orgId = UUID.randomUUID().toString();
-        Organization newOrg = new Organization(name, uni, school, dept, desc, cat, "", ownerUid);
+        Organization newOrg = new Organization(name, uni, school, dept, desc, cat, profileUrl, ownerUid);
+        newOrg.setBannerImageUrl(bannerUrl);
+        newOrg.setId(orgId);
 
         db.collection("organizations").document(orgId).set(newOrg)
                 .addOnSuccessListener(aVoid -> {
@@ -165,11 +273,8 @@ public class RegisterOrgActivity extends AppCompatActivity {
         String dept = etDepartment.getText().toString().trim();
         String desc = etDescription.getText().toString().trim();
         String cat = actvCategory.getText().toString().trim();
-
-        if (name.isEmpty() || uni.isEmpty() || school.isEmpty() || dept.isEmpty() || desc.isEmpty() || cat.isEmpty()) {
-            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        String profileUrl = etProfileImageUrl.getText().toString().trim();
+        String bannerUrl = etBannerImageUrl.getText().toString().trim();
 
         btnRegisterOrg.setEnabled(false);
         btnRegisterOrg.setText("Updating...");
@@ -180,6 +285,8 @@ public class RegisterOrgActivity extends AppCompatActivity {
         existingOrg.setDepartment(dept);
         existingOrg.setDescription(desc);
         existingOrg.setCategory(cat);
+        existingOrg.setProfileImageUrl(profileUrl);
+        existingOrg.setBannerImageUrl(bannerUrl);
 
         db.collection("organizations").document(existingOrg.getId()).set(existingOrg)
                 .addOnSuccessListener(aVoid -> {

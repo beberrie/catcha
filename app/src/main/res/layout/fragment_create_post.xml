@@ -160,6 +160,17 @@
                 android:inputType="textCapSentences"
                 android:imeOptions="actionNext" />
 
+            <!-- Universal Image Preview for both Announcement and Event -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivPostImagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="14dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:background="#F5F5F5"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Catcha.SmallComponent" />
+
             <!-- ANNOUNCEMENT FIELDS -->
             <LinearLayout
                 android:id="@+id/layoutAnnouncement"
@@ -191,7 +202,7 @@
                     android:layout_marginBottom="14dp" />
 
                 <LinearLayout
-                    android:id="@+id/layoutAttachImage"
+                    android:id="@+id/btnAttachImageAnnouncement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_field_outline_light"
@@ -203,6 +214,7 @@
                     android:foreground="?attr/selectableItemBackground">
 
                     <TextView
+                        android:id="@+id/tvAttachLabelAnnouncement"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -279,9 +291,9 @@
                 android:visibility="gone">
 
                 <LinearLayout
-                    android:id="@+id/layoutCoverPhoto"
+                    android:id="@+id/btnAttachEventCover"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="120dp"
                     android:background="@drawable/bg_dashed_border"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -291,9 +303,10 @@
                     android:foreground="?attr/selectableItemBackground">
 
                     <TextView
+                        android:id="@+id/tvAddCoverText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+ Add cover photo"
+                        android:text="+ Add event cover photo"
                         android:textSize="13sp"
                         android:textColor="#AAAAAA" />
                 </LinearLayout>
