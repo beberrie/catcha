@@ -40,7 +40,7 @@ public class CommonGroundAdapter extends RecyclerView.Adapter<CommonGroundAdapte
         String firstName = user.getFirstName();
         holder.tvName.setText(firstName);
 
-        holder.ivAvatar.setImageResource(android.R.drawable.ic_menu_myplaces);
+        holder.ivAvatar.setImageResource(R.drawable.ic_profile);
     }
 
     @Override

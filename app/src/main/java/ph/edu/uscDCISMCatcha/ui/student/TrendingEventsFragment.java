@@ -37,10 +37,13 @@ public class TrendingEventsFragment extends Fragment {
                         android.util.Log.d("EventID", "Event ID: " + eventId);
 
                         View eventCard = inflater.inflate(
-                                R.layout.fragment_event_card, llEventCards, false);
+                                R.layout.other_events_card, llEventCards, false);
 
                         RecyclerView rvCommonGround = eventCard.findViewById(R.id.rvCommonGround);
                         View tvCommonGroundLabel = eventCard.findViewById(R.id.tvCommonGroundLabel);
+
+                        rvCommonGround.setVisibility(View.GONE);
+                        tvCommonGroundLabel.setVisibility(View.GONE);
 
                         rvCommonGround.setVisibility(View.GONE);
                         tvCommonGroundLabel.setVisibility(View.GONE);
