@@ -70,6 +70,42 @@ public class TrendingEventsFragment extends Fragment {
                 .addOnFailureListener(e -> {
                 });
 
+        // Demo for trending card 1
+        RecyclerView rvTrending1 = view.findViewById(R.id.rvCommonGround);
+        View tvTrending1 = view.findViewById(R.id.tvCommonGroundLabel);
+
+        if (rvTrending1 != null && tvTrending1 != null) {
+            tvTrending1.setVisibility(View.VISIBLE);
+            rvTrending1.setVisibility(View.VISIBLE);
+
+            java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers1 = new java.util.ArrayList<>();
+            demoUsers1.add(new ph.edu.uscDCISMCatcha.models.UserModel("Beth", "Santos", "beth",
+                    "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
+            demoUsers1.add(new ph.edu.uscDCISMCatcha.models.UserModel("Carl", "Gomez", "carl",
+                    "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
+
+            CommonGroundAdapter adapter1 = new CommonGroundAdapter(requireContext(), demoUsers1);
+            rvTrending1.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+            rvTrending1.setAdapter(adapter1);
+        }
+
+        // Demo for trending card 2
+        RecyclerView rvTrending2 = view.findViewById(R.id.rvCommonGround2);
+        View tvTrending2 = view.findViewById(R.id.tvCommonGroundLabel2);
+
+        if (rvTrending2 != null && tvTrending2 != null) {
+            tvTrending2.setVisibility(View.VISIBLE);
+            rvTrending2.setVisibility(View.VISIBLE);
+
+            java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers2 = new java.util.ArrayList<>();
+            demoUsers2.add(new ph.edu.uscDCISMCatcha.models.UserModel("Dana", "Cruz", "dana",
+                    "dana@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
+
+            CommonGroundAdapter adapter2 = new CommonGroundAdapter(requireContext(), demoUsers2);
+            rvTrending2.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+            rvTrending2.setAdapter(adapter2);
+        }
+
         return view;
     }
 }

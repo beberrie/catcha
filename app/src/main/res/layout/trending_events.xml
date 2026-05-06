@@ -189,10 +189,11 @@
                         android:textColor="#FFFFFF"
                         android:textSize="10sp"
                         android:textStyle="bold"
-                        android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        android:visibility="visible"
+                        app:layout_constraintBottom_toBottomOf="@id/btnAction"
+                        app:layout_constraintEnd_toStartOf="@id/btnAction"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/btnAction" />
+                        app:layout_constraintTop_toBottomOf="@id/tvLocation" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvCommonGround"
@@ -202,8 +203,7 @@
                         android:orientation="horizontal"
                         android:visibility="gone"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btnAction"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvCommonGroundLabel" />
 
@@ -297,9 +297,10 @@
                         android:textSize="10sp"
                         android:textStyle="bold"
                         android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@id/btn2"
+                        app:layout_constraintEnd_toStartOf="@id/btn2"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/btn2" />
+                        app:layout_constraintTop_toBottomOf="@id/location2" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvCommonGround2"
@@ -309,8 +310,7 @@
                         android:orientation="horizontal"
                         android:visibility="gone"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/btn2"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tvCommonGroundLabel2" />
 
