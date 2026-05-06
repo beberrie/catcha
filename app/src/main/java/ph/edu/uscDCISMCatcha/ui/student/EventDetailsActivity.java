@@ -14,6 +14,7 @@ import com.google.android.material.chip.Chip;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
+import ph.edu.uscDCISMCatcha.utils.Constants;
 import ph.edu.uscDCISMCatcha.viewmodel.student.EventViewModel;
 
 public class EventDetailsActivity extends AppCompatActivity {
@@ -39,14 +40,14 @@ public class EventDetailsActivity extends AppCompatActivity {
         LinearLayout qrSection = findViewById(R.id.qrSection);
 
         // Get data from intent
-        eventId = getIntent().getStringExtra("EVENT_ID");
-        String title = getIntent().getStringExtra("EVENT_TITLE");
-        String host = getIntent().getStringExtra("EVENT_HOST");
-        String location = getIntent().getStringExtra("EVENT_LOCATION");
-        String dateTime = getIntent().getStringExtra("EVENT_DATETIME");
-        String description = getIntent().getStringExtra("EVENT_DESCRIPTION");
-        String status = getIntent().getStringExtra("EVENT_STATUS");
-        int statusColor = getIntent().getIntExtra("EVENT_STATUS_COLOR", R.color.yellow);
+        eventId = getIntent().getStringExtra(Constants.EXTRA_EVENT_ID);
+        String title = getIntent().getStringExtra(Constants.EXTRA_EVENT_TITLE);
+        String host = getIntent().getStringExtra(Constants.EXTRA_EVENT_HOST);
+        String location = getIntent().getStringExtra(Constants.EXTRA_EVENT_LOCATION);
+        String dateTime = getIntent().getStringExtra(Constants.EXTRA_EVENT_DATETIME);
+        String description = getIntent().getStringExtra(Constants.EXTRA_EVENT_DESCRIPTION);
+        String status = getIntent().getStringExtra(Constants.EXTRA_EVENT_STATUS);
+        int statusColor = getIntent().getIntExtra(Constants.EXTRA_EVENT_STATUS_COLOR, R.color.yellow);
 
         // Populate views
         if (title != null) tvTitle.setText(title);
@@ -85,7 +86,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             event.setEventId(eventId != null ? eventId : "dummy_id");
             event.setTitle(title);
             
-            viewModel.rsvpToEvent(event, "Going");
+            viewModel.rsvpToEvent(event, Constants.STATUS_GOING);
         });
 
         btnBack.setOnClickListener(v -> finish());
