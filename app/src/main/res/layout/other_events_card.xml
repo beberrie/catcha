@@ -21,7 +21,6 @@
             android:layout_height="90dp"
             android:scaleType="centerCrop"
             android:src="@drawable/logo_devfest"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,6 +41,7 @@
             android:id="@+id/tvUpcoming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/bg_btn_yellow"
             android:paddingHorizontal="10dp"
             android:paddingVertical="3dp"
@@ -49,7 +49,6 @@
             android:textColor="#FFFFFF"
             android:textSize="9sp"
             android:textStyle="bold"
-            android:layout_marginEnd="4dp"
             app:layout_constraintEnd_toStartOf="@id/tvDaysLeft"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -132,14 +131,56 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginTop="6dp"
-            android:layout_marginBottom="4dp"
             android:text="6:00 - 7:00 PM"
             android:textColor="#444444"
             android:textSize="11sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/ivTimeIcon"
             app:layout_constraintTop_toBottomOf="@id/tvDescription" />
+
+        <TextView
+            android:id="@+id/tvCapacity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/inter"
+            android:text="0/0 slots"
+            android:textColor="@color/softlight_blue"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivEventImage"
+            app:layout_constraintTop_toBottomOf="@id/tvTime" />
+
+        <!-- Common Ground Section -->
+        <TextView
+            android:id="@+id/tvCommonGroundLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:text="People You Know Going"
+            android:textColor="#1A2340"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivEventImage"
+            app:layout_constraintTop_toBottomOf="@id/tvCapacity" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCommonGround"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivEventImage"
+            app:layout_constraintTop_toBottomOf="@id/tvCommonGroundLabel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

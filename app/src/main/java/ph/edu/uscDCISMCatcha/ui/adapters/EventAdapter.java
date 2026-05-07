@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-import ph.edu.uscDCISMCatcha.databinding.FragmentEventCardBinding;
+import ph.edu.uscDCISMCatcha.databinding.OtherEventsCardBinding;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
@@ -33,15 +33,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        FragmentEventCardBinding binding = FragmentEventCardBinding.inflate(
+        OtherEventsCardBinding binding = OtherEventsCardBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
         return new EventViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        EventModel event = eventList.get(position);
-        holder.bind(event);
+        holder.bind(eventList.get(position));
     }
 
     @Override
@@ -50,9 +49,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     class EventViewHolder extends RecyclerView.ViewHolder {
-        private final FragmentEventCardBinding binding;
+        private final OtherEventsCardBinding binding;
 
-        public EventViewHolder(FragmentEventCardBinding binding) {
+        public EventViewHolder(OtherEventsCardBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -67,7 +66,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 binding.tvTime.setText(timeFormat.format(event.getStartDateTime()));
             }
 
-            // --- Capacity Binding ---
             if (event.getMaxCapacity() > 0) {
                 String capacityText = event.getCurrentRsvpCount() + "/" + event.getMaxCapacity() + " slots";
                 binding.tvCapacity.setText(capacityText);
@@ -76,7 +74,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                     binding.tvCapacity.setTextColor(Color.RED);
                     binding.tvCapacity.setText("EVENT FULL (" + event.getMaxCapacity() + ")");
                 } else {
-                    binding.tvCapacity.setTextColor(Color.parseColor("#556077")); // softlight_blue
+                    binding.tvCapacity.setTextColor(Color.parseColor("#556077"));
                 }
             } else {
                 binding.tvCapacity.setText("Unlimited slots");
