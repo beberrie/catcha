@@ -171,14 +171,16 @@
                         android:id="@+id/btnAction"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
-                        android:background="@drawable/bg_glittergold_border"
+                        android:layout_marginTop="0dp"
+                        android:backgroundTint="#D8B963"
                         android:paddingHorizontal="24dp"
-                        android:text="BUTTON"
-                        android:textColor="#FFFFFF"
+                        android:text="VIEW"
+                        android:textColor="#556077"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tvLocation" />
+                        app:layout_constraintTop_toTopOf="@id/tvCommonGroundLabel"
+                        app:layout_constraintBottom_toBottomOf="@id/rvCommonGround" />
 
                     <TextView
                         android:id="@+id/tvCommonGroundLabel"
@@ -278,14 +280,16 @@
                         android:id="@+id/btn2"
                         android:layout_width="wrap_content"
                         android:layout_height="36dp"
-                        android:background="@drawable/bg_glittergold_border"
+                        android:layout_marginTop="0dp"
+                        android:backgroundTint="#D8B963"
                         android:paddingHorizontal="24dp"
-                        android:text="BUTTON"
-                        android:textColor="#FFFFFF"
+                        android:text="VIEW"
+                        android:textColor="#556077"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/location2" />
+                        app:layout_constraintTop_toTopOf="@id/tvCommonGroundLabel2"
+                        app:layout_constraintBottom_toBottomOf="@id/rvCommonGround2" />
 
                     <TextView
                         android:id="@+id/tvCommonGroundLabel2"

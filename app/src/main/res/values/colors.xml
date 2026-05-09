@@ -34,4 +34,11 @@
 
     <!-- Misc -->
     <color name="ripple_light">#1A000000</color>
+
+    <!--    category breakdown-->
+    <color name="category_tech">#1A2B4A</color>
+    <color name="category_leadership">#C8A84B</color>
+    <color name="category_service">#4CAF50</color>
+    <color name="category_arts">#E57373</color>
+
 </resources>
