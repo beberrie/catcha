@@ -15,8 +15,8 @@ public class AnnouncementModel {
     public AnnouncementModel() {}
 
     public AnnouncementModel(String title, String content, String authorUid) {
-        this.title = title;
-        this.content = content;
+        this.title     = title;
+        this.content   = content;
         this.authorUid = authorUid;
     }
 

@@ -12,16 +12,15 @@ public class CreatePostViewModel extends ViewModel {
     public LiveData<String> getStatusMessage() { return statusMessage; }
 
     public void postAnnouncement(String title, String message, boolean sendPush) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            statusMessage.setValue("Announcement created successfully!");
-        }, 600);
+        new Handler(Looper.getMainLooper()).postDelayed(() ->
+                statusMessage.setValue("Announcement created successfully!"), 600);
     }
 
-    public void createEvent(String title, String date, String time, String endTime,
-                            String location, String description, boolean autoReminders) {
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            statusMessage.setValue("Event created successfully!");
-        }, 600);
+    public void createEvent(String title, String date, String time,
+                            String endTime, String location,
+                            String description, boolean autoReminders) {
+        new Handler(Looper.getMainLooper()).postDelayed(() ->
+                statusMessage.setValue("Event created successfully!"), 600);
     }
 
     public void clearStatus() {

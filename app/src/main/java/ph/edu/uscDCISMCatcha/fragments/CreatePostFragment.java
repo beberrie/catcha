@@ -41,9 +41,7 @@ public class CreatePostFragment extends Fragment {
         viewModel.getStatusMessage().observe(getViewLifecycleOwner(), message -> {
             if (message != null) {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                if (message.contains("successfully")) {
-                    clearInputs();
-                }
+                if (message.contains("successfully")) clearInputs();
                 viewModel.clearStatus();
             }
         });
@@ -54,22 +52,18 @@ public class CreatePostFragment extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            boolean startOnAnnouncement = args.getBoolean("startOnAnnouncement", true);
-            switchTab(startOnAnnouncement);
+            switchTab(args.getBoolean("startOnAnnouncement", true));
         }
     }
 
     private void setupTabs() {
         binding.btnTabAnnouncement.setOnClickListener(v -> switchTab(true));
         binding.btnTabEvent.setOnClickListener(v -> switchTab(false));
-
-        // Initialize state
         switchTab(true);
     }
 
     private void switchTab(boolean showAnnouncement) {
         isAnnouncementTab = showAnnouncement;
-
         binding.tvNavTitle.setText(showAnnouncement ? "Create post" : "Create event");
 
         if (showAnnouncement) {
@@ -90,64 +84,51 @@ public class CreatePostFragment extends Fragment {
 
     private void setupDateTimePickers() {
         binding.layoutPickDate.setOnClickListener(v -> {
-            Calendar calendar = Calendar.getInstance();
+            Calendar c = Calendar.getInstance();
             new DatePickerDialog(requireContext(),
-                    (datePicker, year, month, day) -> {
-                        String date = String.format(Locale.getDefault(),
-                                "%d-%02d-%02d", year, month + 1, day);
-                        binding.tvDate.setText(date);
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-            ).show();
+                    (dp, year, month, day) -> binding.tvDate.setText(
+                            String.format(Locale.getDefault(), "%d-%02d-%02d",
+                                    year, month + 1, day)),
+                    c.get(Calendar.YEAR),
+                    c.get(Calendar.MONTH),
+                    c.get(Calendar.DAY_OF_MONTH)).show();
         });
 
         binding.layoutPickTime.setOnClickListener(v -> showTimePicker(binding.tvTime));
         binding.layoutPickEndTime.setOnClickListener(v -> showTimePicker(binding.tvEndTime));
     }
 
-    private void showTimePicker(TextView targetView) {
-        Calendar calendar = Calendar.getInstance();
+    private void showTimePicker(TextView target) {
+        Calendar c = Calendar.getInstance();
         new TimePickerDialog(requireContext(),
-                (timePicker, hour, minute) -> {
+                (tp, hour, minute) -> {
                     String amPm = hour < 12 ? "AM" : "PM";
-                    int displayHour = hour % 12 == 0 ? 12 : hour % 12;
-                    String time = String.format(Locale.getDefault(),
-                            "%d:%02d %s", displayHour, minute, amPm);
-                    targetView.setText(time);
+                    int h = hour % 12 == 0 ? 12 : hour % 12;
+                    target.setText(String.format(Locale.getDefault(),
+                            "%d:%02d %s", h, minute, amPm));
                 },
-                calendar.get(Calendar.HOUR_OF_DAY),
-                calendar.get(Calendar.MINUTE),
-                false
-        ).show();
+                c.get(Calendar.HOUR_OF_DAY),
+                c.get(Calendar.MINUTE), false).show();
     }
 
     private void setupButtons() {
-
         binding.btnBack.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
-        // Broadcast button
         binding.btnBroadcast.setOnClickListener(v -> {
             String title   = binding.etTitle.getText().toString().trim();
             String message = binding.etMessage.getText().toString().trim();
             boolean sendPush = binding.switchPushNotification.isChecked();
 
-            if (title.isEmpty()) {
-                binding.etTitle.setError("Required");
-                return;
-            }
+            if (title.isEmpty()) { binding.etTitle.setError("Required"); return; }
             if (message.isEmpty()) {
-                Toast.makeText(requireContext(),
-                        "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Message cannot be empty",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
-
             viewModel.postAnnouncement(title, message, sendPush);
         });
 
-        // Create event button
         binding.btnCreateEvent.setOnClickListener(v -> {
             String title       = binding.etTitle.getText().toString().trim();
             String date        = binding.tvDate.getText().toString();
@@ -157,17 +138,14 @@ public class CreatePostFragment extends Fragment {
             String description = binding.etDescription.getText().toString().trim();
             boolean autoReminders = binding.switchAutoReminders.isChecked();
 
-            if (title.isEmpty()) {
-                binding.etTitle.setError("Required");
-                return;
-            }
+            if (title.isEmpty()) { binding.etTitle.setError("Required"); return; }
             if (date.equals("Pick date") || time.equals("Pick time") || location.isEmpty()) {
-                Toast.makeText(requireContext(),
-                        "Fill in all required fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Fill in all required fields",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            viewModel.createEvent(title, date, time, endTime, location, description, autoReminders);
+            viewModel.createEvent(title, date, time, endTime,
+                    location, description, autoReminders);
         });
     }
 
