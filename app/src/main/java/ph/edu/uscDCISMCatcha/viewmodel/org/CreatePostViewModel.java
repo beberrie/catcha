@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -45,7 +46,12 @@ public class CreatePostViewModel extends ViewModel {
             String uid = dataSource.getCurrentUser().getUid();
             dataSource.getOrganizationByOwner(uid).addOnSuccessListener(queryDocumentSnapshots -> {
                 if (!queryDocumentSnapshots.isEmpty()) {
-                    organization.setValue(queryDocumentSnapshots.getDocuments().get(0).toObject(Organization.class));
+                    DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
+                    Organization org = doc.toObject(Organization.class);
+                    if (org != null) {
+                        org.setId(doc.getId()); // Explicitly set the document ID
+                    }
+                    organization.setValue(org);
                 }
             });
         }
@@ -139,7 +145,7 @@ public class CreatePostViewModel extends ViewModel {
             Organization org = organization.getValue();
 
             String orgName = (org != null) ? org.getName() : "Organization";
-            String orgId = (org != null) ? org.getId() : uid;
+            String orgId = (org != null && org.getId() != null) ? org.getId() : uid;
 
             EventModel event = new EventModel();
             event.setTitle(title);

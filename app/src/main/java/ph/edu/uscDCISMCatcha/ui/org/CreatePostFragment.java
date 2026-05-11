@@ -54,7 +54,7 @@ public class CreatePostFragment extends Fragment {
     );
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreatePostBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -120,7 +120,6 @@ public class CreatePostFragment extends Fragment {
             if (announcement != null) {
                 binding.etTitle.setText(announcement.getTitle());
                 binding.etMessage.setText(announcement.getContent());
-                // Image handling for editing could be added here
             }
         });
 
@@ -241,7 +240,7 @@ public class CreatePostFragment extends Fragment {
                 requireActivity().getSupportFragmentManager().popBackStack());
 
         binding.btnAttachImageAnnouncement.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
-        binding.btnAttachEventCover.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        // binding.btnAttachEventCover is hidden in XML
 
         binding.btnBroadcast.setOnClickListener(v -> {
             String title   = binding.etTitle.getText().toString().trim();
@@ -302,14 +301,10 @@ public class CreatePostFragment extends Fragment {
             }
 
             if (editId != null) {
-                // For simplicity, update uses current logic; image update could be added
                 viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity, getSelectedCategories(), registrationUrl, "");
             } else {
-                if (selectedImageUri != null) {
-                    viewModel.createEventWithImage(title, date, time, endTime, location, description, capacity, getSelectedCategories(), registrationUrl, selectedImageUri);
-                } else {
-                    viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories(), registrationUrl);
-                }
+                // TEMPORARILY DISABLED: Always use createEvent (no image) for testing
+                viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories(), registrationUrl);
             }
         });
     }

@@ -67,10 +67,16 @@ public class FirebaseRemoteDataSource {
         DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
 
         return firestore.runTransaction(transaction -> {
-            DocumentSnapshot snapshot = transaction.get(userRef);
+            // Reads
+            DocumentSnapshot userSnapshot = transaction.get(userRef);
+            DocumentSnapshot metricsSnapshot = transaction.get(metricsRef);
+
+            // Writes
             transaction.set(userRef, user);
-            if (!snapshot.exists()) {
-                ensureMetricsInitialized(transaction, metricsRef);
+            if (!userSnapshot.exists()) {
+                if (!metricsSnapshot.exists()) {
+                    transaction.set(metricsRef, getInitialGlobalMetrics());
+                }
                 transaction.update(metricsRef, "totalUsers", FieldValue.increment(1));
             }
             return null;
@@ -120,7 +126,14 @@ public class FirebaseRemoteDataSource {
         DocumentReference userRef = firestore.collection(Constants.COL_USERS).document(org.getOwnerUid());
 
         return firestore.runTransaction(transaction -> {
-            ensureMetricsInitialized(transaction, metricsRef);
+            // Read
+            DocumentSnapshot metricsSnapshot = transaction.get(metricsRef);
+            
+            // Writes
+            if (!metricsSnapshot.exists()) {
+                transaction.set(metricsRef, getInitialGlobalMetrics());
+            }
+            
             transaction.set(orgRef, org);
             transaction.update(userRef, "role", "OrgHandler");
             transaction.update(metricsRef, "totalOrganizations", FieldValue.increment(1));
@@ -133,15 +146,23 @@ public class FirebaseRemoteDataSource {
         DocumentReference docRef = firestore.collection(Constants.COL_EVENTS).document();
         event.setEventId(docRef.getId());
         DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
+        DocumentReference orgMetricsRef = firestore.collection(Constants.COL_ORG_METRICS).document(event.getOrgId());
         
         return firestore.runTransaction(transaction -> {
-            ensureMetricsInitialized(transaction, metricsRef);
+            // Reads
+            DocumentSnapshot metricsSnapshot = transaction.get(metricsRef);
+            DocumentSnapshot orgMetricsSnapshot = transaction.get(orgMetricsRef);
+
+            // Writes
+            if (!metricsSnapshot.exists()) {
+                transaction.set(metricsRef, getInitialGlobalMetrics());
+            }
+            if (!orgMetricsSnapshot.exists()) {
+                transaction.set(orgMetricsRef, getInitialOrgMetrics());
+            }
+
             transaction.set(docRef, event);
             transaction.update(metricsRef, "totalEvents", FieldValue.increment(1));
-            
-            // Increment org-level event count
-            DocumentReference orgMetricsRef = firestore.collection(Constants.COL_ORG_METRICS).document(event.getOrgId());
-            ensureOrgMetricsInitialized(transaction, orgMetricsRef);
             transaction.update(orgMetricsRef, "totalEvents", FieldValue.increment(1));
             
             return null;
@@ -161,12 +182,18 @@ public class FirebaseRemoteDataSource {
         DocumentReference rsvpRef = firestore.collection(Constants.COL_RSVPS).document(rsvpId);
         DocumentReference eventRef = firestore.collection(Constants.COL_EVENTS).document(rsvp.getEventId());
         DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
+        
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        DocumentReference dailyRef = firestore.collection(Constants.COL_DAILY_METRICS).document(dateStr);
+        
         rsvp.setRsvpId(rsvpId);
 
         return firestore.runTransaction(transaction -> {
-            ensureMetricsInitialized(transaction, metricsRef);
+            // Reads
+            DocumentSnapshot metricsSnapshot = transaction.get(metricsRef);
             DocumentSnapshot rsvpSnapshot = transaction.get(rsvpRef);
             DocumentSnapshot eventSnapshot = transaction.get(eventRef);
+            DocumentSnapshot dailySnapshot = transaction.get(dailyRef);
             
             if (!eventSnapshot.exists()) {
                 throw new RuntimeException("Event does not exist!");
@@ -174,7 +201,18 @@ public class FirebaseRemoteDataSource {
 
             String orgId = eventSnapshot.getString("orgId");
             DocumentReference orgMetricsRef = firestore.collection(Constants.COL_ORG_METRICS).document(orgId);
-            ensureOrgMetricsInitialized(transaction, orgMetricsRef);
+            DocumentSnapshot orgMetricsSnapshot = transaction.get(orgMetricsRef);
+
+            // Writes
+            if (!metricsSnapshot.exists()) {
+                transaction.set(metricsRef, getInitialGlobalMetrics());
+            }
+            if (!orgMetricsSnapshot.exists()) {
+                transaction.set(orgMetricsRef, getInitialOrgMetrics());
+            }
+            if (!dailySnapshot.exists()) {
+                transaction.set(dailyRef, getInitialDailyMetrics());
+            }
 
             String oldStatus = rsvpSnapshot.exists() ? rsvpSnapshot.getString("status") : null;
             String newStatus = rsvp.getStatus();
@@ -204,21 +242,24 @@ public class FirebaseRemoteDataSource {
             // Save RSVP
             transaction.set(rsvpRef, rsvp);
 
-            // Update Global Metrics
+            // Update Metrics
             if (oldStatus == null) {
                 transaction.update(metricsRef, "totalRsvps", FieldValue.increment(1));
-                updateDailyMetrics(transaction, newStatus, 1);
-                updateCategoricalMetrics(transaction, orgMetricsRef, newStatus, 1);
-            } else if (!newStatus.equals(oldStatus)) {
-                updateDailyMetrics(transaction, oldStatus, -1);
-                updateDailyMetrics(transaction, newStatus, 1);
-                updateCategoricalMetrics(transaction, orgMetricsRef, oldStatus, -1);
-                updateCategoricalMetrics(transaction, orgMetricsRef, newStatus, 1);
+                transaction.update(dailyRef, "totalRsvps", FieldValue.increment(1));
+                transaction.update(orgMetricsRef, "totalRsvps", FieldValue.increment(1));
                 
-                if (Constants.STATUS_GOING.equals(oldStatus)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(-1));
-                if (Constants.STATUS_INTERESTED.equals(oldStatus)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(-1));
-                if (Constants.STATUS_GOING.equals(newStatus)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(1));
-                if (Constants.STATUS_INTERESTED.equals(newStatus)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(1));
+                if (Constants.STATUS_GOING.equals(newStatus)) {
+                    transaction.update(dailyRef, "totalGoing", FieldValue.increment(1));
+                    transaction.update(orgMetricsRef, "totalGoing", FieldValue.increment(1));
+                    transaction.update(metricsRef, "totalGoing", FieldValue.increment(1));
+                } else if (Constants.STATUS_INTERESTED.equals(newStatus)) {
+                    transaction.update(dailyRef, "totalInterested", FieldValue.increment(1));
+                    transaction.update(orgMetricsRef, "totalInterested", FieldValue.increment(1));
+                    transaction.update(metricsRef, "totalInterested", FieldValue.increment(1));
+                }
+            } else if (!newStatus.equals(oldStatus)) {
+                updateMetricsDelta(transaction, metricsRef, dailyRef, orgMetricsRef, oldStatus, -1);
+                updateMetricsDelta(transaction, metricsRef, dailyRef, orgMetricsRef, newStatus, 1);
             }
 
             return null;
@@ -229,14 +270,21 @@ public class FirebaseRemoteDataSource {
         DocumentReference rsvpRef = firestore.collection(Constants.COL_RSVPS).document(rsvpId);
         DocumentReference eventRef = firestore.collection(Constants.COL_EVENTS).document(eventId);
         DocumentReference metricsRef = firestore.collection(Constants.COL_SYSTEM_METRICS).document(Constants.DOC_GLOBAL_METRICS);
+        
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        DocumentReference dailyRef = firestore.collection(Constants.COL_DAILY_METRICS).document(dateStr);
 
         return firestore.runTransaction(transaction -> {
-            ensureMetricsInitialized(transaction, metricsRef);
+            // Reads
             DocumentSnapshot rsvpSnapshot = transaction.get(rsvpRef);
+            DocumentSnapshot metricsSnapshot = transaction.get(metricsRef);
+            DocumentSnapshot eventSnapshot = transaction.get(eventRef);
+            DocumentSnapshot dailySnapshot = transaction.get(dailyRef);
+            
             if (!rsvpSnapshot.exists()) return null;
             
             String status = rsvpSnapshot.getString("status");
-            DocumentSnapshot eventSnapshot = transaction.get(eventRef);
+
             if (!eventSnapshot.exists()) {
                 transaction.delete(rsvpRef);
                 return null;
@@ -244,6 +292,18 @@ public class FirebaseRemoteDataSource {
 
             String orgId = eventSnapshot.getString("orgId");
             DocumentReference orgMetricsRef = firestore.collection(Constants.COL_ORG_METRICS).document(orgId);
+            DocumentSnapshot orgMetricsSnapshot = transaction.get(orgMetricsRef);
+
+            // Writes
+            if (!metricsSnapshot.exists()) {
+                transaction.set(metricsRef, getInitialGlobalMetrics());
+            }
+            if (!dailySnapshot.exists()) {
+                transaction.set(dailyRef, getInitialDailyMetrics());
+            }
+            if (!orgMetricsSnapshot.exists()) {
+                transaction.set(orgMetricsRef, getInitialOrgMetrics());
+            }
 
             // Delete RSVP
             transaction.delete(rsvpRef);
@@ -255,72 +315,54 @@ public class FirebaseRemoteDataSource {
                 transaction.update(eventRef, "interestedCount", FieldValue.increment(-1));
             }
             
-            // Update Global Metrics
+            // Update Metrics
+            updateMetricsDelta(transaction, metricsRef, dailyRef, orgMetricsRef, status, -1);
             transaction.update(metricsRef, "totalRsvps", FieldValue.increment(-1));
-            if (Constants.STATUS_GOING.equals(status)) transaction.update(metricsRef, "totalGoing", FieldValue.increment(-1));
-            if (Constants.STATUS_INTERESTED.equals(status)) transaction.update(metricsRef, "totalInterested", FieldValue.increment(-1));
-            
-            updateDailyMetrics(transaction, status, -1);
-            updateCategoricalMetrics(transaction, orgMetricsRef, status, -1);
+            transaction.update(dailyRef, "totalRsvps", FieldValue.increment(-1));
+            transaction.update(orgMetricsRef, "totalRsvps", FieldValue.increment(-1));
             
             return null;
         });
     }
 
-    private void ensureMetricsInitialized(Transaction transaction, DocumentReference metricsRef) throws com.google.firebase.firestore.FirebaseFirestoreException {
-        DocumentSnapshot metricsSnapshot = transaction.get(metricsRef);
-        if (!metricsSnapshot.exists()) {
-            Map<String, Object> initial = new HashMap<>();
-            initial.put("totalRsvps", 0L);
-            initial.put("totalGoing", 0L);
-            initial.put("totalInterested", 0L);
-            initial.put("totalEvents", 0L);
-            initial.put("totalOrganizations", 0L);
-            initial.put("totalUsers", 0L);
-            transaction.set(metricsRef, initial);
-        }
-    }
-
-    private void ensureOrgMetricsInitialized(Transaction transaction, DocumentReference orgMetricsRef) throws com.google.firebase.firestore.FirebaseFirestoreException {
-        DocumentSnapshot snapshot = transaction.get(orgMetricsRef);
-        if (!snapshot.exists()) {
-            Map<String, Object> initial = new HashMap<>();
-            initial.put("totalRsvps", 0L);
-            initial.put("totalGoing", 0L);
-            initial.put("totalInterested", 0L);
-            initial.put("totalEvents", 0L);
-            transaction.set(orgMetricsRef, initial);
-        }
-    }
-
-    private void updateDailyMetrics(Transaction transaction, String status, long delta) throws com.google.firebase.firestore.FirebaseFirestoreException {
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        DocumentReference dailyRef = firestore.collection(Constants.COL_DAILY_METRICS).document(dateStr);
-        DocumentSnapshot dailySnapshot = transaction.get(dailyRef);
-        
-        if (!dailySnapshot.exists()) {
-            Map<String, Object> initial = new HashMap<>();
-            initial.put("totalRsvps", 0L);
-            initial.put("totalGoing", 0L);
-            initial.put("totalInterested", 0L);
-            transaction.set(dailyRef, initial);
-        }
-        
-        transaction.update(dailyRef, "totalRsvps", FieldValue.increment(delta));
-        if (Constants.STATUS_GOING.equals(status)) {
-            transaction.update(dailyRef, "totalGoing", FieldValue.increment(delta));
-        } else if (Constants.STATUS_INTERESTED.equals(status)) {
-            transaction.update(dailyRef, "totalInterested", FieldValue.increment(delta));
-        }
-    }
-
-    private void updateCategoricalMetrics(Transaction transaction, DocumentReference metricsRef, String status, long delta) {
-        transaction.update(metricsRef, "totalRsvps", FieldValue.increment(delta));
+    private void updateMetricsDelta(Transaction transaction, DocumentReference metricsRef, DocumentReference dailyRef, DocumentReference orgMetricsRef, String status, long delta) {
         if (Constants.STATUS_GOING.equals(status)) {
             transaction.update(metricsRef, "totalGoing", FieldValue.increment(delta));
+            transaction.update(dailyRef, "totalGoing", FieldValue.increment(delta));
+            transaction.update(orgMetricsRef, "totalGoing", FieldValue.increment(delta));
         } else if (Constants.STATUS_INTERESTED.equals(status)) {
             transaction.update(metricsRef, "totalInterested", FieldValue.increment(delta));
+            transaction.update(dailyRef, "totalInterested", FieldValue.increment(delta));
+            transaction.update(orgMetricsRef, "totalInterested", FieldValue.increment(delta));
         }
+    }
+
+    private Map<String, Object> getInitialGlobalMetrics() {
+        Map<String, Object> initial = new HashMap<>();
+        initial.put("totalRsvps", 0L);
+        initial.put("totalGoing", 0L);
+        initial.put("totalInterested", 0L);
+        initial.put("totalEvents", 0L);
+        initial.put("totalOrganizations", 0L);
+        initial.put("totalUsers", 0L);
+        return initial;
+    }
+
+    private Map<String, Object> getInitialOrgMetrics() {
+        Map<String, Object> initial = new HashMap<>();
+        initial.put("totalRsvps", 0L);
+        initial.put("totalGoing", 0L);
+        initial.put("totalInterested", 0L);
+        initial.put("totalEvents", 0L);
+        return initial;
+    }
+
+    private Map<String, Object> getInitialDailyMetrics() {
+        Map<String, Object> initial = new HashMap<>();
+        initial.put("totalRsvps", 0L);
+        initial.put("totalGoing", 0L);
+        initial.put("totalInterested", 0L);
+        return initial;
     }
 
     public Task<DocumentSnapshot> getGlobalMetrics() {
