@@ -35,19 +35,19 @@ public class HomeActivity extends AppCompatActivity {
 
         // Load default fragment
         if (savedInstanceState == null) {
-            loadFragment(new OrgDashboardFragment()); // Defaulting to Organizations for now
-            bottomNav.setSelectedItemId(R.id.nav_orgs);
+            loadFragment(new TrendingEventsFragment());
+            bottomNav.setSelectedItemId(R.id.nav_home);
         }
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_home) {
-                // loadFragment(new HomeFragment());
+                loadFragment(new TrendingEventsFragment());
             } else if (id == R.id.nav_orgs) {
                 loadFragment(new OrgDashboardFragment());
             } else if (id == R.id.nav_events) {
-                loadFragment(new TrendingEventsFragment());
+                // loadFragment(new EventFragment());
             }
             return true;
         });

@@ -27,4 +27,5 @@ public class Constants {
     public static final String EXTRA_EVENT_DESCRIPTION = "EVENT_DESCRIPTION";
     public static final String EXTRA_EVENT_STATUS = "EVENT_STATUS";
     public static final String EXTRA_EVENT_STATUS_COLOR = "EVENT_STATUS_COLOR";
+    public static final String EXTRA_EVENT_REGISTRATION_URL = "EVENT_REGISTRATION_URL";
 }

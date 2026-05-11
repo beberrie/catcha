@@ -52,6 +52,9 @@ dependencies {
     // Glide
     implementation(libs.glide)
 
+    // QR Code Generation
+    implementation("com.google.zxing:core:3.5.3")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

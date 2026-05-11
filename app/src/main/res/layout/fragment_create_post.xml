@@ -290,6 +290,7 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <!-- TEMPORARILY DISABLED: Attach Image for Event -->
                 <LinearLayout
                     android:id="@+id/btnAttachEventCover"
                     android:layout_width="match_parent"
@@ -298,8 +299,9 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:layout_marginBottom="14dp"
-                    android:clickable="true"
-                    android:focusable="true"
+                    android:clickable="false"
+                    android:focusable="false"
+                    android:visibility="gone"
                     android:foreground="?attr/selectableItemBackground">
 
                     <TextView
@@ -310,6 +312,28 @@
                         android:textSize="13sp"
                         android:textColor="#AAAAAA" />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="REGISTRATION LINK (GOOGLE FORM)"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/etRegistrationUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="https://forms.gle/..."
+                    android:textSize="13sp"
+                    android:textColor="#1A1A1A"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="12dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="textUri"
+                    android:imeOptions="actionNext" />
 
                 <TextView
                     android:layout_width="wrap_content"

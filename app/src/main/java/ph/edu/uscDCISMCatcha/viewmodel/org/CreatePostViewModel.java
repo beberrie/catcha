@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -45,7 +46,12 @@ public class CreatePostViewModel extends ViewModel {
             String uid = dataSource.getCurrentUser().getUid();
             dataSource.getOrganizationByOwner(uid).addOnSuccessListener(queryDocumentSnapshots -> {
                 if (!queryDocumentSnapshots.isEmpty()) {
-                    organization.setValue(queryDocumentSnapshots.getDocuments().get(0).toObject(Organization.class));
+                    DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
+                    Organization org = doc.toObject(Organization.class);
+                    if (org != null) {
+                        org.setId(doc.getId()); // Explicitly set the document ID
+                    }
+                    organization.setValue(org);
                 }
             });
         }
@@ -120,12 +126,12 @@ public class CreatePostViewModel extends ViewModel {
     }
 
     public void createEvent(String title, String date, String time, String endTime,
-                            String location, String description, int capacity, List<String> categories) {
-        createEventWithImage(title, date, time, endTime, location, description, capacity, categories, null);
+                            String location, String description, int capacity, List<String> categories, String registrationUrl) {
+        createEventWithImage(title, date, time, endTime, location, description, capacity, categories, registrationUrl, null);
     }
 
     public void createEventWithImage(String title, String date, String time, String endTime,
-                            String location, String description, int capacity, List<String> categories, Uri imageUri) {
+                            String location, String description, int capacity, List<String> categories, String registrationUrl, Uri imageUri) {
         
         if (!dataSource.isUserLoggedIn()) {
             statusMessage.setValue("Error: User not logged in");
@@ -139,7 +145,7 @@ public class CreatePostViewModel extends ViewModel {
             Organization org = organization.getValue();
 
             String orgName = (org != null) ? org.getName() : "Organization";
-            String orgId = (org != null) ? org.getId() : uid;
+            String orgId = (org != null && org.getId() != null) ? org.getId() : uid;
 
             EventModel event = new EventModel();
             event.setTitle(title);
@@ -153,6 +159,7 @@ public class CreatePostViewModel extends ViewModel {
             event.setOrgName(orgName);
             event.setCreatedBy(uid);
             event.setCategories(categories);
+            event.setRegistrationUrl(registrationUrl);
 
             if (imageUri != null) {
                 statusMessage.setValue("Uploading event cover...");
@@ -182,7 +189,7 @@ public class CreatePostViewModel extends ViewModel {
     }
 
     public void updateEvent(String id, String title, String date, String time, String endTime,
-                            String location, String description, int capacity, List<String> categories, String imageUrl) {
+                            String location, String description, int capacity, List<String> categories, String registrationUrl, String imageUrl) {
         try {
             Date startD = dateTimeFormat.parse(date + " " + time);
             Date endD = dateTimeFormat.parse(date + " " + endTime);
@@ -195,6 +202,7 @@ public class CreatePostViewModel extends ViewModel {
                             "description", description,
                             "maxCapacity", capacity,
                             "categories", categories,
+                            "registrationUrl", registrationUrl,
                             "imageUrl", imageUrl)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
