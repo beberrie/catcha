@@ -52,11 +52,19 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         if (viewType == VIEW_TYPE_PROMPT) {
             View v = inflater.inflate(
+<<<<<<< HEAD
                     R.layout.org_home_page, parent, false);
             return new PromptViewHolder(v);
         }
         View v = inflater.inflate(
                 R.layout.org_home_page, parent, false);
+=======
+                    R.layout.item_create_post_prompt, parent, false);
+            return new PromptViewHolder(v);
+        }
+        View v = inflater.inflate(
+                R.layout.item_create_post_prompt, parent, false);
+>>>>>>> 61f9bf6689b019dcfe76283eac605b9dca98bb21
         return new PromptViewHolder(v);
     }
 

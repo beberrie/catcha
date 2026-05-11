@@ -45,4 +45,8 @@ public class RecommendationModel {
     public void setTags(String[] tags) { this.tags = tags; }
     public void setFollowers(int followers) { this.followers = followers; }
     public void setInitials(String initials) { this.initials = initials; }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 61f9bf6689b019dcfe76283eac605b9dca98bb21

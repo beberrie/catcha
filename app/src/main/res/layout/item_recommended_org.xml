@@ -82,8 +82,13 @@
             android:text="View org"
             android:textAllCaps="false"
             android:textSize="11sp"
+<<<<<<< HEAD
             android:textColor="#F5C842"
             android:backgroundTint="#1D1D2E"
+=======
+            android:textColor="#555555"
+            android:background="@drawable/bg_field_outline_light"
+>>>>>>> 61f9bf6689b019dcfe76283eac605b9dca98bb21
             android:stateListAnimator="@null" />
 
         <Button
@@ -96,7 +101,11 @@
             android:textSize="11sp"
             android:textColor="#F5C842"
             android:textStyle="bold"
+<<<<<<< HEAD
             android:backgroundTint="#1D1D2E"
+=======
+            android:background="@drawable/bg_btn_dark"
+>>>>>>> 61f9bf6689b019dcfe76283eac605b9dca98bb21
             android:stateListAnimator="@null" />
     </LinearLayout>
 </LinearLayout>

@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
+    <!-- Nav bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +35,7 @@
             android:text="Create post"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#F5C842" />
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
     <ScrollView
@@ -49,6 +50,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Tab switcher -->
             <LinearLayout
                 android:id="@+id/layoutTabs"
                 android:layout_width="match_parent"
@@ -83,6 +85,7 @@
                     android:stateListAnimator="@null" />
             </LinearLayout>
 
+            <!-- Posting as -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -138,6 +141,7 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

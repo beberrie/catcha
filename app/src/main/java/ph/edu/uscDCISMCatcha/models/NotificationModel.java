@@ -4,9 +4,12 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
+<<<<<<< HEAD
 // ADD THESE TWO IMPORTS
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 
+=======
+>>>>>>> 61f9bf6689b019dcfe76283eac605b9dca98bb21
 @IgnoreExtraProperties
 public class NotificationModel {
 
@@ -73,6 +76,7 @@ public class NotificationModel {
         n.isRead        = false;
         n.title         = e.getTitle();
         n.content       = e.getDescription();
+<<<<<<< HEAD
 
         // Note: Make sure these methods (getOrgId, getOrgName, etc.)
         // exist in your EventModel.java!
@@ -91,6 +95,17 @@ public class NotificationModel {
         // Fix: Convert Date to Timestamp
         n.createdAt     = e.getCreatedAt() != null ? new Timestamp(e.getCreatedAt()) : null;
 
+=======
+        n.orgId         = e.getOrgId();
+        n.orgName       = e.getOrgName();
+        n.location      = e.getLocation();
+        n.startDateTime = e.getStartDateTime();
+        n.endDateTime   = e.getEndDateTime();
+        n.university    = e.getUniversity();
+        n.imageUrl      = e.getImageUrl();
+        n.createdBy     = e.getCreatedBy();
+        n.createdAt     = e.getCreatedAt();
+>>>>>>> 61f9bf6689b019dcfe76283eac605b9dca98bb21
         n.eventGoing    = eventGoing;
         n.computeUrgency();
         return n;
@@ -192,4 +207,8 @@ public class NotificationModel {
     public void setSentTime(String sentTime) { this.sentTime = sentTime; }
     public void setFollowersCount(int count) { this.followersCount = count; }
     public void setEventGoing(int going) { this.eventGoing = going; }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 61f9bf6689b019dcfe76283eac605b9dca98bb21
