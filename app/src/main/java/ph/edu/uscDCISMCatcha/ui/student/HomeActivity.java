@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Load default fragment
         if (savedInstanceState == null) {
-            loadFragment(new OrgDashboardFragment()); // Defaulting to Organizations for now
+            loadFragment(new ph.edu.uscDCISMCatcha.fragments.org.OrgDashboardFragment()); // Defaulting to Organizations for now
             bottomNav.setSelectedItemId(R.id.nav_orgs);
         }
 
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 // loadFragment(new HomeFragment());
             } else if (id == R.id.nav_orgs) {
-                loadFragment(new OrgDashboardFragment());
+                loadFragment(new ph.edu.uscDCISMCatcha.fragments.org.OrgDashboardFragment());
             } else if (id == R.id.nav_events) {
                 loadFragment(new TrendingEventsFragment());
             }

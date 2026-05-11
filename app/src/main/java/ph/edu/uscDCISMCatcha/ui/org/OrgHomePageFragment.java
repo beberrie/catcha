@@ -104,7 +104,6 @@ public class OrgHomePageFragment extends Fragment {
     private void fetchAnnouncements() {
         if (organizationName == null || organizationName.isEmpty()) return;
 
-        // Removed .orderBy() to avoid index requirement for now
         db.collection("announcements")
                 .whereEqualTo("orgName", organizationName)
                 .addSnapshotListener((value, error) -> {
@@ -119,11 +118,12 @@ public class OrgHomePageFragment extends Fragment {
                             List<AnnouncementModel> list = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : value) {
                                 AnnouncementModel announcement = doc.toObject(AnnouncementModel.class);
-                                announcement.setAnnouncementId(doc.getId());
-                                list.add(announcement);
+                                if (announcement != null) {
+                                    announcement.setAnnouncementId(doc.getId());
+                                    list.add(announcement);
+                                }
                             }
-                            
-                            // Sort locally by timestamp descending
+
                             Collections.sort(list, (a, b) -> {
                                 if (a.getTimestamp() == null || b.getTimestamp() == null) return 0;
                                 return b.getTimestamp().compareTo(a.getTimestamp());
@@ -144,7 +144,7 @@ public class OrgHomePageFragment extends Fragment {
         cardBinding.tvAnnouncementTitle.setText(announcement.getTitle());
         cardBinding.tvAnnouncementContent.setText(announcement.getContent());
         if (announcement.getTimestamp() != null) {
-            cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp()));
+            cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp().toDate()));
         }
 
         cardBinding.btnEditAnnouncement.setOnClickListener(v -> openCreatePost(true, docId));
@@ -156,7 +156,6 @@ public class OrgHomePageFragment extends Fragment {
     private void fetchEvents() {
         if (organizationName == null || organizationName.isEmpty()) return;
 
-        // Removed .orderBy() to avoid index requirement for now
         db.collection("events")
                 .whereEqualTo("orgName", organizationName)
                 .addSnapshotListener((value, error) -> {
@@ -171,18 +170,19 @@ public class OrgHomePageFragment extends Fragment {
                             List<EventModel> list = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : value) {
                                 EventModel event = doc.toObject(EventModel.class);
-                                event.setEventId(doc.getId());
-                                list.add(event);
+                                if (event != null) {
+                                    event.setId(doc.getId()); // FIXED: Changed setEventId to setId
+                                    list.add(event);
+                                }
                             }
 
-                            // Sort locally by createdAt descending
                             Collections.sort(list, (a, b) -> {
                                 if (a.getCreatedAt() == null || b.getCreatedAt() == null) return 0;
                                 return b.getCreatedAt().compareTo(a.getCreatedAt());
                             });
 
                             for (EventModel event : list) {
-                                addEventCard(event, event.getEventId());
+                                addEventCard(event, event.getId()); // FIXED: Changed getEventId to getId
                             }
                         }
                     }
@@ -196,10 +196,10 @@ public class OrgHomePageFragment extends Fragment {
         cardBinding.tvEventTitle.setText(event.getTitle());
         cardBinding.tvLocation.setText(event.getLocation());
         if (event.getStartDateTime() != null) {
-            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
         }
-        
-        cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 
+
+        cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots",
                 event.getCurrentRsvpCount(), event.getMaxCapacity()));
 
         cardBinding.btnEditEvent.setOnClickListener(v -> openCreatePost(false, docId));
@@ -230,7 +230,7 @@ public class OrgHomePageFragment extends Fragment {
             args.putString("EDIT_ID", editId);
         }
 
-        CreatePostFragment fragment = new CreatePostFragment();
+        ph.edu.uscDCISMCatcha.fragments.CreatePostFragment fragment = new ph.edu.uscDCISMCatcha.fragments.CreatePostFragment();
         fragment.setArguments(args);
 
         if (getActivity() != null) {

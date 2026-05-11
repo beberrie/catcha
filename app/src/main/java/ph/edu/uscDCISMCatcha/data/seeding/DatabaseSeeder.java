@@ -2,6 +2,7 @@ package ph.edu.uscDCISMCatcha.data.seeding;
 
 import android.util.Log;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -9,11 +10,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
-import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.MembershipModel;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.data.models.RSVPModel;
 import ph.edu.uscDCISMCatcha.data.models.UserModel;
+import ph.edu.uscDCISMCatcha.data.models.EventModel;
 
 public class DatabaseSeeder {
 
@@ -59,23 +60,26 @@ public class DatabaseSeeder {
         // 4. Seed Sample Event
         String event1Id = "sample_event_1";
         Calendar cal = Calendar.getInstance();
-        Date now = cal.getTime();
+        Timestamp now = Timestamp.now();
         cal.add(Calendar.DAY_OF_YEAR, 7);
-        Date nextWeek = cal.getTime();
+        Timestamp nextWeek = new Timestamp(cal.getTime());
 
-        EventModel event1 = new EventModel(
-                org1Id,
-                "Computer Science Society",
-                "Hackathon 2024",
-                "Annual coding competition for all students.",
-                "DCISM Lobby",
-                now,
-                nextWeek,
-                "University of San Carlos",
-                "https://example.com/hackathon.png",
-                user1Id
-        );
-        event1.setCreatedAt(now); // Added to ensure it shows up in queries ordered by createdAt
+        EventModel event1 = new EventModel();
+        event1.setId(event1Id);
+        event1.setOrgId(org1Id);
+        event1.setOrgName("Computer Science Society");
+        event1.setTitle("Hackathon 2024");
+        event1.setDescription("Annual coding competition for all students.");
+        event1.setLocation("DCISM Lobby");
+        event1.setStartDateTime(now);
+        event1.setEndDateTime(nextWeek);
+        event1.setUniversity("University of San Carlos");
+        event1.setImageUrl("https://example.com/hackathon.png");
+        event1.setCreatedBy(user1Id);
+        event1.setCreatedAt(now);
+        event1.setMaxCapacity(100);
+        event1.setCurrentRsvpCount(1);
+
         batch.set(db.collection("events").document(event1Id), event1);
 
         // 5. Seed Sample RSVP
@@ -83,23 +87,32 @@ public class DatabaseSeeder {
         RSVPModel rsvp = new RSVPModel(user1Id, event1Id, "Hackathon 2024", "Going");
         batch.set(db.collection("rsvps").document(rsvpId), rsvp);
 
-        // 6. Seed Sample Announcements (Moved to top-level collection and added timestamps)
+        // 6. Seed Sample Announcements (FIXED: Using no-arg constructor and setters)
         String announce1Id = "sample_announce_1";
-        AnnouncementModel announce1 = new AnnouncementModel("Welcome!", "Welcome to the CSS Organization. Stay tuned for more updates!", user1Id);
-        announce1.setOrgName("Computer Science Society");
-        announce1.setTimestamp(new Date());
+        AnnouncementModel announce1 = new AnnouncementModel();
+        announce1.setAnnouncementId(announce1Id);
+        announce1.setTitle("Welcome!");
+        announce1.setContent("Welcome to the CSS Organization. Stay tuned for more updates!");
+        announce1.setAuthorUid(user1Id);
+        announce1.setTimestamp(Timestamp.now());
         batch.set(db.collection("announcements").document(announce1Id), announce1);
 
         String announce2Id = "sample_announce_2";
-        AnnouncementModel announce2 = new AnnouncementModel("General Assembly", "We will have our first General Assembly this Friday at 4 PM in the DCISM Lab.", user1Id);
-        announce2.setOrgName("Computer Science Society");
-        announce2.setTimestamp(new Date());
+        AnnouncementModel announce2 = new AnnouncementModel();
+        announce2.setAnnouncementId(announce2Id);
+        announce2.setTitle("General Assembly");
+        announce2.setContent("We will have our first General Assembly this Friday at 4 PM in the DCISM Lab.");
+        announce2.setAuthorUid(user1Id);
+        announce2.setTimestamp(Timestamp.now());
         batch.set(db.collection("announcements").document(announce2Id), announce2);
 
         String announce3Id = "sample_announce_3";
-        AnnouncementModel announce3 = new AnnouncementModel("Hackathon Registration", "Registration for Hackathon 2024 is now open! Visit the CSS office for more details.", user1Id);
-        announce3.setOrgName("Computer Science Society");
-        announce3.setTimestamp(new Date());
+        AnnouncementModel announce3 = new AnnouncementModel();
+        announce3.setAnnouncementId(announce3Id);
+        announce3.setTitle("Hackathon Registration");
+        announce3.setContent("Registration for Hackathon 2024 is now open! Visit the CSS office for more details.");
+        announce3.setAuthorUid(user1Id);
+        announce3.setTimestamp(Timestamp.now());
         batch.set(db.collection("announcements").document(announce3Id), announce3);
 
         // Commit all changes

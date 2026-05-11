@@ -1,86 +1,62 @@
 package ph.edu.uscDCISMCatcha.data.models;
 
-import com.google.firebase.firestore.Exclude;
-import com.google.firebase.firestore.IgnoreExtraProperties;
-import com.google.firebase.firestore.ServerTimestamp;
+import com.google.firebase.Timestamp;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+public class EventModel {
+    private String id;
+    private String title;
+    private String location;
+    private String description;
+    private String imageUrl;
+    private String status;
+    private String university;
 
-@IgnoreExtraProperties
-public class EventModel implements Serializable {
-    private String eventId; // Added for easier document reference
+    // Fields required by NotificationModel & Repository
     private String orgId;
     private String orgName;
-    private String title;
-    private String description;
-    private String location;
-    private Date startDateTime;
-    private Date endDateTime;
-    private String university;
-    private String imageUrl;
     private String createdBy;
-    private int maxCapacity = 0; // 0 means unlimited if not specified
-    private int currentRsvpCount = 0; // Specifically for "Going"
-    private int interestedCount = 0;
-    private List<String> categories = new ArrayList<>();
-    
-    @ServerTimestamp
-    private Date createdAt;
+    private Timestamp startDateTime;
+    private Timestamp endDateTime;
+    private Timestamp createdAt;
+    private long maxCapacity;
+    private long currentRsvpCount;
+    private long interestedCount;
 
     public EventModel() {}
 
-    public EventModel(String orgId, String orgName, String title, String description, String location, 
-                      Date startDateTime, Date endDateTime, String university, String imageUrl, String createdBy) {
-        this.orgId = orgId;
-        this.orgName = orgName;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.university = university;
-        this.imageUrl = imageUrl;
-        this.createdBy = createdBy;
-    }
-
-    // Getters and Setters
-    @Exclude
-    public String getEventId() { return eventId; }
-    public void setEventId(String eventId) { this.eventId = eventId; }
-    
-    public String getOrgId() { return orgId; }
-    public void setOrgId(String orgId) { this.orgId = orgId; }
-    public String getOrgName() { return orgName; }
-    public void setOrgName(String orgName) { this.orgName = orgName; }
+    // Getters
+    public String getId() { return id; }
     public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
     public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
-    public Date getStartDateTime() { return startDateTime; }
-    public void setStartDateTime(Date startDateTime) { this.startDateTime = startDateTime; }
-    public Date getEndDateTime() { return endDateTime; }
-    public void setEndDateTime(Date endDateTime) { this.endDateTime = endDateTime; }
-    public String getUniversity() { return university; }
-    public void setUniversity(String university) { this.university = university; }
+    public String getDescription() { return description; }
     public String getImageUrl() { return imageUrl; }
-    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public String getStatus() { return status; }
+    public String getUniversity() { return university; }
+    public String getOrgId() { return orgId; }
+    public String getOrgName() { return orgName; }
     public String getCreatedBy() { return createdBy; }
+    public Timestamp getStartDateTime() { return startDateTime; }
+    public Timestamp getEndDateTime() { return endDateTime; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public long getMaxCapacity() { return maxCapacity; }
+    public long getCurrentRsvpCount() { return currentRsvpCount; }
+    public long getInterestedCount() { return interestedCount; }
+
+    // Setters
+    public void setId(String id) { this.id = id; }
+    public void setTitle(String title) { this.title = title; }
+    public void setLocation(String location) { this.location = location; }
+    public void setDescription(String description) { this.description = description; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+    public void setStatus(String status) { this.status = status; }
+    public void setUniversity(String university) { this.university = university; }
+    public void setOrgId(String orgId) { this.orgId = orgId; }
+    public void setOrgName(String orgName) { this.orgName = orgName; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
-
-    public int getMaxCapacity() { return maxCapacity; }
-    public void setMaxCapacity(int maxCapacity) { this.maxCapacity = maxCapacity; }
-    public int getCurrentRsvpCount() { return currentRsvpCount; }
-    public void setCurrentRsvpCount(int currentRsvpCount) { this.currentRsvpCount = currentRsvpCount; }
-    public int getInterestedCount() { return interestedCount; }
-    public void setInterestedCount(int interestedCount) { this.interestedCount = interestedCount; }
-
-    public List<String> getCategories() { return categories; }
-    public void setCategories(List<String> categories) { this.categories = categories; }
+    public void setStartDateTime(Timestamp startDateTime) { this.startDateTime = startDateTime; }
+    public void setEndDateTime(Timestamp endDateTime) { this.endDateTime = endDateTime; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public void setMaxCapacity(long maxCapacity) { this.maxCapacity = maxCapacity; }
+    public void setCurrentRsvpCount(long currentRsvpCount) { this.currentRsvpCount = currentRsvpCount; }
+    public void setInterestedCount(long interestedCount) { this.interestedCount = interestedCount; }
 }
