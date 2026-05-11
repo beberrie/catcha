@@ -12,7 +12,7 @@ import java.util.List;
 
 // FIXED IMPORTS
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
-import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
+import ph.edu.uscDCISMCatcha.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.models.NotificationModel;
 
 public class NotificationViewModel extends ViewModel {

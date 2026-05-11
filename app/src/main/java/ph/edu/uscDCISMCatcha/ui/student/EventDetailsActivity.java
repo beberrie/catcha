@@ -83,10 +83,9 @@ public class EventDetailsActivity extends AppCompatActivity {
         btnRSVP.setOnClickListener(v -> {
             // Create a temporary EventModel for the RSVP call
             EventModel event = new EventModel();
-            // FIXED: Changed setEventId to setId
-            event.setId(eventId != null ? eventId : "dummy_id");
+            event.setEventId(eventId != null ? eventId : "dummy_id");
             event.setTitle(title);
-
+            
             viewModel.rsvpToEvent(event, Constants.STATUS_GOING);
         });
 

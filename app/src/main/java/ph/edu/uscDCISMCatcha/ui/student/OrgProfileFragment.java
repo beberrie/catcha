@@ -58,7 +58,7 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         super.onViewCreated(view, savedInstanceState);
 
         setupClickListeners();
-
+        
         if (orgId != null) {
             fetchOrganizationDetails();
             checkMembershipStatus();
@@ -76,6 +76,7 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         });
 
         binding.joinButton.setOnClickListener(v -> showRegistrationDialog());
+
         binding.joinedButton.setOnClickListener(v -> showLeaveDialog());
 
         binding.filterButton.setOnClickListener(v -> {
@@ -141,31 +142,38 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         Query query = db.collection("events")
                 .whereEqualTo("orgId", orgId);
 
+        // Firestore client-side filtering or multiple where clauses if indexed
+        // For simplicity and because we use SnapshotListener, we'll fetch and filter if needed
+        // or just apply basic ordering.
         query.orderBy("startDateTime", Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         binding.tvNoEvents.setVisibility(View.VISIBLE);
+                        binding.tvLimitsReached.setVisibility(View.GONE);
                         return;
                     }
 
                     binding.eventsContainer.removeAllViews();
                     int visibleCount = 0;
 
-                    if (value != null) {
+                    if (value != null && !value.isEmpty()) {
                         for (QueryDocumentSnapshot doc : value) {
                             EventModel event = doc.toObject(EventModel.class);
-                            if (event != null) {
-                                event.setId(doc.getId()); // Using simplified ID setter
-                                if (shouldShowEvent(event, status, startTimeStr, endTimeStr)) {
-                                    addEventCard(event);
-                                    visibleCount++;
-                                }
+
+                            if (shouldShowEvent(event, status, startTimeStr, endTimeStr)) {
+                                addEventCard(event);
+                                visibleCount++;
                             }
                         }
                     }
 
-                    binding.tvNoEvents.setVisibility(visibleCount == 0 ? View.VISIBLE : View.GONE);
-                    binding.tvLimitsReached.setVisibility(visibleCount > 0 ? View.VISIBLE : View.GONE);
+                    if (visibleCount == 0) {
+                        binding.tvNoEvents.setVisibility(View.VISIBLE);
+                        binding.tvLimitsReached.setVisibility(View.GONE);
+                    } else {
+                        binding.tvNoEvents.setVisibility(View.GONE);
+                        binding.tvLimitsReached.setVisibility(View.VISIBLE); // Now we show it if there ARE events
+                    }
                     binding.tvEventsCount.setText(String.valueOf(visibleCount));
                 });
     }
@@ -173,12 +181,12 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
     private boolean shouldShowEvent(EventModel event, String status, String startT, String endT) {
         // Filter by Status
         if (status != null && !status.isEmpty()) {
-            String eventStatus = "UPCOMING";
+            // Simplified status check
+            String eventStatus = "UPCOMING"; // Default
             long now = System.currentTimeMillis();
             if (event.getStartDateTime() != null && event.getEndDateTime() != null) {
-                // FIXED: Convert Timestamp to Date then to Long
-                long start = event.getStartDateTime().toDate().getTime();
-                long end = event.getEndDateTime().toDate().getTime();
+                long start = event.getStartDateTime().getTime();
+                long end = event.getEndDateTime().getTime();
                 if (now < start) eventStatus = "UPCOMING";
                 else if (now <= end) eventStatus = "ONGOING";
                 else eventStatus = "FINISHED";
@@ -192,8 +200,8 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
                 Date filterStart = timeFormat.parse(startT);
                 Date filterEnd = timeFormat.parse(endT);
 
-                // FIXED: Convert Timestamp to Date
-                Date eventDate = event.getStartDateTime().toDate();
+                // Get only time part of event start
+                Date eventDate = event.getStartDateTime();
                 String eventTimeStr = timeFormat.format(eventDate);
                 Date eventTime = timeFormat.parse(eventTimeStr);
 
@@ -204,6 +212,7 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
                 e.printStackTrace();
             }
         }
+
         return true;
     }
 
@@ -214,27 +223,25 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         cardBinding.tvEventTitle.setText(event.getTitle());
         cardBinding.tvLocation.setText(event.getLocation());
         cardBinding.tvDescription.setText(event.getDescription());
-
+        
         if (event.getStartDateTime() != null) {
-            // FIXED: Convert Timestamp to Date for format()
-            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
-            cardBinding.tvTime.setText(timeFormat.format(event.getStartDateTime().toDate()));
+            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime()));
         }
 
-        cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots",
+        cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 
                 event.getCurrentRsvpCount(), event.getMaxCapacity()));
 
         cardBinding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), EventDetailsActivity.class);
-            intent.putExtra("EVENT_ID", event.getId());
             intent.putExtra("EVENT_TITLE", event.getTitle());
             intent.putExtra("EVENT_HOST", event.getOrgName());
             intent.putExtra("EVENT_LOCATION", event.getLocation());
             if (event.getStartDateTime() != null) {
-                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime().toDate()));
+                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime()));
             }
             intent.putExtra("EVENT_DESCRIPTION", event.getDescription());
-            intent.putExtra("EVENT_STATUS", "UPCOMING");
+            intent.putExtra("EVENT_STATUS", "UPCOMING"); // Simplified status
             intent.putExtra("EVENT_STATUS_COLOR", R.color.yellow);
             startActivity(intent);
         });
@@ -260,12 +267,15 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
 
-        dialogView.findViewById(R.id.btnSubmitRegistration).setOnClickListener(v -> {
+        View btnSubmit = dialogView.findViewById(R.id.btnSubmitRegistration);
+        View btnCancel = dialogView.findViewById(R.id.btnCancelRegistration);
+
+        btnSubmit.setOnClickListener(v -> {
             joinOrganization();
             dialog.dismiss();
         });
 
-        dialogView.findViewById(R.id.btnCancelRegistration).setOnClickListener(v -> dialog.dismiss());
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
@@ -284,8 +294,10 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         new AlertDialog.Builder(getContext())
                 .setTitle("Leaving?")
                 .setMessage("Are you sure you want to leave this organization?")
-                .setPositiveButton("Yes", (dialog, which) -> leaveOrganization())
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    leaveOrganization();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 

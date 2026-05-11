@@ -32,7 +32,7 @@ public class EventViewModel extends ViewModel {
         }
 
         String userId = dataSource.getCurrentUser().getUid();
-        RSVPModel rsvp = new RSVPModel(userId, event.getId(), event.getTitle(), status);
+        RSVPModel rsvp = new RSVPModel(userId, event.getEventId(), event.getTitle(), status);
 
         // First check for conflicts if status is "Going"
         if (Constants.STATUS_GOING.equals(status)) {

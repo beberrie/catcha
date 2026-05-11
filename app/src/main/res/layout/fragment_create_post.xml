@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <!-- Nav bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,7 +34,7 @@
             android:text="Create post"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF" />
+            android:textColor="#F5C842" />
     </LinearLayout>
 
     <ScrollView
@@ -50,8 +49,8 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Tab switcher -->
             <LinearLayout
+                android:id="@+id/layoutTabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_tab_container"
@@ -84,7 +83,6 @@
                     android:stateListAnimator="@null" />
             </LinearLayout>
 
-            <!-- Posting as -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,9 +102,10 @@
                 android:layout_marginBottom="16dp">
 
                 <TextView
+                    android:id="@+id/tvOrgInitial"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:text="DC"
+                    android:text="O"
                     android:textSize="12sp"
                     android:textColor="#F5C842"
                     android:textStyle="bold"
@@ -121,23 +120,24 @@
                     android:layout_marginStart="10dp">
 
                     <TextView
+                        android:id="@+id/tvOrgName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="DCISM Organization"
+                        android:text="Loading organization..."
                         android:textSize="13sp"
                         android:textColor="#1A1A1A"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tvOrgSub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="312 followers"
+                        android:text="Organization"
                         android:textSize="11sp"
                         android:textColor="#888888" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,6 +159,17 @@
                 android:layout_marginBottom="14dp"
                 android:inputType="textCapSentences"
                 android:imeOptions="actionNext" />
+
+            <!-- Universal Image Preview for both Announcement and Event -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivPostImagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="14dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:background="#F5F5F5"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Catcha.SmallComponent" />
 
             <!-- ANNOUNCEMENT FIELDS -->
             <LinearLayout
@@ -191,7 +202,7 @@
                     android:layout_marginBottom="14dp" />
 
                 <LinearLayout
-                    android:id="@+id/layoutAttachImage"
+                    android:id="@+id/btnAttachImageAnnouncement"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_field_outline_light"
@@ -203,6 +214,7 @@
                     android:foreground="?attr/selectableItemBackground">
 
                     <TextView
+                        android:id="@+id/tvAttachLabelAnnouncement"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -261,7 +273,7 @@
                     android:id="@+id/btnBroadcast"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:text="Broadcast to 312 followers"
+                    android:text="Broadcast"
                     android:textAllCaps="false"
                     android:textColor="#F5C842"
                     android:textSize="14sp"
@@ -279,9 +291,9 @@
                 android:visibility="gone">
 
                 <LinearLayout
-                    android:id="@+id/layoutCoverPhoto"
+                    android:id="@+id/btnAttachEventCover"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="120dp"
                     android:background="@drawable/bg_dashed_border"
                     android:gravity="center"
                     android:orientation="vertical"
@@ -291,12 +303,35 @@
                     android:foreground="?attr/selectableItemBackground">
 
                     <TextView
+                        android:id="@+id/tvAddCoverText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+ Add cover photo"
+                        android:text="+ Add event cover photo"
                         android:textSize="13sp"
                         android:textColor="#AAAAAA" />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CAPACITY"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <EditText
+                    android:id="@+id/etCapacity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Maximum number of attendees (0 for unlimited)"
+                    android:textSize="13sp"
+                    android:textColor="#1A1A1A"
+                    android:background="@drawable/bg_field_outline_light"
+                    android:padding="12dp"
+                    android:layout_marginBottom="14dp"
+                    android:inputType="number"
+                    android:imeOptions="actionNext" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -430,6 +465,22 @@
                     android:padding="12dp"
                     android:inputType="textMultiLine|textCapSentences"
                     android:layout_marginBottom="14dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CATEGORIES"
+                    android:textSize="11sp"
+                    android:textColor="#888888"
+                    android:letterSpacing="0.05"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="14dp"
+                    app:chipSpacingHorizontal="8dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

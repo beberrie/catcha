@@ -7,9 +7,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.Calendar;
-import java.util.Date;
 
-import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
+import ph.edu.uscDCISMCatcha.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.MembershipModel;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.data.models.RSVPModel;
@@ -65,18 +64,18 @@ public class DatabaseSeeder {
         Timestamp nextWeek = new Timestamp(cal.getTime());
 
         EventModel event1 = new EventModel();
-        event1.setId(event1Id);
+        event1.setEventId(event1Id);
         event1.setOrgId(org1Id);
         event1.setOrgName("Computer Science Society");
         event1.setTitle("Hackathon 2024");
         event1.setDescription("Annual coding competition for all students.");
         event1.setLocation("DCISM Lobby");
-        event1.setStartDateTime(now);
-        event1.setEndDateTime(nextWeek);
+        event1.setStartDateTime(now.toDate());
+        event1.setEndDateTime(nextWeek.toDate());
         event1.setUniversity("University of San Carlos");
         event1.setImageUrl("https://example.com/hackathon.png");
         event1.setCreatedBy(user1Id);
-        event1.setCreatedAt(now);
+        event1.setCreatedAt(now.toDate());
         event1.setMaxCapacity(100);
         event1.setCurrentRsvpCount(1);
 

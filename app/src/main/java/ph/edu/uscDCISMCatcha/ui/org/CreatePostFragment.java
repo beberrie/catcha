@@ -1,29 +1,57 @@
-package ph.edu.uscDCISMCatcha.fragments;
+package ph.edu.uscDCISMCatcha.ui.org;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.bumptech.glide.Glide;
+import com.google.android.material.chip.Chip;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentCreatePostBinding;
-import ph.edu.uscDCISMCatcha.viewmodel.CreatePostViewModel;
+import ph.edu.uscDCISMCatcha.viewmodel.org.CreatePostViewModel;
 
 public class CreatePostFragment extends Fragment {
 
     private FragmentCreatePostBinding binding;
     private CreatePostViewModel viewModel;
     private boolean isAnnouncementTab = true;
+    private String editId = null;
+    private Uri selectedImageUri = null;
+    
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+    private final ActivityResultLauncher<String> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    selectedImageUri = uri;
+                    binding.ivPostImagePreview.setVisibility(View.VISIBLE);
+                    Glide.with(this).load(uri).into(binding.ivPostImagePreview);
+                }
+            }
+    );
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -38,21 +66,108 @@ public class CreatePostFragment extends Fragment {
 
         viewModel = new ViewModelProvider(this).get(CreatePostViewModel.class);
 
+        setupTabs();
+        setupDateTimePickers();
+        setupCategories();
+        setupButtons();
+        observeViewModel();
+
+        Bundle args = getArguments();
+        if (args != null) {
+            boolean startOnAnnouncement = args.getBoolean("startOnAnnouncement", true);
+            editId = args.getString("EDIT_ID");
+            switchTab(startOnAnnouncement);
+
+            if (editId != null) {
+                binding.tvNavTitle.setText(startOnAnnouncement ? "Edit Announcement" : "Edit Event");
+                binding.btnBroadcast.setText("Update Announcement");
+                binding.btnCreateEvent.setText("Update Event");
+                
+                binding.layoutTabs.setVisibility(View.GONE);
+
+                if (startOnAnnouncement) {
+                    viewModel.fetchAnnouncement(editId);
+                } else {
+                    viewModel.fetchEvent(editId);
+                }
+            }
+        }
+    }
+
+    private void observeViewModel() {
         viewModel.getStatusMessage().observe(getViewLifecycleOwner(), message -> {
             if (message != null) {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                if (message.contains("successfully")) clearInputs();
+                if (message.contains("successfully")) {
+                    requireActivity().getSupportFragmentManager().popBackStack();
+                }
                 viewModel.clearStatus();
             }
         });
 
-        setupTabs();
-        setupDateTimePickers();
-        setupButtons();
+        viewModel.getOrganization().observe(getViewLifecycleOwner(), org -> {
+            if (org != null) {
+                binding.tvOrgName.setText(org.getName());
+                binding.tvOrgSub.setText(org.getCategory() != null ? org.getCategory() : "Organization");
+                if (org.getName() != null && !org.getName().isEmpty()) {
+                    binding.tvOrgInitial.setText(String.valueOf(org.getName().charAt(0)).toUpperCase());
+                }
+                binding.btnBroadcast.setText("Broadcast as " + org.getName());
+            }
+        });
 
-        Bundle args = getArguments();
-        if (args != null) {
-            switchTab(args.getBoolean("startOnAnnouncement", true));
+        viewModel.getExistingAnnouncement().observe(getViewLifecycleOwner(), announcement -> {
+            if (announcement != null) {
+                binding.etTitle.setText(announcement.getTitle());
+                binding.etMessage.setText(announcement.getContent());
+                // Image handling for editing could be added here
+            }
+        });
+
+        viewModel.getExistingEvent().observe(getViewLifecycleOwner(), event -> {
+            if (event != null) {
+                binding.etTitle.setText(event.getTitle());
+                binding.etLocation.setText(event.getLocation());
+                binding.etDescription.setText(event.getDescription());
+                binding.etCapacity.setText(String.valueOf(event.getMaxCapacity()));
+                
+                if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
+                    binding.ivPostImagePreview.setVisibility(View.VISIBLE);
+                    Glide.with(this).load(event.getImageUrl()).into(binding.ivPostImagePreview);
+                }
+
+                if (event.getStartDateTime() != null) {
+                    binding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
+                    binding.tvTime.setText(timeFormat.format(event.getStartDateTime()));
+                }
+                if (event.getEndDateTime() != null) {
+                    binding.tvEndTime.setText(timeFormat.format(event.getEndDateTime()));
+                }
+
+                if (event.getCategories() != null) {
+                    for (int i = 0; i < binding.cgCategories.getChildCount(); i++) {
+                        Chip chip = (Chip) binding.cgCategories.getChildAt(i);
+                        if (event.getCategories().contains(chip.getText().toString())) {
+                            chip.setChecked(true);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void setupCategories() {
+        String[] categories = {
+                "Creative Arts", "Tech & Innovation", "Academic & Career",
+                "Sports & Wellness", "Community Service", "Faith & Culture"
+        };
+
+        for (String category : categories) {
+            Chip chip = new Chip(requireContext());
+            chip.setText(category);
+            chip.setCheckable(true);
+            chip.setClickable(true);
+            binding.cgCategories.addView(chip);
         }
     }
 
@@ -64,7 +179,10 @@ public class CreatePostFragment extends Fragment {
 
     private void switchTab(boolean showAnnouncement) {
         isAnnouncementTab = showAnnouncement;
-        binding.tvNavTitle.setText(showAnnouncement ? "Create post" : "Create event");
+
+        if (editId == null) {
+            binding.tvNavTitle.setText(showAnnouncement ? "Create post" : "Create event");
+        }
 
         if (showAnnouncement) {
             binding.btnTabAnnouncement.setBackgroundResource(R.drawable.bg_tab_selected);
@@ -84,49 +202,68 @@ public class CreatePostFragment extends Fragment {
 
     private void setupDateTimePickers() {
         binding.layoutPickDate.setOnClickListener(v -> {
-            Calendar c = Calendar.getInstance();
+            Calendar calendar = Calendar.getInstance();
             new DatePickerDialog(requireContext(),
-                    (dp, year, month, day) -> binding.tvDate.setText(
-                            String.format(Locale.getDefault(), "%d-%02d-%02d",
-                                    year, month + 1, day)),
-                    c.get(Calendar.YEAR),
-                    c.get(Calendar.MONTH),
-                    c.get(Calendar.DAY_OF_MONTH)).show();
+                    (datePicker, year, month, day) -> {
+                        String date = String.format(Locale.getDefault(),
+                                "%d-%02d-%02d", year, month + 1, day);
+                        binding.tvDate.setText(date);
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+            ).show();
         });
 
         binding.layoutPickTime.setOnClickListener(v -> showTimePicker(binding.tvTime));
         binding.layoutPickEndTime.setOnClickListener(v -> showTimePicker(binding.tvEndTime));
     }
 
-    private void showTimePicker(TextView target) {
-        Calendar c = Calendar.getInstance();
+    private void showTimePicker(TextView targetView) {
+        Calendar calendar = Calendar.getInstance();
         new TimePickerDialog(requireContext(),
-                (tp, hour, minute) -> {
+                (timePicker, hour, minute) -> {
                     String amPm = hour < 12 ? "AM" : "PM";
-                    int h = hour % 12 == 0 ? 12 : hour % 12;
-                    target.setText(String.format(Locale.getDefault(),
-                            "%d:%02d %s", h, minute, amPm));
+                    int displayHour = hour % 12 == 0 ? 12 : hour % 12;
+                    String time = String.format(Locale.getDefault(),
+                            "%d:%02d %s", displayHour, minute, amPm);
+                    targetView.setText(time);
                 },
-                c.get(Calendar.HOUR_OF_DAY),
-                c.get(Calendar.MINUTE), false).show();
+                calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE),
+                false
+        ).show();
     }
 
     private void setupButtons() {
         binding.btnBack.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
+        binding.btnAttachImageAnnouncement.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        binding.btnAttachEventCover.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+
         binding.btnBroadcast.setOnClickListener(v -> {
             String title   = binding.etTitle.getText().toString().trim();
             String message = binding.etMessage.getText().toString().trim();
-            boolean sendPush = binding.switchPushNotification.isChecked();
 
-            if (title.isEmpty()) { binding.etTitle.setError("Required"); return; }
-            if (message.isEmpty()) {
-                Toast.makeText(requireContext(), "Message cannot be empty",
-                        Toast.LENGTH_SHORT).show();
+            if (title.isEmpty()) {
+                binding.etTitle.setError("Required");
                 return;
             }
-            viewModel.postAnnouncement(title, message, sendPush);
+            if (message.isEmpty()) {
+                Toast.makeText(requireContext(), "Message cannot be empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (editId != null) {
+                viewModel.updateAnnouncement(editId, title, message);
+            } else {
+                if (selectedImageUri != null) {
+                    viewModel.postAnnouncementWithImage(title, message, binding.switchPushNotification.isChecked(), selectedImageUri);
+                } else {
+                    viewModel.postAnnouncement(title, message, binding.switchPushNotification.isChecked());
+                }
+            }
         });
 
         binding.btnCreateEvent.setOnClickListener(v -> {
@@ -136,30 +273,49 @@ public class CreatePostFragment extends Fragment {
             String endTime     = binding.tvEndTime.getText().toString();
             String location    = binding.etLocation.getText().toString().trim();
             String description = binding.etDescription.getText().toString().trim();
-            boolean autoReminders = binding.switchAutoReminders.isChecked();
+            String capacityStr = binding.etCapacity.getText().toString().trim();
 
-            if (title.isEmpty()) { binding.etTitle.setError("Required"); return; }
-            if (date.equals("Pick date") || time.equals("Pick time") || location.isEmpty()) {
-                Toast.makeText(requireContext(), "Fill in all required fields",
-                        Toast.LENGTH_SHORT).show();
+            if (title.isEmpty()) {
+                binding.etTitle.setError("Required");
                 return;
             }
-            viewModel.createEvent(title, date, time, endTime,
-                    location, description, autoReminders);
+            if (date.equals("Pick date") || time.equals("Pick time") || location.isEmpty()) {
+                Toast.makeText(requireContext(), "Fill in all required fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int capacity = 0;
+            if (!capacityStr.isEmpty()) {
+                try {
+                    capacity = Integer.parseInt(capacityStr);
+                } catch (NumberFormatException e) {
+                    binding.etCapacity.setError("Invalid number");
+                    return;
+                }
+            }
+
+            if (editId != null) {
+                // For simplicity, update uses current logic; image update could be added
+                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity, getSelectedCategories(), "");
+            } else {
+                if (selectedImageUri != null) {
+                    viewModel.createEventWithImage(title, date, time, endTime, location, description, capacity, getSelectedCategories(), selectedImageUri);
+                } else {
+                    viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories());
+                }
+            }
         });
     }
 
-    private void clearInputs() {
-        binding.etTitle.setText("");
-        binding.etMessage.setText("");
-        binding.etLocation.setText("");
-        binding.etDescription.setText("");
-        binding.tvDate.setText("Pick date");
-        binding.tvTime.setText("Pick time");
-        binding.tvEndTime.setText("Pick time");
-        binding.switchPushNotification.setChecked(false);
-        binding.switchAutoReminders.setChecked(false);
-        binding.etTitle.requestFocus();
+    private List<String> getSelectedCategories() {
+        List<String> selected = new ArrayList<>();
+        for (int i = 0; i < binding.cgCategories.getChildCount(); i++) {
+            Chip chip = (Chip) binding.cgCategories.getChildAt(i);
+            if (chip.isChecked()) {
+                selected.add(chip.getText().toString());
+            }
+        }
+        return selected;
     }
 
     @Override

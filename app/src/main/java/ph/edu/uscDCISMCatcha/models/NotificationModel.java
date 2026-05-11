@@ -5,7 +5,6 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 
 // ADD THESE TWO IMPORTS
-import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 
 @IgnoreExtraProperties
@@ -80,12 +79,17 @@ public class NotificationModel {
         n.orgId         = e.getOrgId();
         n.orgName       = e.getOrgName();
         n.location      = e.getLocation();
-        n.startDateTime = e.getStartDateTime();
-        n.endDateTime   = e.getEndDateTime();
+        
+        // Fix: Convert Date to Timestamp
+        n.startDateTime = e.getStartDateTime() != null ? new Timestamp(e.getStartDateTime()) : null;
+        n.endDateTime   = e.getEndDateTime() != null ? new Timestamp(e.getEndDateTime()) : null;
+        
         n.university    = e.getUniversity();
         n.imageUrl      = e.getImageUrl();
         n.createdBy     = e.getCreatedBy();
-        n.createdAt     = e.getCreatedAt();
+        
+        // Fix: Convert Date to Timestamp
+        n.createdAt     = e.getCreatedAt() != null ? new Timestamp(e.getCreatedAt()) : null;
 
         n.eventGoing    = eventGoing;
         n.computeUrgency();
