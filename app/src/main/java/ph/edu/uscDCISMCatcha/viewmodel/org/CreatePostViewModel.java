@@ -1,11 +1,11 @@
 package ph.edu.uscDCISMCatcha.viewmodel.org;
 
+import android.net.Uri;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
@@ -68,6 +68,10 @@ public class CreatePostViewModel extends ViewModel {
     }
 
     public void postAnnouncement(String title, String message, boolean sendPush) {
+        postAnnouncementWithImage(title, message, sendPush, null);
+    }
+
+    public void postAnnouncementWithImage(String title, String message, boolean sendPush, Uri imageUri) {
         if (!dataSource.isUserLoggedIn()) {
             statusMessage.setValue("Error: User not logged in");
             return;
@@ -80,6 +84,20 @@ public class CreatePostViewModel extends ViewModel {
         AnnouncementModel announcement = new AnnouncementModel(title, message, uid);
         announcement.setOrgName(orgName);
 
+        if (imageUri != null) {
+            statusMessage.setValue("Uploading image...");
+            dataSource.uploadImage(imageUri, "announcements")
+                    .addOnSuccessListener(url -> {
+                        announcement.setImageUrl(url); 
+                        saveAnnouncement(announcement);
+                    })
+                    .addOnFailureListener(e -> statusMessage.setValue("Upload failed: " + e.getMessage()));
+        } else {
+            saveAnnouncement(announcement);
+        }
+    }
+
+    private void saveAnnouncement(AnnouncementModel announcement) {
         dataSource.createAnnouncement(announcement).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 statusMessage.setValue("Announcement created successfully!");
@@ -103,6 +121,11 @@ public class CreatePostViewModel extends ViewModel {
 
     public void createEvent(String title, String date, String time, String endTime,
                             String location, String description, int capacity, List<String> categories) {
+        createEventWithImage(title, date, time, endTime, location, description, capacity, categories, null);
+    }
+
+    public void createEventWithImage(String title, String date, String time, String endTime,
+                            String location, String description, int capacity, List<String> categories, Uri imageUri) {
         
         if (!dataSource.isUserLoggedIn()) {
             statusMessage.setValue("Error: User not logged in");
@@ -116,7 +139,7 @@ public class CreatePostViewModel extends ViewModel {
             Organization org = organization.getValue();
 
             String orgName = (org != null) ? org.getName() : "Organization";
-            String orgId = uid; // Fallback
+            String orgId = (org != null) ? org.getId() : uid;
 
             EventModel event = new EventModel();
             event.setTitle(title);
@@ -131,21 +154,35 @@ public class CreatePostViewModel extends ViewModel {
             event.setCreatedBy(uid);
             event.setCategories(categories);
 
-            dataSource.createEvent(event).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    statusMessage.setValue("Event created successfully!");
-                } else {
-                    statusMessage.setValue("Error: " + task.getException().getMessage());
-                }
-            });
+            if (imageUri != null) {
+                statusMessage.setValue("Uploading event cover...");
+                dataSource.uploadImage(imageUri, "events")
+                        .addOnSuccessListener(url -> {
+                            event.setImageUrl(url);
+                            saveEvent(event);
+                        })
+                        .addOnFailureListener(e -> statusMessage.setValue("Upload failed: " + e.getMessage()));
+            } else {
+                saveEvent(event);
+            }
 
         } catch (ParseException e) {
             statusMessage.setValue("Error parsing date/time");
         }
     }
 
+    private void saveEvent(EventModel event) {
+        dataSource.createEvent(event).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                statusMessage.setValue("Event created successfully!");
+            } else {
+                statusMessage.setValue("Error: " + task.getException().getMessage());
+            }
+        });
+    }
+
     public void updateEvent(String id, String title, String date, String time, String endTime,
-                            String location, String description, int capacity, List<String> categories) {
+                            String location, String description, int capacity, List<String> categories, String imageUrl) {
         try {
             Date startD = dateTimeFormat.parse(date + " " + time);
             Date endD = dateTimeFormat.parse(date + " " + endTime);
@@ -157,7 +194,8 @@ public class CreatePostViewModel extends ViewModel {
                             "location", location,
                             "description", description,
                             "maxCapacity", capacity,
-                            "categories", categories)
+                            "categories", categories,
+                            "imageUrl", imageUrl)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             statusMessage.setValue("Event updated successfully!");

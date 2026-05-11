@@ -2,6 +2,7 @@ package ph.edu.uscDCISMCatcha.ui.org;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
@@ -24,10 +28,12 @@ import ph.edu.uscDCISMCatcha.databinding.OrgHomePageBinding;
 
 public class OrgHomePageFragment extends Fragment {
 
+    private static final String TAG = "OrgHomePageFragment";
     private OrgHomePageBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy • hh:mm a", Locale.getDefault());
+    private String organizationName;
 
     public OrgHomePageFragment() {
         // Required empty public constructor
@@ -53,8 +59,7 @@ public class OrgHomePageFragment extends Fragment {
 
         setupHeader();
         setupCreatePostCard();
-        fetchAnnouncements();
-        fetchEvents();
+        fetchOrganizationData();
     }
 
     private void setupHeader() {
@@ -77,24 +82,55 @@ public class OrgHomePageFragment extends Fragment {
         binding.btnAttachImage.setOnClickListener(v -> openCreatePost(true, null));
     }
 
-    private void fetchAnnouncements() {
+    private void fetchOrganizationData() {
         String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
         if (uid.isEmpty()) return;
 
+        db.collection("organizations")
+                .whereEqualTo("ownerUid", uid)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        organizationName = queryDocumentSnapshots.getDocuments().get(0).getString("name");
+                        if (organizationName != null) {
+                            fetchAnnouncements();
+                            fetchEvents();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error fetching org", e));
+    }
+
+    private void fetchAnnouncements() {
+        if (organizationName == null || organizationName.isEmpty()) return;
+
+        // Removed .orderBy() to avoid index requirement for now
         db.collection("announcements")
-                .whereEqualTo("authorUid", uid)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .whereEqualTo("orgName", organizationName)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
+                        Log.e(TAG, "Announcements error: " + error.getMessage());
                         return;
                     }
 
                     if (binding != null) {
                         binding.announcementsContainer.removeAllViews();
                         if (value != null) {
+                            List<AnnouncementModel> list = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : value) {
                                 AnnouncementModel announcement = doc.toObject(AnnouncementModel.class);
-                                addAnnouncementCard(announcement, doc.getId());
+                                announcement.setAnnouncementId(doc.getId());
+                                list.add(announcement);
+                            }
+                            
+                            // Sort locally by timestamp descending
+                            Collections.sort(list, (a, b) -> {
+                                if (a.getTimestamp() == null || b.getTimestamp() == null) return 0;
+                                return b.getTimestamp().compareTo(a.getTimestamp());
+                            });
+
+                            for (AnnouncementModel announcement : list) {
+                                addAnnouncementCard(announcement, announcement.getAnnouncementId());
                             }
                         }
                     }
@@ -118,23 +154,35 @@ public class OrgHomePageFragment extends Fragment {
     }
 
     private void fetchEvents() {
-        String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
-        if (uid.isEmpty()) return;
+        if (organizationName == null || organizationName.isEmpty()) return;
 
+        // Removed .orderBy() to avoid index requirement for now
         db.collection("events")
-                .whereEqualTo("createdBy", uid)
-                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .whereEqualTo("orgName", organizationName)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
+                        Log.e(TAG, "Events error: " + error.getMessage());
                         return;
                     }
 
                     if (binding != null) {
                         binding.eventsContainer.removeAllViews();
                         if (value != null) {
+                            List<EventModel> list = new ArrayList<>();
                             for (QueryDocumentSnapshot doc : value) {
                                 EventModel event = doc.toObject(EventModel.class);
-                                addEventCard(event, doc.getId());
+                                event.setEventId(doc.getId());
+                                list.add(event);
+                            }
+
+                            // Sort locally by createdAt descending
+                            Collections.sort(list, (a, b) -> {
+                                if (a.getCreatedAt() == null || b.getCreatedAt() == null) return 0;
+                                return b.getCreatedAt().compareTo(a.getCreatedAt());
+                            });
+
+                            for (EventModel event : list) {
+                                addEventCard(event, event.getEventId());
                             }
                         }
                     }

@@ -14,6 +14,7 @@ public class AnnouncementModel implements Serializable {
     private String content;
     private String authorUid;
     private String orgName;
+    private String imageUrl;
     @ServerTimestamp
     private Date timestamp;
 
@@ -37,6 +38,8 @@ public class AnnouncementModel implements Serializable {
     public void setAuthorUid(String authorUid) { this.authorUid = authorUid; }
     public String getOrgName() { return orgName; }
     public void setOrgName(String orgName) { this.orgName = orgName; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public Date getTimestamp() { return timestamp; }
     public void setTimestamp(Date timestamp) { this.timestamp = timestamp; }
 }

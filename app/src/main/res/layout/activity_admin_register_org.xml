@@ -74,12 +74,55 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
+                <!-- Banner Picker -->
+                <FrameLayout
+                    android:id="@+id/btnPickBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_dashed_border">
+
+                    <ImageView
+                        android:id="@+id/ivBannerPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="+ Add Banner Photo"
+                        android:textColor="@color/text_secondary" />
+                </FrameLayout>
+
+                <!-- Profile Picker -->
+                <LinearLayout
+                    android:id="@+id/btnPickProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="-40dp"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ivProfilePreview"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@color/white"
+                        android:padding="2dp"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                        app:strokeColor="@color/blue"
+                        app:strokeWidth="1dp"
+                        android:src="@android:drawable/ic_menu_gallery" />
+                </LinearLayout>
+
                 <!-- Organization Name -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.Catcha.TextInputLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="16dp"
                     android:hint="Organization Name">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -164,6 +207,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Profile Image URL (Hidden/Additional) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Catcha.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Profile Image URL">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etProfileImageUrl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textUri" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Banner Image URL (Hidden/Additional) -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Catcha.TextInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="Banner Image URL">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etBannerImageUrl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textUri" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View

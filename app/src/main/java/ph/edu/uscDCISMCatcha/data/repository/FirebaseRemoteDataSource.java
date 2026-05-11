@@ -1,5 +1,7 @@
 package ph.edu.uscDCISMCatcha.data.repository;
 
+import android.net.Uri;
+
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.AuthResult;
@@ -12,6 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
@@ -33,10 +38,12 @@ public class FirebaseRemoteDataSource {
 
     private final FirebaseAuth auth;
     private final FirebaseFirestore firestore;
+    private final FirebaseStorage storage;
 
     public FirebaseRemoteDataSource() {
         this.auth = FirebaseAuth.getInstance();
         this.firestore = FirebaseFirestore.getInstance();
+        this.storage = FirebaseStorage.getInstance();
     }
 
     public FirebaseUser getCurrentUser() {
@@ -92,6 +99,18 @@ public class FirebaseRemoteDataSource {
 
     public void signOut() {
         auth.signOut();
+    }
+
+    // --- Image Upload ---
+    public Task<String> uploadImage(Uri imageUri, String folder) {
+        String fileName = UUID.randomUUID().toString();
+        StorageReference ref = storage.getReference().child(folder + "/" + fileName);
+        return ref.putFile(imageUri).continueWithTask(task -> {
+            if (!task.isSuccessful()) {
+                throw task.getException();
+            }
+            return ref.getDownloadUrl();
+        }).continueWith(task -> task.getResult().toString());
     }
 
     // --- Organization Management ---

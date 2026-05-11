@@ -3,22 +3,30 @@ package ph.edu.uscDCISMCatcha.ui.org;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.bumptech.glide.Glide;
 import com.google.android.material.chip.Chip;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentCreatePostBinding;
 import ph.edu.uscDCISMCatcha.viewmodel.org.CreatePostViewModel;
@@ -29,8 +37,21 @@ public class CreatePostFragment extends Fragment {
     private CreatePostViewModel viewModel;
     private boolean isAnnouncementTab = true;
     private String editId = null;
+    private Uri selectedImageUri = null;
+    
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+    private final ActivityResultLauncher<String> imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    selectedImageUri = uri;
+                    binding.ivPostImagePreview.setVisibility(View.VISIBLE);
+                    Glide.with(this).load(uri).into(binding.ivPostImagePreview);
+                }
+            }
+    );
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -62,7 +83,6 @@ public class CreatePostFragment extends Fragment {
                 binding.btnBroadcast.setText("Update Announcement");
                 binding.btnCreateEvent.setText("Update Event");
                 
-                // Hide tabs when editing to prevent confusion
                 binding.layoutTabs.setVisibility(View.GONE);
 
                 if (startOnAnnouncement) {
@@ -100,6 +120,7 @@ public class CreatePostFragment extends Fragment {
             if (announcement != null) {
                 binding.etTitle.setText(announcement.getTitle());
                 binding.etMessage.setText(announcement.getContent());
+                // Image handling for editing could be added here
             }
         });
 
@@ -110,6 +131,11 @@ public class CreatePostFragment extends Fragment {
                 binding.etDescription.setText(event.getDescription());
                 binding.etCapacity.setText(String.valueOf(event.getMaxCapacity()));
                 
+                if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
+                    binding.ivPostImagePreview.setVisibility(View.VISIBLE);
+                    Glide.with(this).load(event.getImageUrl()).into(binding.ivPostImagePreview);
+                }
+
                 if (event.getStartDateTime() != null) {
                     binding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
                     binding.tvTime.setText(timeFormat.format(event.getStartDateTime()));
@@ -148,8 +174,6 @@ public class CreatePostFragment extends Fragment {
     private void setupTabs() {
         binding.btnTabAnnouncement.setOnClickListener(v -> switchTab(true));
         binding.btnTabEvent.setOnClickListener(v -> switchTab(false));
-
-        // Initialize state
         switchTab(true);
     }
 
@@ -215,6 +239,9 @@ public class CreatePostFragment extends Fragment {
         binding.btnBack.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
+        binding.btnAttachImageAnnouncement.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+        binding.btnAttachEventCover.setOnClickListener(v -> imagePickerLauncher.launch("image/*"));
+
         binding.btnBroadcast.setOnClickListener(v -> {
             String title   = binding.etTitle.getText().toString().trim();
             String message = binding.etMessage.getText().toString().trim();
@@ -231,7 +258,11 @@ public class CreatePostFragment extends Fragment {
             if (editId != null) {
                 viewModel.updateAnnouncement(editId, title, message);
             } else {
-                viewModel.postAnnouncement(title, message, binding.switchPushNotification.isChecked());
+                if (selectedImageUri != null) {
+                    viewModel.postAnnouncementWithImage(title, message, binding.switchPushNotification.isChecked(), selectedImageUri);
+                } else {
+                    viewModel.postAnnouncement(title, message, binding.switchPushNotification.isChecked());
+                }
             }
         });
 
@@ -264,9 +295,14 @@ public class CreatePostFragment extends Fragment {
             }
 
             if (editId != null) {
-                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity, getSelectedCategories());
+                // For simplicity, update uses current logic; image update could be added
+                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity, getSelectedCategories(), "");
             } else {
-                viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories());
+                if (selectedImageUri != null) {
+                    viewModel.createEventWithImage(title, date, time, endTime, location, description, capacity, getSelectedCategories(), selectedImageUri);
+                } else {
+                    viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories());
+                }
             }
         });
     }
