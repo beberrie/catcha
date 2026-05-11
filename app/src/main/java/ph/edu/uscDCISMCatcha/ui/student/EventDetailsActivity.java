@@ -1,10 +1,7 @@
 package ph.edu.uscDCISMCatcha.ui.student;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,10 +11,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
@@ -45,7 +38,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         TextView tvDescription = findViewById(R.id.tvDescription);
         Chip chipStatus = findViewById(R.id.chipStatus);
         LinearLayout qrSection = findViewById(R.id.qrSection);
-        ImageView ivQRCode = findViewById(R.id.ivQRCode);
 
         // Get data from intent
         eventId = getIntent().getStringExtra(Constants.EXTRA_EVENT_ID);
@@ -56,7 +48,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         String description = getIntent().getStringExtra(Constants.EXTRA_EVENT_DESCRIPTION);
         String status = getIntent().getStringExtra(Constants.EXTRA_EVENT_STATUS);
         int statusColor = getIntent().getIntExtra(Constants.EXTRA_EVENT_STATUS_COLOR, R.color.yellow);
-        String registrationUrl = getIntent().getStringExtra(Constants.EXTRA_EVENT_REGISTRATION_URL);
 
         // Populate views
         if (title != null) tvTitle.setText(title);
@@ -70,9 +61,8 @@ public class EventDetailsActivity extends AppCompatActivity {
             chipStatus.setChipBackgroundColorResource(statusColor);
 
             if (qrSection != null) {
-                if ("UPCOMING".equalsIgnoreCase(status) && registrationUrl != null && !registrationUrl.isEmpty()) {
+                if ("UPCOMING".equalsIgnoreCase(status)) {
                     qrSection.setVisibility(View.VISIBLE);
-                    generateQRCode(registrationUrl, ivQRCode);
                 } else {
                     qrSection.setVisibility(View.GONE);
                 }
@@ -100,23 +90,5 @@ public class EventDetailsActivity extends AppCompatActivity {
         });
 
         btnBack.setOnClickListener(v -> finish());
-    }
-
-    private void generateQRCode(String content, ImageView imageView) {
-        QRCodeWriter writer = new QRCodeWriter();
-        try {
-            BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
-            int width = bitMatrix.getWidth();
-            int height = bitMatrix.getHeight();
-            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
-                }
-            }
-            imageView.setImageBitmap(bmp);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
     }
 }

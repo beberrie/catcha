@@ -17,8 +17,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
-import ph.edu.uscDCISMCatcha.models.EventModel;
-import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
+
 public class TrendingEventsFragment extends Fragment {
 
     @Nullable
