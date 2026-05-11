@@ -22,6 +22,7 @@ public class EventModel implements Serializable {
     private String university;
     private String imageUrl;
     private String createdBy;
+    private String registrationUrl; // Link to Google Form or other registration
     private int maxCapacity = 0; // 0 means unlimited if not specified
     private int currentRsvpCount = 0; // Specifically for "Going"
     private int interestedCount = 0;
@@ -71,6 +72,8 @@ public class EventModel implements Serializable {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public String getCreatedBy() { return createdBy; }
     public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
+    public String getRegistrationUrl() { return registrationUrl; }
+    public void setRegistrationUrl(String registrationUrl) { this.registrationUrl = registrationUrl; }
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 

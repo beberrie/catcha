@@ -120,12 +120,12 @@ public class CreatePostViewModel extends ViewModel {
     }
 
     public void createEvent(String title, String date, String time, String endTime,
-                            String location, String description, int capacity, List<String> categories) {
-        createEventWithImage(title, date, time, endTime, location, description, capacity, categories, null);
+                            String location, String description, int capacity, List<String> categories, String registrationUrl) {
+        createEventWithImage(title, date, time, endTime, location, description, capacity, categories, registrationUrl, null);
     }
 
     public void createEventWithImage(String title, String date, String time, String endTime,
-                            String location, String description, int capacity, List<String> categories, Uri imageUri) {
+                            String location, String description, int capacity, List<String> categories, String registrationUrl, Uri imageUri) {
         
         if (!dataSource.isUserLoggedIn()) {
             statusMessage.setValue("Error: User not logged in");
@@ -153,6 +153,7 @@ public class CreatePostViewModel extends ViewModel {
             event.setOrgName(orgName);
             event.setCreatedBy(uid);
             event.setCategories(categories);
+            event.setRegistrationUrl(registrationUrl);
 
             if (imageUri != null) {
                 statusMessage.setValue("Uploading event cover...");
@@ -182,7 +183,7 @@ public class CreatePostViewModel extends ViewModel {
     }
 
     public void updateEvent(String id, String title, String date, String time, String endTime,
-                            String location, String description, int capacity, List<String> categories, String imageUrl) {
+                            String location, String description, int capacity, List<String> categories, String registrationUrl, String imageUrl) {
         try {
             Date startD = dateTimeFormat.parse(date + " " + time);
             Date endD = dateTimeFormat.parse(date + " " + endTime);
@@ -195,6 +196,7 @@ public class CreatePostViewModel extends ViewModel {
                             "description", description,
                             "maxCapacity", capacity,
                             "categories", categories,
+                            "registrationUrl", registrationUrl,
                             "imageUrl", imageUrl)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {

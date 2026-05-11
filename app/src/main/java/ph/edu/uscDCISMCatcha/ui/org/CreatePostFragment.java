@@ -130,7 +130,8 @@ public class CreatePostFragment extends Fragment {
                 binding.etLocation.setText(event.getLocation());
                 binding.etDescription.setText(event.getDescription());
                 binding.etCapacity.setText(String.valueOf(event.getMaxCapacity()));
-                
+                binding.etRegistrationUrl.setText(event.getRegistrationUrl());
+
                 if (event.getImageUrl() != null && !event.getImageUrl().isEmpty()) {
                     binding.ivPostImagePreview.setVisibility(View.VISIBLE);
                     Glide.with(this).load(event.getImageUrl()).into(binding.ivPostImagePreview);
@@ -274,6 +275,7 @@ public class CreatePostFragment extends Fragment {
             String location    = binding.etLocation.getText().toString().trim();
             String description = binding.etDescription.getText().toString().trim();
             String capacityStr = binding.etCapacity.getText().toString().trim();
+            String registrationUrl = binding.etRegistrationUrl.getText().toString().trim();
 
             if (title.isEmpty()) {
                 binding.etTitle.setError("Required");
@@ -281,6 +283,11 @@ public class CreatePostFragment extends Fragment {
             }
             if (date.equals("Pick date") || time.equals("Pick time") || location.isEmpty()) {
                 Toast.makeText(requireContext(), "Fill in all required fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (registrationUrl.isEmpty()) {
+                binding.etRegistrationUrl.setError("Required for QR code");
                 return;
             }
 
@@ -296,12 +303,12 @@ public class CreatePostFragment extends Fragment {
 
             if (editId != null) {
                 // For simplicity, update uses current logic; image update could be added
-                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity, getSelectedCategories(), "");
+                viewModel.updateEvent(editId, title, date, time, endTime, location, description, capacity, getSelectedCategories(), registrationUrl, "");
             } else {
                 if (selectedImageUri != null) {
-                    viewModel.createEventWithImage(title, date, time, endTime, location, description, capacity, getSelectedCategories(), selectedImageUri);
+                    viewModel.createEventWithImage(title, date, time, endTime, location, description, capacity, getSelectedCategories(), registrationUrl, selectedImageUri);
                 } else {
-                    viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories());
+                    viewModel.createEvent(title, date, time, endTime, location, description, capacity, getSelectedCategories(), registrationUrl);
                 }
             }
         });
