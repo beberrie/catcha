@@ -141,7 +141,7 @@ public class FirebaseRemoteDataSource {
         });
     }
 
-    // --- Event Creation ---
+
     public Task<Void> createEvent(EventModel event) {
         DocumentReference docRef = firestore.collection(Constants.COL_EVENTS).document();
         event.setEventId(docRef.getId());
@@ -169,14 +169,12 @@ public class FirebaseRemoteDataSource {
         });
     }
 
-    // --- Announcement Creation ---
     public Task<Void> createAnnouncement(AnnouncementModel announcement) {
         DocumentReference docRef = firestore.collection(Constants.COL_ANNOUNCEMENTS).document();
         announcement.setAnnouncementId(docRef.getId());
         return docRef.set(announcement);
     }
 
-    // --- RSVP Capacity Enforcement & Aggregation ---
     public Task<Void> rsvpToEvent(RSVPModel rsvp) {
         String rsvpId = rsvp.getUserId() + "_" + rsvp.getEventId();
         DocumentReference rsvpRef = firestore.collection(Constants.COL_RSVPS).document(rsvpId);
