@@ -22,6 +22,7 @@
         android:background="@drawable/bottom_nav_background"
         android:elevation="12dp"
         app:menu="@menu/bottom_nav_menu"
+        app:itemIconSize="20dp"
         app:itemIconTint="@color/nav_color_selector"
         app:itemTextColor="@color/nav_color_selector"
         app:layout_constraintBottom_toBottomOf="parent"

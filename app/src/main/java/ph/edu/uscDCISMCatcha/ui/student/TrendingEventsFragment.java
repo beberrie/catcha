@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import ph.edu.uscDCISMCatcha.R;
+import ph.edu.uscDCISMCatcha.adapters.CommonGroundTrendingAdapter;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
 import ph.edu.uscDCISMCatcha.models.EventModel;
 import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
@@ -84,7 +85,7 @@ public class TrendingEventsFragment extends Fragment {
             demoUsers1.add(new ph.edu.uscDCISMCatcha.models.UserModel("Carl", "Gomez", "carl",
                     "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
 
-            CommonGroundAdapter adapter1 = new CommonGroundAdapter(requireContext(), demoUsers1);
+            CommonGroundTrendingAdapter adapter1 = new CommonGroundTrendingAdapter(requireContext(), demoUsers1);
             rvTrending1.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
             rvTrending1.setAdapter(adapter1);
         }
@@ -101,7 +102,7 @@ public class TrendingEventsFragment extends Fragment {
             demoUsers2.add(new ph.edu.uscDCISMCatcha.models.UserModel("Dana", "Cruz", "dana",
                     "dana@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
 
-            CommonGroundAdapter adapter2 = new CommonGroundAdapter(requireContext(), demoUsers2);
+            CommonGroundTrendingAdapter adapter2 = new CommonGroundTrendingAdapter(requireContext(), demoUsers2);
             rvTrending2.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
             rvTrending2.setAdapter(adapter2);
         }
