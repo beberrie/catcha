@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.ui.student; // FIXED PACKAGE NAME
+package ph.edu.uscDCISMCatcha.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.chip.Chip;
 import java.util.List;
-
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentRecommendationsBinding;
 import ph.edu.uscDCISMCatcha.models.RecommendationModel;
@@ -28,44 +27,51 @@ public class RecommendationFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentRecommendationsBinding.inflate(inflater, container, false);
+        binding = FragmentRecommendationsBinding.inflate(
+                inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         viewModel = new ViewModelProvider(this).get(InterestViewModel.class);
+
         observeRecommendations();
         viewModel.loadDummyRecommendations();
     }
 
     private void observeRecommendations() {
-        viewModel.getRecommendations().observe(getViewLifecycleOwner(), list -> {
-            if (list == null) return;
-            binding.layoutRecommendedOrgs.removeAllViews();
-            binding.layoutRecommendedEvents.removeAllViews();
+        viewModel.getRecommendations().observe(getViewLifecycleOwner(),
+                list -> {
+                    if (list == null) return;
+                    binding.layoutRecommendedOrgs.removeAllViews();
+                    binding.layoutRecommendedEvents.removeAllViews();
 
-            for (RecommendationModel item : list) {
-                if (item.getType() == RecommendationModel.Type.ORG) {
-                    addOrgCard(item);
-                } else {
-                    addEventCard(item);
-                }
-            }
-        });
+                    for (RecommendationModel item : list) {
+                        if (item.getType() == RecommendationModel.Type.ORG) {
+                            addOrgCard(item);
+                        } else {
+                            addEventCard(item);
+                        }
+                    }
+                });
     }
 
     private void addOrgCard(RecommendationModel item) {
         View card = LayoutInflater.from(requireContext())
-                .inflate(R.layout.item_recommended_org, binding.layoutRecommendedOrgs, false);
+                .inflate(R.layout.item_recommended_org,
+                        binding.layoutRecommendedOrgs, false);
 
         TextView tvInitials = card.findViewById(R.id.tvOrgInitials);
-        TextView tvName = card.findViewById(R.id.tvOrgName);
+        TextView tvName     = card.findViewById(R.id.tvOrgName);
         TextView tvFollowers = card.findViewById(R.id.tvOrgFollowers);
-        TextView tvMatch = card.findViewById(R.id.tvMatchPercent);
-        com.google.android.material.chip.ChipGroup chipGroup = card.findViewById(R.id.chipGroupOrgTags);
+        TextView tvMatch    = card.findViewById(R.id.tvMatchPercent);
+        com.google.android.material.chip.ChipGroup chipGroup =
+                card.findViewById(R.id.chipGroupOrgTags);
+        Button btnView   = card.findViewById(R.id.btnViewOrg);
         Button btnFollow = card.findViewById(R.id.btnFollowOrg);
 
         tvInitials.setText(item.getInitials());
@@ -80,10 +86,17 @@ public class RecommendationFragment extends Fragment {
             chipGroup.addView(chip);
         }
 
+        btnView.setOnClickListener(v ->
+                Toast.makeText(requireContext(),
+                        "Opening " + item.getTitle(),
+                        Toast.LENGTH_SHORT).show());
+
         btnFollow.setOnClickListener(v -> {
             btnFollow.setText("Following");
             btnFollow.setEnabled(false);
-            viewModel.updateTagWeight("user_001", item.getTags()[0], 0.08);
+            // Update interest weight when user follows
+            viewModel.updateTagWeight("user_001",
+                    item.getTags()[0], 0.08);
         });
 
         binding.layoutRecommendedOrgs.addView(card);
@@ -91,12 +104,14 @@ public class RecommendationFragment extends Fragment {
 
     private void addEventCard(RecommendationModel item) {
         View card = LayoutInflater.from(requireContext())
-                .inflate(R.layout.item_recommended_event, binding.layoutRecommendedEvents, false);
+                .inflate(R.layout.item_recommended_event,
+                        binding.layoutRecommendedEvents, false);
 
-        TextView tvTitle = card.findViewById(R.id.tvEventTitle);
+        TextView tvTitle   = card.findViewById(R.id.tvEventTitle);
         TextView tvDateTime = card.findViewById(R.id.tvEventDateTime);
-        TextView tvMatch = card.findViewById(R.id.tvEventMatchPercent);
-        com.google.android.material.chip.ChipGroup chipGroup = card.findViewById(R.id.chipGroupEventTags);
+        TextView tvMatch   = card.findViewById(R.id.tvEventMatchPercent);
+        com.google.android.material.chip.ChipGroup chipGroup =
+                card.findViewById(R.id.chipGroupEventTags);
         Button btnInterested = card.findViewById(R.id.btnInterestedEvent);
 
         tvTitle.setText(item.getTitle());
@@ -113,7 +128,9 @@ public class RecommendationFragment extends Fragment {
         btnInterested.setOnClickListener(v -> {
             btnInterested.setText("Interested ✓");
             btnInterested.setEnabled(false);
-            viewModel.updateTagWeight("user_001", item.getTags()[0], 0.10);
+            // Update interest weight when user marks interested
+            viewModel.updateTagWeight("user_001",
+                    item.getTags()[0], 0.10);
         });
 
         binding.layoutRecommendedEvents.addView(card);

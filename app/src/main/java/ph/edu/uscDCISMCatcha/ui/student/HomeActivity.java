@@ -14,6 +14,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ph.edu.uscDCISMCatcha.R;
 
+import ph.edu.uscDCISMCatcha.ui.student.OrgDashboardFragment;
+
 public class HomeActivity extends AppCompatActivity {
 
     @Override
@@ -35,28 +37,28 @@ public class HomeActivity extends AppCompatActivity {
 
         // Load default fragment
         if (savedInstanceState == null) {
-            loadFragment(new TrendingEventsFragment());
-            bottomNav.setSelectedItemId(R.id.nav_home);
+            loadFragment(new OrgDashboardFragment());
+            bottomNav.setSelectedItemId(R.id.nav_orgs);
         }
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
             if (id == R.id.nav_home) {
-                loadFragment(new TrendingEventsFragment());
+                // loadFragment(new HomeFragment());
             } else if (id == R.id.nav_orgs) {
                 loadFragment(new OrgDashboardFragment());
             } else if (id == R.id.nav_events) {
-                // loadFragment(new EventFragment());
+                loadFragment(new TrendingEventsFragment());
             }
             return true;
         });
     }
 
-     private void loadFragment(Fragment fragment) {
-         getSupportFragmentManager()
-             .beginTransaction()
-             .replace(R.id.fragment_container, fragment)
-             .commit();
-     }
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+    }
 }
