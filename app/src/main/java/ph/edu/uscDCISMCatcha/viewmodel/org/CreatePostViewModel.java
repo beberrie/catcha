@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.viewmodel;
+package ph.edu.uscDCISMCatcha.viewmodel.org;
 
 import android.os.Handler;
 import android.os.Looper;

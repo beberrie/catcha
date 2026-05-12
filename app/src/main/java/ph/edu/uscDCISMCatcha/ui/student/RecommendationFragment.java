@@ -17,7 +17,7 @@ import java.util.List;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentRecommendationsBinding;
 import ph.edu.uscDCISMCatcha.models.RecommendationModel;
-import ph.edu.uscDCISMCatcha.viewmodel.InterestViewModel;
+import ph.edu.uscDCISMCatcha.viewmodel.student.InterestViewModel;
 
 public class RecommendationFragment extends Fragment {
 

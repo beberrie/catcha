@@ -19,7 +19,7 @@ import java.util.Map;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentInterestProfileBinding;
 import ph.edu.uscDCISMCatcha.models.InterestModel;
-import ph.edu.uscDCISMCatcha.viewmodel.InterestViewModel;
+import ph.edu.uscDCISMCatcha.viewmodel.student.InterestViewModel;
 
 public class InterestProfileFragment extends Fragment {
 
