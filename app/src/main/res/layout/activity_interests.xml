@@ -137,6 +137,8 @@
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_coding" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_robotics" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_ai" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_cybersecurity" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_uiux" style="@style/Widget.SubChip" />
 
                 </com.google.android.flexbox.FlexboxLayout>
 
@@ -177,6 +179,7 @@
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_research" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_entrepreneurship" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_public_speaking" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_leadership" style="@style/Widget.SubChip" />
 
                 </com.google.android.flexbox.FlexboxLayout>
 
@@ -194,13 +197,14 @@
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_basketball" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_volleyball" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_yoga" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_esports" style="@style/Widget.SubChip" />
 
                 </com.google.android.flexbox.FlexboxLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_marginBottom="10dp">
 
                     <com.google.android.material.chip.Chip
@@ -226,13 +230,14 @@
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_volunteering" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_advocacy" style="@style/Widget.SubChip" />
                     <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_charity" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_environment" style="@style/Widget.SubChip" />
 
                 </com.google.android.flexbox.FlexboxLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_marginBottom="10dp">
 
                     <com.google.android.material.chip.Chip
@@ -255,9 +260,9 @@
                     app:alignItems="flex_start"
                     app:justifyContent="flex_start">
 
-                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_subcat1" style="@style/Widget.SubChip" />
-                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_subcat2" style="@style/Widget.SubChip" />
-                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_subcat3" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_spiritual_growth" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_cultural_heritage" style="@style/Widget.SubChip" />
+                    <com.google.android.material.chip.Chip android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_interfaith" style="@style/Widget.SubChip" />
 
                 </com.google.android.flexbox.FlexboxLayout>
 

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +35,7 @@ public class InterestsActivity extends AppCompatActivity {
     private FlexboxLayout subCreativeArts, subTechInnovation, subAcademicCareer,
             subSportsWellness, subCommunityService, subFaithCulture;
 
-    private TextView tvInterestsHint;
+    private TextView tvInterestsHint, tvUserName;
     private MaterialButton btnContinue;
     private final Set<String> selectedInterests = new HashSet<>();
 
@@ -65,6 +68,7 @@ public class InterestsActivity extends AppCompatActivity {
         subFaithCulture     = findViewById(R.id.sub_faith_culture);
 
         tvInterestsHint = findViewById(R.id.tv_interests_hint);
+        tvUserName = findViewById(R.id.tv_user_name);
         btnContinue = findViewById(R.id.btn_continue);
         TextView tvSkip = findViewById(R.id.tv_skip);
 
@@ -86,7 +90,66 @@ public class InterestsActivity extends AppCompatActivity {
         btnContinue.setOnClickListener(v -> saveInterestsAndNavigate());
         tvSkip.setOnClickListener(v -> saveInterestsAndNavigate());
 
+        displayUsername();
         updateValidation();
+    }
+
+    private void displayUsername() {
+        String intentUsername = getIntent().getStringExtra("username");
+        if (intentUsername != null && !intentUsername.isEmpty()) {
+            setStyledUsername(intentUsername);
+        } else {
+            fetchUsernameFromFirestore();
+        }
+    }
+
+    private void fetchUsernameFromFirestore() {
+        String uid = mAuth.getUid();
+        if (uid != null) {
+            db.collection("users").document(uid).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String username = documentSnapshot.getString("username");
+                            if (username != null && !username.isEmpty()) {
+                                setStyledUsername(username);
+                            }
+                        }
+                    });
+        }
+    }
+
+    private void setStyledUsername(String username) {
+        String base = "OUR DEAR ";
+        String upperUsername = username.trim().toUpperCase();
+        // Removed space before the exclamation point
+        String fullText = base + upperUsername + "!";
+        SpannableString spannable = new SpannableString(fullText);
+        
+        int start = base.length();
+        int length = upperUsername.length();
+        int end = start + length;
+        
+        if (length > 0) {
+            // Apply a split color palette (Blue & Yellow) to the username part
+            // Splits in the middle to mimic the "catcha" logo style
+            int mid = start + (length / 2);
+
+            // First part: Catcha Blue
+            if (mid > start || length == 1) {
+                int blueEnd = (length == 1) ? end : mid;
+                spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.blue)),
+                        start, blueEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            // Second part: Catcha Yellow
+            if (mid < end && length > 1) {
+                spannable.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.yellow)),
+                        mid, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+
+        // "OUR DEAR " and "!" remain the original text color (dark)
+        tvUserName.setText(spannable);
     }
 
     private void saveInterestsAndNavigate() {
@@ -162,10 +225,8 @@ public class InterestsActivity extends AppCompatActivity {
                     String interest = subChip.getText().toString();
                     if (isChecked) {
                         selectedInterests.add(interest);
-                        subChip.setChipBackgroundColorResource(R.color.soft_yellow);
                     } else {
                         selectedInterests.remove(interest);
-                        subChip.setChipBackgroundColorResource(R.color.off_white);
                     }
                     updateValidation();
                 });
@@ -181,18 +242,22 @@ public class InterestsActivity extends AppCompatActivity {
         if (isReady) {
             btnContinue.setAlpha(1.0f);
             tvInterestsHint.setVisibility(View.GONE);
-            // Apply gold glow effect
+            // Reverting to golden theme for button highlights
             int glowColor = ContextCompat.getColor(this, R.color.soft_yellow);
+            btnContinue.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
             btnContinue.setStrokeColor(ColorStateList.valueOf(glowColor));
             btnContinue.setStrokeWidth((int) (3 * getResources().getDisplayMetrics().density));
             btnContinue.setTextColor(Color.BLACK);
+            btnContinue.setIconTint(ColorStateList.valueOf(Color.BLACK));
         } else {
             btnContinue.setAlpha(0.5f);
             tvInterestsHint.setVisibility(View.VISIBLE);
             // Default greyed out state
+            btnContinue.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
             btnContinue.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#CCCCCC")));
             btnContinue.setStrokeWidth((int) (1.5 * getResources().getDisplayMetrics().density));
             btnContinue.setTextColor(Color.parseColor("#888888"));
+            btnContinue.setIconTint(ColorStateList.valueOf(Color.parseColor("#888888")));
         }
     }
 }
