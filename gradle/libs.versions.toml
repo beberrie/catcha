@@ -11,6 +11,8 @@ core-splashscreen = "1.2.0"
 googleServices = "4.4.4"
 firebaseBom = "34.12.0"
 glide = "4.16.0"
+googleAi = "0.9.0"
+guava = "33.4.0-android"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -26,6 +28,8 @@ firebase-auth = { group = "com.google.firebase", name = "firebase-auth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
+google-ai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "googleAi" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
