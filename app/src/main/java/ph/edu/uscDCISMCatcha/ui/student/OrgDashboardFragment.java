@@ -13,6 +13,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
+import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
 import ph.edu.uscDCISMCatcha.databinding.OrgDashboardBinding;
 import ph.edu.uscDCISMCatcha.databinding.FragmentOrgCardMainBinding;
 
@@ -41,6 +42,7 @@ public class OrgDashboardFragment extends Fragment {
 
         setupHeader();
         setupFilters();
+        setupChatBot();
         
         // Suggested Orgs - Clear for now as requested
         binding.suggestedOrgsContainer.removeAllViews();
@@ -69,6 +71,15 @@ public class OrgDashboardFragment extends Fragment {
         binding.chipFilters.setOnClickListener(v -> {
             OrgFiltersBottomSheet bottomSheet = new OrgFiltersBottomSheet();
             bottomSheet.show(getParentFragmentManager(), "OrgFiltersBottomSheet");
+        });
+    }
+
+    private void setupChatBot() {
+        binding.fabChatBot.setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new ChatBotFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 

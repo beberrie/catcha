@@ -55,6 +55,10 @@ dependencies {
     // QR Code Generation
     implementation("com.google.zxing:core:3.5.3")
 
+    // Google AI (Gemini)
+    implementation(libs.google.ai)
+    implementation(libs.guava)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
