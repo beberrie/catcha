@@ -24,28 +24,36 @@
             android:layout_marginEnd="16dp"
             app:tint="@color/blue" />
 
-        <EditText
-            android:id="@+id/etSearch"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/bg_btn_dark"
-            android:backgroundTint="#F5F5F5"
-            android:hint="Search events or orgs..."
-            android:paddingHorizontal="16dp"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:singleLine="true"
-            android:textSize="14sp" />
+            android:background="@drawable/bg_search_bar"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp">
 
-        <ImageView
-            android:id="@+id/btnClearSearch"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="-36dp"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:visibility="gone"
-            app:tint="@color/soft_blue" />
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="Search events or orgs..."
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:paddingHorizontal="4dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/btnClearSearch"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:visibility="gone"
+                app:tint="@color/soft_blue" />
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView

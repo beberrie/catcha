@@ -76,8 +76,7 @@ public class EventFragment extends Fragment implements EventAdapter.OnEventClick
     private void setupHeader() {
         binding.header.ivSearchHeader.setOnClickListener(v -> navigateTo(new SearchFragment()));
         
-        binding.header.ivNotificationsHeader.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Notifications coming soon!", Toast.LENGTH_SHORT).show());
+        binding.header.ivNotificationsHeader.setOnClickListener(v -> navigateTo(new PushSetupFragment()));
 
         binding.header.ivUserAvatarHeader.setOnClickListener(v -> navigateTo(new UserProfileFragment()));
     }
