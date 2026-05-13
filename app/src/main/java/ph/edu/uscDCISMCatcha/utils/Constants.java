@@ -30,5 +30,5 @@ public class Constants {
     public static final String EXTRA_EVENT_REGISTRATION_URL = "EVENT_REGISTRATION_URL";
 
     // AI Configuration
-    public static final String GEMINI_API_KEY = "AIzaSyCsh5KIUv4V8LUxy0X5t-8kDvfd8L3pFm4";
+    public static final String GEMINI_API_KEY = "AIzaSyDvcC-wVUasCJN6jOg_nOo7frfVsn8uXUw";
 }

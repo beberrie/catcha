@@ -77,8 +77,8 @@ public class ChatBotFragment extends Fragment {
 
     private void initGemini() {
         GenerativeModel gm = new GenerativeModel(
-                "gemini-1.5-flash",
-                Constants.GEMINI_API_KEY
+                "gemini-flash-latest",
+                Constants.GEMINI_API_KEY.trim()
         );
         model = GenerativeModelFutures.from(gm);
     }
@@ -97,17 +97,25 @@ public class ChatBotFragment extends Fragment {
                 }
             }
             eventsContext = context.toString();
+            Log.d(TAG, "Events context fetched: " + eventsContext.length() + " chars");
         }).addOnFailureListener(e -> Log.e(TAG, "Error fetching events for context", e));
     }
 
     private void generateAIResponse(String userPrompt) {
-        String systemInstruction = "You are Catcha Assistant, a helpful AI for a campus event management app called Catcha. " +
+        if (model == null) {
+            Log.e(TAG, "Gemini model not initialized");
+            addBotMessage("AI is not initialized. Please try again later.");
+            return;
+        }
+
+        String fullPrompt = "System: You are Catcha Assistant, a helpful AI for a campus event management app called Catcha. " +
                 "Your goal is to help students discover events and organizations. " +
                 "Use the following event data to answer questions. If you don't know the answer, say you don't know.\n\n" +
-                eventsContext + "\n\nUser asked: " + userPrompt;
+                "Event Data:\n" + (eventsContext.isEmpty() ? "No events currently available." : eventsContext) + "\n\n" +
+                "User: " + userPrompt;
 
         Content content = new Content.Builder()
-                .addText(systemInstruction)
+                .addText(fullPrompt)
                 .build();
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
@@ -123,9 +131,19 @@ public class ChatBotFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Throwable t) {
-                Log.e(TAG, "Gemini Error", t);
+                Log.e(TAG, "Gemini Error: " + t.getMessage(), t);
                 if (isAdded() && getActivity() != null) {
-                    getActivity().runOnUiThread(() -> addBotMessage("Sorry, I'm having trouble connecting to the AI right now."));
+                    getActivity().runOnUiThread(() -> {
+                        String rawError = t.getMessage() != null ? t.getMessage() : "Unknown Error";
+                        String errorMsg = "Sorry, I'm having trouble connecting to the AI.";
+                        
+                        if (rawError.contains("404")) {
+                            errorMsg += "\n\nError 404: The model name you used was not found. Please double check the name in initGemini().";
+                        }
+                        errorMsg += "\n\nDetails: " + rawError;
+
+                        addBotMessage(errorMsg);
+                    });
                 }
             }
         }, executor);
