@@ -67,4 +67,6 @@ public class UserModel implements Serializable {
     public void setFcmTokens(Map<String, String> fcmTokens) { this.fcmTokens = fcmTokens; }
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+
+    public String getName() { return firstName + " " + lastName; }
 }

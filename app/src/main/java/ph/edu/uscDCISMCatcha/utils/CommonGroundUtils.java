@@ -7,7 +7,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import ph.edu.uscDCISMCatcha.models.UserModel;
+import ph.edu.uscDCISMCatcha.data.models.UserModel;
 
 public class CommonGroundUtils {
 
