@@ -151,5 +151,6 @@
     <string name="status_ended">ENDED</string>
     <string name="status_ongoing">ONGOING</string>
 
+    <string name="search_results_count">%1$d Results for \"%2$s\"</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

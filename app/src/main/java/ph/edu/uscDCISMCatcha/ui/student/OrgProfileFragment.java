@@ -91,6 +91,8 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         });
     }
 
+    private String membershipStatus = "None"; // "None", "Pending", "Active"
+
     private void checkMembershipStatus() {
         if (mAuth.getCurrentUser() == null) return;
 
@@ -101,7 +103,20 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
 
-                    isMember = (value != null && !value.isEmpty());
+                    if (value != null && !value.isEmpty()) {
+                        MembershipModel membership = value.getDocuments().get(0).toObject(MembershipModel.class);
+                        if (membership != null) {
+                            membershipStatus = membership.getStatus();
+                            isMember = "Active".equals(membershipStatus);
+                        } else {
+                            membershipStatus = "None";
+                            isMember = false;
+                        }
+                    } else {
+                        membershipStatus = "None";
+                        isMember = false;
+                    }
+
                     updateMembershipUI();
 
                     if (isMember) {
@@ -116,12 +131,25 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
     }
 
     private void updateMembershipUI() {
-        if (isMember) {
-            binding.joinButton.setVisibility(View.GONE);
-            binding.joinedStatusContainer.setVisibility(View.VISIBLE);
-        } else {
-            binding.joinButton.setVisibility(View.VISIBLE);
-            binding.joinedStatusContainer.setVisibility(View.GONE);
+        switch (membershipStatus) {
+            case "Active":
+                binding.joinButton.setVisibility(View.GONE);
+                binding.joinedStatusContainer.setVisibility(View.VISIBLE);
+                binding.joinedButton.setText("Joined");
+                break;
+            case "Pending":
+                binding.joinButton.setVisibility(View.VISIBLE);
+                binding.joinButton.setText("Pending Approval");
+                binding.joinButton.setEnabled(false);
+                binding.joinedStatusContainer.setVisibility(View.GONE);
+                break;
+            case "None":
+            default:
+                binding.joinButton.setVisibility(View.VISIBLE);
+                binding.joinButton.setText("Join");
+                binding.joinButton.setEnabled(true);
+                binding.joinedStatusContainer.setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -287,10 +315,11 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         if (mAuth.getCurrentUser() == null) return;
 
         String uid = mAuth.getCurrentUser().getUid();
-        MembershipModel membership = new MembershipModel(uid, orgId, binding.orgName.getText().toString(), "Member", "Active");
+        // Set status to "Pending" so organization handlers can approve it
+        MembershipModel membership = new MembershipModel(uid, orgId, binding.orgName.getText().toString(), "Member", "Pending");
 
         db.collection("memberships").add(membership)
-                .addOnSuccessListener(doc -> Toast.makeText(getContext(), "Joined successfully!", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(doc -> Toast.makeText(getContext(), "Request sent to organization!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 

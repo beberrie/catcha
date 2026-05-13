@@ -26,6 +26,10 @@ import ph.edu.uscDCISMCatcha.databinding.ItemAnnouncementCardBinding;
 import ph.edu.uscDCISMCatcha.databinding.ItemEventCardHandlerBinding;
 import ph.edu.uscDCISMCatcha.databinding.OrgHomePageBinding;
 
+import ph.edu.uscDCISMCatcha.data.models.MembershipModel;
+import ph.edu.uscDCISMCatcha.data.models.UserModel;
+import ph.edu.uscDCISMCatcha.databinding.ItemMembershipRequestBinding;
+
 public class OrgHomePageFragment extends Fragment {
 
     private static final String TAG = "OrgHomePageFragment";
@@ -33,7 +37,9 @@ public class OrgHomePageFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy • hh:mm a", Locale.getDefault());
+    private final SimpleDateFormat shortDate = new SimpleDateFormat("MMM dd", Locale.getDefault());
     private String organizationName;
+    private String organizationId;
 
     public OrgHomePageFragment() {
         // Required empty public constructor
@@ -91,14 +97,87 @@ public class OrgHomePageFragment extends Fragment {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
+                        organizationId = queryDocumentSnapshots.getDocuments().get(0).getId();
                         organizationName = queryDocumentSnapshots.getDocuments().get(0).getString("name");
                         if (organizationName != null) {
                             fetchAnnouncements();
                             fetchEvents();
+                            fetchMembershipRequests();
                         }
                     }
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Error fetching org", e));
+    }
+
+    private void fetchMembershipRequests() {
+        if (organizationId == null) return;
+
+        db.collection("memberships")
+                .whereEqualTo("orgId", organizationId)
+                .whereEqualTo("status", "Pending")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) return;
+
+                    if (binding != null) {
+                        binding.membershipRequestsContainer.removeAllViews();
+                        if (value != null && !value.isEmpty()) {
+                            binding.sectionMembershipRequests.setVisibility(View.VISIBLE);
+                            binding.tvRequestCount.setText(String.valueOf(value.size()));
+                            for (QueryDocumentSnapshot doc : value) {
+                                MembershipModel request = doc.toObject(MembershipModel.class);
+                                addMembershipRequestCard(request, doc.getId());
+                            }
+                        } else {
+                            binding.sectionMembershipRequests.setVisibility(View.GONE);
+                        }
+                    }
+                });
+    }
+
+    private void addMembershipRequestCard(MembershipModel request, String membershipId) {
+        ItemMembershipRequestBinding reqBinding = ItemMembershipRequestBinding.inflate(
+                getLayoutInflater(), binding.membershipRequestsContainer, false);
+
+        // Fetch user details for the name
+        db.collection("users").document(request.getUserId()).get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        UserModel user = doc.toObject(UserModel.class);
+                        if (user != null) {
+                            reqBinding.tvUserName.setText(user.getFirstName() + " " + user.getLastName());
+                        }
+                    }
+                });
+
+        if (request.getJoinedAt() != null) {
+            reqBinding.tvRequestDate.setText("Requested on " + shortDate.format(request.getJoinedAt().toDate()));
+        }
+
+        reqBinding.btnApprove.setOnClickListener(v -> updateMembershipStatus(membershipId, "Active"));
+        reqBinding.btnReject.setOnClickListener(v -> showRejectConfirmation(membershipId));
+
+        binding.membershipRequestsContainer.addView(reqBinding.getRoot());
+    }
+
+    private void updateMembershipStatus(String membershipId, String newStatus) {
+        db.collection("memberships").document(membershipId)
+                .update("status", newStatus)
+                .addOnSuccessListener(aVoid -> {
+                    String msg = "Active".equals(newStatus) ? "Member approved!" : "Request rejected.";
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void showRejectConfirmation(String membershipId) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Reject Request")
+                .setMessage("Are you sure you want to reject this membership request?")
+                .setPositiveButton("Reject", (dialog, which) -> {
+                    db.collection("memberships").document(membershipId).delete()
+                            .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Request rejected and removed.", Toast.LENGTH_SHORT).show());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void fetchAnnouncements() {

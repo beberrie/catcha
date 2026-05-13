@@ -5,18 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CalendarView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -32,13 +27,11 @@ import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.ui.adapters.EventAdapter;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
+import ph.edu.uscDCISMCatcha.databinding.FragmentEventsBinding;
 
 public class EventFragment extends Fragment implements EventAdapter.OnEventClickListener {
 
-    private CalendarView calendarView;
-    private RecyclerView rvEvents;
-    private TextView tvSelectedDate, tvNoEvents;
-    private ProgressBar progressBar;
+    private FragmentEventsBinding binding;
     private EventAdapter adapter;
     private List<EventModel> allEvents = new ArrayList<>();
     private List<EventModel> filteredEvents = new ArrayList<>();
@@ -50,48 +43,47 @@ public class EventFragment extends Fragment implements EventAdapter.OnEventClick
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_events, container, false);
+        binding = FragmentEventsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        calendarView = view.findViewById(R.id.calendarView);
-        rvEvents = view.findViewById(R.id.rvEvents);
-        tvSelectedDate = view.findViewById(R.id.tvSelectedDate);
-        tvNoEvents = view.findViewById(R.id.tvNoEvents);
-        progressBar = view.findViewById(R.id.progressBar);
-
-        rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvEvents.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new EventAdapter(filteredEvents, this);
-        rvEvents.setAdapter(adapter);
+        binding.rvEvents.setAdapter(adapter);
 
         // Set default text
-        tvSelectedDate.setText(dateFormat.format(new Date()));
+        binding.tvSelectedDate.setText(dateFormat.format(new Date()));
 
-        calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
+        binding.calendarView.setOnDateChangeListener((view1, year, month, dayOfMonth) -> {
             Calendar selected = Calendar.getInstance();
             selected.set(year, month, dayOfMonth);
             updateFilteredEvents(selected.getTime());
         });
 
+        setupHeader();
+        setupChatBot();
         loadJoinedEvents();
         loadAllEvents();
-        setupChatBot(view);
-
-        return view;
     }
 
-    private void setupChatBot(View view) {
-        FloatingActionButton fabChatBot = view.findViewById(R.id.fabChatBot);
-        if (fabChatBot != null) {
-            fabChatBot.setOnClickListener(v -> {
-                getParentFragmentManager().beginTransaction()
-                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                        .replace(R.id.fragment_container, new ChatBotFragment())
-                        .addToBackStack(null)
-                        .commit();
-            });
-        }
+    private void setupHeader() {
+        binding.header.ivSearchHeader.setOnClickListener(v -> navigateTo(new SearchFragment()));
+        
+        binding.header.ivNotificationsHeader.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Notifications coming soon!", Toast.LENGTH_SHORT).show());
+
+        binding.header.ivUserAvatarHeader.setOnClickListener(v -> navigateTo(new UserProfileFragment()));
+    }
+
+    private void setupChatBot() {
+        binding.fabChatBot.setOnClickListener(v -> navigateTo(new ChatBotFragment()));
     }
 
     private void loadJoinedEvents() {
@@ -111,27 +103,29 @@ public class EventFragment extends Fragment implements EventAdapter.OnEventClick
     }
 
     private void loadAllEvents() {
-        progressBar.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
         db.collection("events").get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (binding == null) return;
                     allEvents.clear();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         EventModel event = doc.toObject(EventModel.class);
                         event.setEventId(doc.getId());
                         allEvents.add(event);
                     }
-                    progressBar.setVisibility(View.GONE);
+                    binding.progressBar.setVisibility(View.GONE);
                     // Filter for today by default
-                    updateFilteredEvents(new Date(calendarView.getDate()));
+                    updateFilteredEvents(new Date(binding.calendarView.getDate()));
                 })
                 .addOnFailureListener(e -> {
-                    progressBar.setVisibility(View.GONE);
+                    if (binding == null) return;
+                    binding.progressBar.setVisibility(View.GONE);
                     Toast.makeText(getContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void updateFilteredEvents(Date date) {
-        tvSelectedDate.setText(dateFormat.format(date));
+        binding.tvSelectedDate.setText(dateFormat.format(date));
         filteredEvents.clear();
 
         Calendar cal1 = Calendar.getInstance();
@@ -150,13 +144,21 @@ public class EventFragment extends Fragment implements EventAdapter.OnEventClick
         }
 
         if (filteredEvents.isEmpty()) {
-            tvNoEvents.setVisibility(View.VISIBLE);
-            rvEvents.setVisibility(View.GONE);
+            binding.tvNoEvents.setVisibility(View.VISIBLE);
+            binding.rvEvents.setVisibility(View.GONE);
         } else {
-            tvNoEvents.setVisibility(View.GONE);
-            rvEvents.setVisibility(View.VISIBLE);
+            binding.tvNoEvents.setVisibility(View.GONE);
+            binding.rvEvents.setVisibility(View.VISIBLE);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void navigateTo(Fragment fragment) {
+        getParentFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -165,5 +167,11 @@ public class EventFragment extends Fragment implements EventAdapter.OnEventClick
         intent.putExtra("EVENT_ID", event.getEventId());
         intent.putExtra("EVENT_DATA", event);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

@@ -66,7 +66,11 @@ public class OrgDashboardFragment extends Fragment {
                         .commit());
 
         binding.header.ivSearchHeader.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Search functionality coming soon!", Toast.LENGTH_SHORT).show());
+                getParentFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                        .replace(R.id.fragment_container, new SearchFragment())
+                        .addToBackStack(null)
+                        .commit());
     }
 
     private void setupFilters() {
