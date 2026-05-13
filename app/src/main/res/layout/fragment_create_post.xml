@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:background="#FFFFFF">
 
+    <!-- Nav bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,7 +41,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
         android:fillViewport="true">
 
         <LinearLayout
@@ -49,8 +49,8 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Tab switcher -->
             <LinearLayout
-                android:id="@+id/layoutTabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_tab_container"
@@ -83,6 +83,7 @@
                     android:stateListAnimator="@null" />
             </LinearLayout>
 
+            <!-- Posting as -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -102,10 +103,9 @@
                 android:layout_marginBottom="16dp">
 
                 <TextView
-                    android:id="@+id/tvOrgInitial"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-                    android:text="O"
+                    android:text="DC"
                     android:textSize="12sp"
                     android:textColor="#F5C842"
                     android:textStyle="bold"
@@ -120,24 +120,23 @@
                     android:layout_marginStart="10dp">
 
                     <TextView
-                        android:id="@+id/tvOrgName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Loading organization..."
+                        android:text="DCISM Organization"
                         android:textSize="13sp"
                         android:textColor="#1A1A1A"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvOrgSub"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Organization"
+                        android:text="312 followers"
                         android:textSize="11sp"
                         android:textColor="#888888" />
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,17 +158,6 @@
                 android:layout_marginBottom="14dp"
                 android:inputType="textCapSentences"
                 android:imeOptions="actionNext" />
-
-            <!-- Universal Image Preview for both Announcement and Event -->
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/ivPostImagePreview"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginBottom="14dp"
-                android:scaleType="centerCrop"
-                android:visibility="gone"
-                android:background="#F5F5F5"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.Catcha.SmallComponent" />
 
             <!-- ANNOUNCEMENT FIELDS -->
             <LinearLayout
@@ -201,8 +189,9 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:layout_marginBottom="14dp" />
 
+                <!-- Attach image -->
                 <LinearLayout
-                    android:id="@+id/btnAttachImageAnnouncement"
+                    android:id="@+id/layoutAttachImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_field_outline_light"
@@ -214,7 +203,6 @@
                     android:foreground="?attr/selectableItemBackground">
 
                     <TextView
-                        android:id="@+id/tvAttachLabelAnnouncement"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -230,6 +218,7 @@
                         android:textColor="#AAAAAA" />
                 </LinearLayout>
 
+                <!-- Push notification toggle -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -269,11 +258,12 @@
                         app:trackTint="#A9A9B2" />
                 </LinearLayout>
 
+                <!-- Broadcast button -->
                 <Button
                     android:id="@+id/btnBroadcast"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:text="Broadcast"
+                    android:text="Broadcast to 312 followers"
                     android:textAllCaps="false"
                     android:textColor="#F5C842"
                     android:textSize="14sp"
@@ -290,72 +280,25 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
-                <!-- TEMPORARILY DISABLED: Attach Image for Event -->
                 <LinearLayout
-                    android:id="@+id/btnAttachEventCover"
+                    android:id="@+id/layoutCoverPhoto"
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="80dp"
                     android:background="@drawable/bg_dashed_border"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:layout_marginBottom="14dp"
-                    android:clickable="false"
-                    android:focusable="false"
-                    android:visibility="gone"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:foreground="?attr/selectableItemBackground">
 
                     <TextView
-                        android:id="@+id/tvAddCoverText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="+ Add event cover photo"
+                        android:text="+ Add cover photo"
                         android:textSize="13sp"
                         android:textColor="#AAAAAA" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="REGISTRATION LINK (GOOGLE FORM)"
-                    android:textSize="11sp"
-                    android:textColor="#888888"
-                    android:letterSpacing="0.05"
-                    android:layout_marginBottom="6dp" />
-
-                <EditText
-                    android:id="@+id/etRegistrationUrl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="https://forms.gle/..."
-                    android:textSize="13sp"
-                    android:textColor="#1A1A1A"
-                    android:background="@drawable/bg_field_outline_light"
-                    android:padding="12dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="textUri"
-                    android:imeOptions="actionNext" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CAPACITY"
-                    android:textSize="11sp"
-                    android:textColor="#888888"
-                    android:letterSpacing="0.05"
-                    android:layout_marginBottom="6dp" />
-
-                <EditText
-                    android:id="@+id/etCapacity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Maximum number of attendees (0 for unlimited)"
-                    android:textSize="13sp"
-                    android:textColor="#1A1A1A"
-                    android:background="@drawable/bg_field_outline_light"
-                    android:padding="12dp"
-                    android:layout_marginBottom="14dp"
-                    android:inputType="number"
-                    android:imeOptions="actionNext" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -489,22 +432,6 @@
                     android:padding="12dp"
                     android:inputType="textMultiLine|textCapSentences"
                     android:layout_marginBottom="14dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CATEGORIES"
-                    android:textSize="11sp"
-                    android:textColor="#888888"
-                    android:letterSpacing="0.05"
-                    android:layout_marginBottom="6dp" />
-
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/cgCategories"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="14dp"
-                    app:chipSpacingHorizontal="8dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

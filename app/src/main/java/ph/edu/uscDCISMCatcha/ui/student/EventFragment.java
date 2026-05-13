@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
-import ph.edu.uscDCISMCatcha.fragments.NotificationFragment;
+import ph.edu.uscDCISMCatcha.ui.student.NotificationFragment;
 import ph.edu.uscDCISMCatcha.ui.adapters.EventAdapter;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
 import ph.edu.uscDCISMCatcha.databinding.FragmentEventsBinding;

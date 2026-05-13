@@ -6,7 +6,7 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.view. View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +18,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentCreatePostBinding;
-import ph.edu.uscDCISMCatcha.viewmodel.SharedAnnouncementViewModel;
+import ph.edu.uscDCISMCatcha.viewmodel.student.SharedAnnouncementViewModel;
 
 
 public class CreatePostFragment extends Fragment {

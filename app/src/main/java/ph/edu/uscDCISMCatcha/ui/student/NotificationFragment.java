@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.fragments;
+package ph.edu.uscDCISMCatcha.ui.student;
 
 
 import android.graphics.Color;
@@ -17,7 +17,7 @@ import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.adapters.NotificationAdapter;
 import ph.edu.uscDCISMCatcha.databinding.FragmentNotificationBinding;
 import ph.edu.uscDCISMCatcha.data.models.NotificationModel;
-import ph.edu.uscDCISMCatcha.viewmodel.SharedAnnouncementViewModel;
+import ph.edu.uscDCISMCatcha.viewmodel.student.SharedAnnouncementViewModel;
 
 
 public class NotificationFragment extends Fragment

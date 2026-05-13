@@ -1,6 +1,5 @@
 package ph.edu.uscDCISMCatcha.adapters;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +11,18 @@ import java.util.ArrayList;
 import java.util.List;
 import ph.edu.uscDCISMCatcha.R;
 
-
 public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
 
     private static final int VIEW_TYPE_PROMPT = 0;
     private static final int VIEW_TYPE_POST   = 1;
-
 
     private List<Object> items;
     private final boolean isOrgMember;
     private final OnCreatePostClickListener listener;
 
-
     public interface OnCreatePostClickListener {
         void onCreatePostClick(boolean startOnAnnouncement);
     }
-
 
     public FeedAdapter(List<Object> posts, boolean isOrgMember,
                        OnCreatePostClickListener listener) {
@@ -39,7 +33,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.items.addAll(posts);
     }
 
-
     public void updatePosts(List<Object> newPosts) {
         this.items.clear();
         this.items.add("PROMPT");
@@ -47,12 +40,10 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         notifyDataSetChanged();
     }
 
-
     @Override
     public int getItemViewType(int position) {
         return position == 0 ? VIEW_TYPE_PROMPT : VIEW_TYPE_POST;
     }
-
 
     @NonNull
     @Override
@@ -69,7 +60,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return new PromptViewHolder(v);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder,
                                  int position) {
@@ -77,7 +67,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             bindPrompt((PromptViewHolder) holder);
         }
     }
-
 
     private void bindPrompt(PromptViewHolder h) {
         if (!isOrgMember) {
@@ -88,7 +77,6 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         h.itemView.setVisibility(View.VISIBLE);
         h.itemView.getLayoutParams().height =
                 ViewGroup.LayoutParams.WRAP_CONTENT;
-
 
         h.btnOpenCreatePost.setOnClickListener(v -> {
             if (listener != null) listener.onCreatePostClick(true);
@@ -101,17 +89,14 @@ public class FeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
     }
 
-
     @Override
     public int getItemCount() { return items.size(); }
-
 
     static class PromptViewHolder extends RecyclerView.ViewHolder {
         ImageView    ivUserAvatar;
         LinearLayout btnOpenCreatePost;
         LinearLayout btnShortcutAnnouncement;
         LinearLayout btnShortcutEvent;
-
 
         PromptViewHolder(@NonNull View v) {
             super(v);

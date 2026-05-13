@@ -52,7 +52,7 @@ public class NotificationModel {
         n.title = a.getTitle();
         n.content = a.getContent();
         n.authorUid = a.getAuthorUid();
-        if (a.getTimestamp() != null) n.createdAt = new Timestamp(a.getTimestamp());
+        if (a.getTimestamp() != null) n.createdAt = a.getTimestamp();
         n.postedByName = postedByName;
         n.postedByPosition = postedByPosition;
         n.followersCount = followersCount;

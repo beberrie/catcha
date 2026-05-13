@@ -20,7 +20,6 @@ import ph.edu.uscDCISMCatcha.data.models.MembershipModel;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.databinding.FragmentEventCardBinding;
 import ph.edu.uscDCISMCatcha.databinding.OrgProfileBinding;
-import ph.edu.uscDCISMCatcha.utils.Constants;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -188,7 +187,6 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
                     if (value != null && !value.isEmpty()) {
                         for (QueryDocumentSnapshot doc : value) {
                             EventModel event = doc.toObject(EventModel.class);
-                            event.setEventId(doc.getId());
 
                             if (shouldShowEvent(event, status, startTimeStr, endTimeStr)) {
                                 addEventCard(event);
@@ -264,17 +262,15 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
 
         cardBinding.getRoot().setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), EventDetailsActivity.class);
-            intent.putExtra(Constants.EXTRA_EVENT_ID, event.getEventId());
-            intent.putExtra(Constants.EXTRA_EVENT_TITLE, event.getTitle());
-            intent.putExtra(Constants.EXTRA_EVENT_HOST, event.getOrgName());
-            intent.putExtra(Constants.EXTRA_EVENT_LOCATION, event.getLocation());
+            intent.putExtra("EVENT_TITLE", event.getTitle());
+            intent.putExtra("EVENT_HOST", event.getOrgName());
+            intent.putExtra("EVENT_LOCATION", event.getLocation());
             if (event.getStartDateTime() != null) {
-                intent.putExtra(Constants.EXTRA_EVENT_DATETIME, dateFormat.format(event.getStartDateTime()));
+                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime()));
             }
-            intent.putExtra(Constants.EXTRA_EVENT_DESCRIPTION, event.getDescription());
-            intent.putExtra(Constants.EXTRA_EVENT_STATUS, "UPCOMING"); // Simplified status
-            intent.putExtra(Constants.EXTRA_EVENT_STATUS_COLOR, R.color.yellow);
-            intent.putExtra(Constants.EXTRA_EVENT_REGISTRATION_URL, event.getRegistrationUrl());
+            intent.putExtra("EVENT_DESCRIPTION", event.getDescription());
+            intent.putExtra("EVENT_STATUS", "UPCOMING"); // Simplified status
+            intent.putExtra("EVENT_STATUS_COLOR", R.color.yellow);
             startActivity(intent);
         });
 

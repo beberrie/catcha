@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.viewmodel;
+package ph.edu.uscDCISMCatcha.viewmodel.student;
 
 
 import androidx.lifecycle.LiveData;
