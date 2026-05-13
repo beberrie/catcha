@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ph.edu.uscDCISMCatcha.R;
-import ph.edu.uscDCISMCatcha.models.UserModel;
+import ph.edu.uscDCISMCatcha.data.models.UserModel;
 
 public class CommonGroundTrendingAdapter extends RecyclerView.Adapter<CommonGroundTrendingAdapter.AvatarViewHolder> {
 

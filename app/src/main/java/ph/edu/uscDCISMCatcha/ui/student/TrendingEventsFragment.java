@@ -17,7 +17,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
-import ph.edu.uscDCISMCatcha.models.EventModel;
+import ph.edu.uscDCISMCatcha.data.models.EventModel;
+import ph.edu.uscDCISMCatcha.data.models.UserModel;
 import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
 public class TrendingEventsFragment extends Fragment {
 
@@ -48,11 +49,10 @@ public class TrendingEventsFragment extends Fragment {
                         rvCommonGround.setVisibility(View.GONE);
                         tvCommonGroundLabel.setVisibility(View.GONE);
 
-                        // HARDCODED FOR DEMO
-                        java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers = new java.util.ArrayList<>();
-                        demoUsers.add(new ph.edu.uscDCISMCatcha.models.UserModel("Beth", "Santos", "beth",
+                        java.util.List<UserModel> demoUsers = new java.util.ArrayList<>();
+                        demoUsers.add(new UserModel("Beth", "Santos", "beth",
                                 "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
-                        demoUsers.add(new ph.edu.uscDCISMCatcha.models.UserModel("Carl", "Gomez", "carl",
+                        demoUsers.add(new UserModel("Carl", "Gomez", "carl",
                                 "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
 
                         tvCommonGroundLabel.setVisibility(View.VISIBLE);
@@ -78,10 +78,10 @@ public class TrendingEventsFragment extends Fragment {
             tvTrending1.setVisibility(View.VISIBLE);
             rvTrending1.setVisibility(View.VISIBLE);
 
-            java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers1 = new java.util.ArrayList<>();
-            demoUsers1.add(new ph.edu.uscDCISMCatcha.models.UserModel("Beth", "Santos", "beth",
+            java.util.List<UserModel> demoUsers1 = new java.util.ArrayList<>();
+            demoUsers1.add(new UserModel("Beth", "Santos", "beth",
                     "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
-            demoUsers1.add(new ph.edu.uscDCISMCatcha.models.UserModel("Carl", "Gomez", "carl",
+            demoUsers1.add(new UserModel("Carl", "Gomez", "carl",
                     "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
 
             CommonGroundAdapter adapter1 = new CommonGroundAdapter(requireContext(), demoUsers1);
@@ -97,8 +97,8 @@ public class TrendingEventsFragment extends Fragment {
             tvTrending2.setVisibility(View.VISIBLE);
             rvTrending2.setVisibility(View.VISIBLE);
 
-            java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers2 = new java.util.ArrayList<>();
-            demoUsers2.add(new ph.edu.uscDCISMCatcha.models.UserModel("Dana", "Cruz", "dana",
+            java.util.List<UserModel> demoUsers2 = new java.util.ArrayList<>();
+            demoUsers2.add(new UserModel("Dana", "Cruz", "dana",
                     "dana@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
 
             CommonGroundAdapter adapter2 = new CommonGroundAdapter(requireContext(), demoUsers2);
