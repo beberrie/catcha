@@ -162,11 +162,12 @@
         <item name="android:fontFamily">@font/poppins</item>
         <item name="chipBackgroundColor">@color/chip_background_selector</item>
         <item name="android:textColor">@color/chip_text_selector</item>
-        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/chip_stroke_selector</item>
         <item name="chipCornerRadius">20dp</item>
-        <item name="chipMinHeight">40dp</item>
-        <item name="chipStartPadding">14dp</item>
-        <item name="chipEndPadding">14dp</item>
+        <item name="chipMinHeight">44dp</item>
+        <item name="chipStartPadding">16dp</item>
+        <item name="chipEndPadding">16dp</item>
         <item name="checkedIconVisible">false</item>
         <item name="chipIconVisible">false</item>
         <item name="android:checkable">true</item>
@@ -177,7 +178,8 @@
         <item name="android:fontFamily">@font/poppins</item>
         <item name="chipBackgroundColor">@color/chip_background_selector</item>
         <item name="android:textColor">@color/chip_text_selector</item>
-        <item name="chipStrokeWidth">0dp</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="chipStrokeColor">@color/chip_stroke_selector</item>
         <item name="chipCornerRadius">18dp</item>
         <item name="chipMinHeight">36dp</item>
         <item name="chipStartPadding">12dp</item>
