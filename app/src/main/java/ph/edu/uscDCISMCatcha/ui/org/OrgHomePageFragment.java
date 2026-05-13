@@ -253,7 +253,7 @@ public class OrgHomePageFragment extends Fragment {
         cardBinding.tvAnnouncementTitle.setText(announcement.getTitle());
         cardBinding.tvAnnouncementContent.setText(announcement.getContent());
         if (announcement.getTimestamp() != null) {
-            cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp()));
+            cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp().toDate()));
         }
 
 
