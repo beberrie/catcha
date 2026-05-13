@@ -12,13 +12,16 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
 import ph.edu.uscDCISMCatcha.models.EventModel;
+import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
 import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
+
 public class TrendingEventsFragment extends Fragment {
 
     @Nullable
@@ -41,9 +44,6 @@ public class TrendingEventsFragment extends Fragment {
 
                         RecyclerView rvCommonGround = eventCard.findViewById(R.id.rvCommonGround);
                         View tvCommonGroundLabel = eventCard.findViewById(R.id.tvCommonGroundLabel);
-
-                        rvCommonGround.setVisibility(View.GONE);
-                        tvCommonGroundLabel.setVisibility(View.GONE);
 
                         rvCommonGround.setVisibility(View.GONE);
                         tvCommonGroundLabel.setVisibility(View.GONE);
@@ -106,6 +106,21 @@ public class TrendingEventsFragment extends Fragment {
             rvTrending2.setAdapter(adapter2);
         }
 
+        setupChatBot(view);
+
         return view;
+    }
+
+    private void setupChatBot(View view) {
+        FloatingActionButton fabChatBot = view.findViewById(R.id.fabChatBot);
+        if (fabChatBot != null) {
+            fabChatBot.setOnClickListener(v -> {
+                getParentFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                        .replace(R.id.fragment_container, new ChatBotFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+        }
     }
 }
