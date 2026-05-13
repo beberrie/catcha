@@ -73,6 +73,9 @@ dependencies {
     implementation(libs.google.ai)
     implementation(libs.guava)
 
+    // Markdown Support
+    implementation(libs.markwon)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

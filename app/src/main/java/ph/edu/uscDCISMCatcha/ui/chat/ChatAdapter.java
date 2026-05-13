@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.ChatMessage;
+import io.noties.markwon.Markwon;
 
 public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_USER = 1;
     private static final int VIEW_TYPE_BOT = 2;
     private final List<ChatMessage> messages;
+    private Markwon markwon;
 
     public ChatAdapter(List<ChatMessage> messages) {
         this.messages = messages;
@@ -28,6 +30,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (markwon == null) {
+            markwon = Markwon.create(parent.getContext());
+        }
         if (viewType == VIEW_TYPE_USER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_message_user, parent, false);
             return new UserViewHolder(view);
@@ -43,7 +48,7 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (holder instanceof UserViewHolder) {
             ((UserViewHolder) holder).tvMessage.setText(message.getText());
         } else {
-            ((BotViewHolder) holder).tvMessage.setText(message.getText());
+            markwon.setMarkdown(((BotViewHolder) holder).tvMessage, message.getText());
         }
     }
 
