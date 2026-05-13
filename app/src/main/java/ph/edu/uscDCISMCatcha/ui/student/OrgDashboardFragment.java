@@ -13,6 +13,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
+import ph.edu.uscDCISMCatcha.fragments.NotificationFragment;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
 import ph.edu.uscDCISMCatcha.databinding.OrgDashboardBinding;
 import ph.edu.uscDCISMCatcha.databinding.FragmentOrgCardMainBinding;
@@ -61,7 +62,7 @@ public class OrgDashboardFragment extends Fragment {
         binding.header.ivNotificationsHeader.setOnClickListener(v ->
                 getParentFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                        .replace(R.id.fragment_container, new PushSetupFragment())
+                        .replace(R.id.fragment_container, new NotificationFragment())
                         .addToBackStack(null)
                         .commit());
 

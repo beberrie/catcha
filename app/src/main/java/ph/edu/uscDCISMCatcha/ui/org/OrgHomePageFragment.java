@@ -309,7 +309,7 @@ public class OrgHomePageFragment extends Fragment {
             args.putString("EDIT_ID", editId);
         }
 
-        CreatePostFragment fragment = new CreatePostFragment();
+        ph.edu.uscDCISMCatcha.fragments.CreatePostFragment fragment = new ph.edu.uscDCISMCatcha.fragments.CreatePostFragment();
         fragment.setArguments(args);
 
         if (getActivity() != null) {

@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
+import ph.edu.uscDCISMCatcha.fragments.NotificationFragment;
 import ph.edu.uscDCISMCatcha.ui.adapters.EventAdapter;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
 import ph.edu.uscDCISMCatcha.databinding.FragmentEventsBinding;
@@ -76,7 +77,7 @@ public class EventFragment extends Fragment implements EventAdapter.OnEventClick
     private void setupHeader() {
         binding.header.ivSearchHeader.setOnClickListener(v -> navigateTo(new SearchFragment()));
         
-        binding.header.ivNotificationsHeader.setOnClickListener(v -> navigateTo(new PushSetupFragment()));
+        binding.header.ivNotificationsHeader.setOnClickListener(v -> navigateTo(new NotificationFragment()));
 
         binding.header.ivUserAvatarHeader.setOnClickListener(v -> navigateTo(new UserProfileFragment()));
     }

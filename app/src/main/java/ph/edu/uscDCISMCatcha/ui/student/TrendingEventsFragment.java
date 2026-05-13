@@ -20,6 +20,7 @@ import java.util.List;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
 import ph.edu.uscDCISMCatcha.data.models.UserModel;
+import ph.edu.uscDCISMCatcha.fragments.NotificationFragment;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
 import ph.edu.uscDCISMCatcha.databinding.TrendingEventsBinding;
 
@@ -51,7 +52,7 @@ public class TrendingEventsFragment extends Fragment {
     private void setupHeader() {
         binding.header.ivSearchHeader.setOnClickListener(v -> navigateTo(new SearchFragment()));
 
-        binding.header.ivNotificationsHeader.setOnClickListener(v -> navigateTo(new PushSetupFragment()));
+        binding.header.ivNotificationsHeader.setOnClickListener(v -> navigateTo(new NotificationFragment()));
 
         binding.header.ivUserAvatarHeader.setOnClickListener(v -> navigateTo(new UserProfileFragment()));
     }
