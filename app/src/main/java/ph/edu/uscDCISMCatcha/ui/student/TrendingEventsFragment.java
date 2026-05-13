@@ -12,14 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.UserModel;
-import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
+import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
+
 public class TrendingEventsFragment extends Fragment {
 
     @Nullable
@@ -43,26 +48,26 @@ public class TrendingEventsFragment extends Fragment {
                         RecyclerView rvCommonGround = eventCard.findViewById(R.id.rvCommonGround);
                         View tvCommonGroundLabel = eventCard.findViewById(R.id.tvCommonGroundLabel);
 
-                        rvCommonGround.setVisibility(View.GONE);
-                        tvCommonGroundLabel.setVisibility(View.GONE);
+                        if (rvCommonGround != null && tvCommonGroundLabel != null) {
+                            rvCommonGround.setVisibility(View.GONE);
+                            tvCommonGroundLabel.setVisibility(View.GONE);
 
-                        rvCommonGround.setVisibility(View.GONE);
-                        tvCommonGroundLabel.setVisibility(View.GONE);
+                            // HARDCODED FOR DEMO
+                            List<UserModel> demoUsers = new ArrayList<>();
+                            demoUsers.add(new UserModel("Beth", "Santos", "beth",
+                                    "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
+                            demoUsers.add(new UserModel("Carl", "Gomez", "carl",
+                                    "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
 
-                        java.util.List<UserModel> demoUsers = new java.util.ArrayList<>();
-                        demoUsers.add(new UserModel("Beth", "Santos", "beth",
-                                "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
-                        demoUsers.add(new UserModel("Carl", "Gomez", "carl",
-                                "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
+                            tvCommonGroundLabel.setVisibility(View.VISIBLE);
+                            rvCommonGround.setVisibility(View.VISIBLE);
 
-                        tvCommonGroundLabel.setVisibility(View.VISIBLE);
-                        rvCommonGround.setVisibility(View.VISIBLE);
-
-                        CommonGroundAdapter adapter = new CommonGroundAdapter(requireContext(), demoUsers);
-                        rvCommonGround.setLayoutManager(
-                                new LinearLayoutManager(requireContext(),
-                                        LinearLayoutManager.HORIZONTAL, false));
-                        rvCommonGround.setAdapter(adapter);
+                            CommonGroundAdapter adapter = new CommonGroundAdapter(requireContext(), demoUsers);
+                            rvCommonGround.setLayoutManager(
+                                    new LinearLayoutManager(requireContext(),
+                                            LinearLayoutManager.HORIZONTAL, false));
+                            rvCommonGround.setAdapter(adapter);
+                        }
 
                         llEventCards.addView(eventCard);
                     }
@@ -78,7 +83,7 @@ public class TrendingEventsFragment extends Fragment {
             tvTrending1.setVisibility(View.VISIBLE);
             rvTrending1.setVisibility(View.VISIBLE);
 
-            java.util.List<UserModel> demoUsers1 = new java.util.ArrayList<>();
+            List<UserModel> demoUsers1 = new ArrayList<>();
             demoUsers1.add(new UserModel("Beth", "Santos", "beth",
                     "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
             demoUsers1.add(new UserModel("Carl", "Gomez", "carl",
@@ -97,7 +102,7 @@ public class TrendingEventsFragment extends Fragment {
             tvTrending2.setVisibility(View.VISIBLE);
             rvTrending2.setVisibility(View.VISIBLE);
 
-            java.util.List<UserModel> demoUsers2 = new java.util.ArrayList<>();
+            List<UserModel> demoUsers2 = new ArrayList<>();
             demoUsers2.add(new UserModel("Dana", "Cruz", "dana",
                     "dana@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
 
@@ -106,6 +111,21 @@ public class TrendingEventsFragment extends Fragment {
             rvTrending2.setAdapter(adapter2);
         }
 
+        setupChatBot(view);
+
         return view;
+    }
+
+    private void setupChatBot(View view) {
+        FloatingActionButton fabChatBot = view.findViewById(R.id.fabChatBot);
+        if (fabChatBot != null) {
+            fabChatBot.setOnClickListener(v -> {
+                getParentFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                        .replace(R.id.fragment_container, new ChatBotFragment())
+                        .addToBackStack(null)
+                        .commit();
+            });
+        }
     }
 }

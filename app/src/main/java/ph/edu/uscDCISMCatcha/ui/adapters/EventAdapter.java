@@ -2,15 +2,18 @@ package ph.edu.uscDCISMCatcha.ui.adapters;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.OtherEventsCardBinding;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 
@@ -18,6 +21,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private final List<EventModel> eventList;
     private final OnEventClickListener listener;
+    private List<String> joinedEventIds = new ArrayList<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
@@ -28,6 +32,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public EventAdapter(List<EventModel> eventList, OnEventClickListener listener) {
         this.eventList = eventList;
         this.listener = listener;
+    }
+
+    public void setJoinedEventIds(List<String> joinedEventIds) {
+        this.joinedEventIds = joinedEventIds;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -80,7 +89,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 binding.tvCapacity.setText("Unlimited slots");
             }
 
+            if (joinedEventIds != null && joinedEventIds.contains(event.getEventId())) {
+                binding.tvUpcoming.setText("JOINED");
+                binding.tvUpcoming.setBackgroundResource(R.drawable.bg_btn_yellow); // Keep yellow but change text, or use a green one if exists
+                // Note: I don't know if there's a green background, sticking to text change for now or setting color directly if possible
+                binding.tvUpcoming.setVisibility(View.VISIBLE);
+            } else {
+                binding.tvUpcoming.setText("UPCOMING");
+                binding.tvUpcoming.setBackgroundResource(R.drawable.bg_btn_yellow);
+                binding.tvUpcoming.setVisibility(View.VISIBLE);
+            }
+
             itemView.setOnClickListener(v -> listener.onEventClick(event));
+            binding.btnAction.setOnClickListener(v -> listener.onEventClick(event));
         }
     }
 }
