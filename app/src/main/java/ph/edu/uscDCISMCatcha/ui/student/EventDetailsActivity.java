@@ -95,7 +95,7 @@ public class EventDetailsActivity extends AppCompatActivity {
             EventModel event = new EventModel();
             event.setEventId(eventId != null ? eventId : "dummy_id");
             event.setTitle(title);
-            
+
             viewModel.rsvpToEvent(event, Constants.STATUS_GOING);
         });
 
