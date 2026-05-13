@@ -47,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
             } else if (id == R.id.nav_orgs) {
                 loadFragment(new OrgDashboardFragment());
             } else if (id == R.id.nav_events) {
-                // loadFragment(new EventFragment());
+                loadFragment(new EventFragment());
             }
             return true;
         });
