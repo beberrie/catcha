@@ -169,6 +169,10 @@ public class FirebaseRemoteDataSource {
         });
     }
 
+    public Task<QuerySnapshot> getAllEvents() {
+        return firestore.collection(Constants.COL_EVENTS).get();
+    }
+
     // --- Announcement Creation ---
     public Task<Void> createAnnouncement(AnnouncementModel announcement) {
         DocumentReference docRef = firestore.collection(Constants.COL_ANNOUNCEMENTS).document();

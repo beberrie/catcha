@@ -3,11 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="ph.edu.uscDCISMCatcha">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <queries>
         <package android:name="com.google.android.gms" />
+        <package android:name="com.android.vending" />
+        <package android:name="com.google.android.gsf" />
 
         <intent>
             <action android:name="com.google.android.gms.auth.service.START" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.common.service.START" />
+        </intent>
+        <intent>
+            <action android:name="com.google.android.gms.auth.api.signin.SERVICE_CONFIG_UPDATED" />
         </intent>
     </queries>
 

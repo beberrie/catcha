@@ -1,5 +1,7 @@
 package ph.edu.uscDCISMCatcha.utils;
 
+import ph.edu.uscDCISMCatcha.BuildConfig;
+
 public class Constants {
     // Firestore Collections
     public static final String COL_USERS = "users";
@@ -28,4 +30,7 @@ public class Constants {
     public static final String EXTRA_EVENT_STATUS = "EVENT_STATUS";
     public static final String EXTRA_EVENT_STATUS_COLOR = "EVENT_STATUS_COLOR";
     public static final String EXTRA_EVENT_REGISTRATION_URL = "EVENT_REGISTRATION_URL";
+
+    // AI Configuration
+    public static final String GEMINI_API_KEY = BuildConfig.GEMINI_API_KEY;
 }
