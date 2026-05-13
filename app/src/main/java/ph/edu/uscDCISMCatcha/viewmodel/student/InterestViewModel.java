@@ -9,82 +9,98 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import ph.edu.uscDCISMCatcha.data.models.InterestModel;
+import ph.edu.uscDCISMCatcha.models.InterestModel;
 import ph.edu.uscDCISMCatcha.models.RecommendationModel;
 
 public class InterestViewModel extends ViewModel {
 
-    private final MutableLiveData<InterestModel> interestProfile = new MutableLiveData<>();
-    private final MutableLiveData<List<RecommendationModel>> recommendations = new MutableLiveData<>();
+    private final MutableLiveData<InterestModel> interestProfile
+            = new MutableLiveData<>();
+
+    // ✅ Only ORG recommendations — events removed
+    private final MutableLiveData<List<RecommendationModel>>
+            orgRecommendations = new MutableLiveData<>();
+
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public LiveData<InterestModel> getInterestProfile() { return interestProfile; }
-    public LiveData<List<RecommendationModel>> getRecommendations() { return recommendations; }
-
-    public void loadDummyRecommendations() {
-        // Using a default user ID for dummy loading
-        loadUserContent("user_001");
+    public LiveData<InterestModel> getInterestProfile() {
+        return interestProfile;
     }
 
-    // This method replaces your dummy loaders
+    // ✅ Renamed to orgRecommendations
+    public LiveData<List<RecommendationModel>> getOrgRecommendations() {
+        return orgRecommendations;
+    }
+
+    // Called from OrgDashboardFragment
     public void loadUserContent(String userId) {
         db.collection("users").document(userId)
                 .addSnapshotListener((documentSnapshot, e) -> {
-                    if (e != null || documentSnapshot == null || !documentSnapshot.exists()) return;
+                    if (e != null
+                            || documentSnapshot == null
+                            || !documentSnapshot.exists()) return;
 
-                    // Getting the "interests" array from your screenshot
-                    List<String> userInterests = (List<String>) documentSnapshot.get("interests");
+                    List<String> userInterests =
+                            (List<String>) documentSnapshot.get("interests");
 
-                    if (userInterests != null) {
-                        Map<String, Double> tagWeights = new LinkedHashMap<>();
+                    if (userInterests != null && !userInterests.isEmpty()) {
+                        // Build interest profile
+                        Map<String, Double> tagWeights =
+                                new LinkedHashMap<>();
                         for (String interest : userInterests) {
                             tagWeights.put(interest, 1.0);
                         }
-                        interestProfile.setValue(new InterestModel(userId, tagWeights));
+                        interestProfile.setValue(
+                                new InterestModel(userId, tagWeights));
 
-                        // Fetch matching content
-                        fetchMatchesFromFirestore(userInterests);
+                        // ✅ Fetch only org matches
+                        fetchOrgMatchesFromFirestore(userInterests);
                     }
                 });
     }
 
-    public void updateTagWeight(String userId, String tag, double increment) {
-        // TODO: Implement actual tag weight update logic in Firestore if needed
-        // For now, this stub prevents compilation errors in RecommendationFragment
-    }
-
-    private void fetchMatchesFromFirestore(List<String> userInterests) {
+    // ✅ Only fetches orgs — no events
+    private void fetchOrgMatchesFromFirestore(List<String> userInterests) {
         if (userInterests.isEmpty()) return;
 
-        List<RecommendationModel> combinedResults = new ArrayList<>();
-
-        // Match "Category" in events
-        db.collection("events")
-                .whereIn("Category", userInterests)
+        db.collection("organizations")
+                .whereIn("category", userInterests)
                 .get()
-                .addOnSuccessListener(eventSnapshots -> {
-                    for (DocumentSnapshot doc : eventSnapshots) {
-                        RecommendationModel event = doc.toObject(RecommendationModel.class);
-                        if (event != null) {
-                            event.setType(RecommendationModel.Type.EVENT);
-                            combinedResults.add(event);
+                .addOnSuccessListener(orgSnapshots -> {
+                    List<RecommendationModel> orgList = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : orgSnapshots.getDocuments()) {
+                        RecommendationModel org =
+                                doc.toObject(RecommendationModel.class);
+                        if (org != null) {
+                            org.setType(RecommendationModel.Type.ORG);
+                            orgList.add(org);
                         }
                     }
 
-                    // Match "category" in organizations
-                    db.collection("organizations")
-                            .whereIn("category", userInterests)
-                            .get()
-                            .addOnSuccessListener(orgSnapshots -> {
-                                for (DocumentSnapshot doc : orgSnapshots) {
-                                    RecommendationModel org = doc.toObject(RecommendationModel.class);
-                                    if (org != null) {
-                                        org.setType(RecommendationModel.Type.ORG);
-                                        combinedResults.add(org);
-                                    }
-                                }
-                                recommendations.setValue(combinedResults);
-                            });
-                });
+                    orgRecommendations.setValue(orgList);
+                })
+                .addOnFailureListener(e ->
+                        orgRecommendations.setValue(new ArrayList<>()));
+    }
+
+    // ✅ Update tag weight when user follows an org
+    public void updateTagWeight(String userId, String tag,
+                                double delta) {
+        InterestModel current = interestProfile.getValue();
+        if (current == null
+                || current.getTagWeights() == null) return;
+
+        Map<String, Double> weights = current.getTagWeights();
+        double currentWeight = weights.containsKey(tag)
+                ? weights.get(tag) : 0.0;
+        double newWeight = Math.min(currentWeight + delta, 1.0);
+        weights.put(tag, newWeight);
+        current.setLastUpdated(System.currentTimeMillis());
+        interestProfile.setValue(current);
+
+        // Re-fetch org recommendations after weight update
+        List<String> tags = new ArrayList<>(weights.keySet());
+        if (!tags.isEmpty()) fetchOrgMatchesFromFirestore(tags);
     }
 }
