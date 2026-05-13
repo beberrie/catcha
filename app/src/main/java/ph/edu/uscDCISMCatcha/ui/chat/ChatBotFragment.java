@@ -19,8 +19,11 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -40,6 +43,7 @@ public class ChatBotFragment extends Fragment {
     private FirebaseRemoteDataSource remoteDataSource;
     private final Executor executor = Executors.newSingleThreadExecutor();
     private String eventsContext = "";
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault());
 
     @Nullable
     @Override
@@ -85,14 +89,19 @@ public class ChatBotFragment extends Fragment {
 
     private void fetchEventsContext() {
         remoteDataSource.getAllEvents().addOnSuccessListener(queryDocumentSnapshots -> {
-            StringBuilder context = new StringBuilder("Here are the available events at the university:\n");
+            StringBuilder context = new StringBuilder("Available events at the university:\n");
             for (DocumentSnapshot doc : queryDocumentSnapshots) {
                 EventModel event = doc.toObject(EventModel.class);
                 if (event != null) {
                     context.append("- ").append(event.getTitle())
                             .append(" hosted by ").append(event.getOrgName())
-                            .append(" at ").append(event.getLocation())
-                            .append(". Description: ").append(event.getDescription())
+                            .append(" at ").append(event.getLocation());
+                    
+                    if (event.getStartDateTime() != null) {
+                        context.append(" on ").append(dateFormat.format(event.getStartDateTime()));
+                    }
+                    
+                    context.append(". Description: ").append(event.getDescription())
                             .append("\n");
                 }
             }
@@ -108,11 +117,16 @@ public class ChatBotFragment extends Fragment {
             return;
         }
 
-        String fullPrompt = "System: You are Catcha Assistant, a helpful AI for a campus event management app called Catcha. " +
-                "Your goal is to help students discover events and organizations. " +
-                "Use the following event data to answer questions. If you don't know the answer, say you don't know.\n\n" +
-                "Event Data:\n" + (eventsContext.isEmpty() ? "No events currently available." : eventsContext) + "\n\n" +
-                "User: " + userPrompt;
+        String today = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(new Date());
+
+        String systemInstruction = "You are Catcha Assistant, a friendly and professional student assistant for the 'Catcha' app. " +
+                "Today's date is " + today + ". " +
+                "Help students find university events and organizations based on the provided list. " +
+                "If a user asks about events in a specific month or date, check the event list carefully. " +
+                "Be natural and conversational. Avoid saying 'based on the data provided' or 'I don't have that information' if possible; instead, just answer directly or say you couldn't find any events matching that description. " +
+                "\n\nEvent List:\n" + (eventsContext.isEmpty() ? "No events currently available." : eventsContext);
+
+        String fullPrompt = systemInstruction + "\n\nUser Question: " + userPrompt;
 
         Content content = new Content.Builder()
                 .addText(fullPrompt)
