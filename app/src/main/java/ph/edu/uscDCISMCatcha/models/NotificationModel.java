@@ -5,7 +5,6 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 import com.google.firebase.firestore.ServerTimestamp;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 
 @IgnoreExtraProperties
@@ -157,4 +156,6 @@ public class NotificationModel {
     public void setFollowersCount(int followersCount) { this.followersCount = followersCount; }
     public int getEventGoing() { return eventGoing; }
     public void setEventGoing(int eventGoing) { this.eventGoing = eventGoing; }
+    
+    public String getNotificationId() { return id; }
 }

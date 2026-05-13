@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.data.models;
+package ph.edu.uscDCISMCatcha.models;
 
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.ServerTimestamp;

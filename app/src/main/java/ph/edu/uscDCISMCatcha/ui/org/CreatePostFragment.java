@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentCreatePostBinding;
-import ph.edu.uscDCISMCatcha.viewmodel.CreatePostViewModel;
+import ph.edu.uscDCISMCatcha.viewmodel.student.CreatePostViewModel;
 
 public class CreatePostFragment extends Fragment {
 

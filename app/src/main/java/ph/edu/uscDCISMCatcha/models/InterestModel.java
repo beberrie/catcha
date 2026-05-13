@@ -8,6 +8,11 @@ public class InterestModel {
 
     public InterestModel() {}
 
+    public InterestModel(String userId, Map<String, Double> tagWeights) {
+        this.userId = userId;
+        this.tagWeights = tagWeights;
+    }
+
     public String getUserId() {
         return userId;
     }

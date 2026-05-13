@@ -28,10 +28,23 @@ public class RecommendationModel {
     }
 
     public String getInitials() { return initials; }
+    public void setInitials(String initials) { this.initials = initials; }
+
     public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
     public String getSubtitle() { return subtitle; }
+    public void setSubtitle(String subtitle) { this.subtitle = subtitle; }
+
     public int getFollowers() { return followers; }
+    public void setFollowers(int followers) { this.followers = followers; }
+
     public int getMatchPercent() { return matchPercent; }
+    public void setMatchPercent(int matchPercent) { this.matchPercent = matchPercent; }
+
     public String[] getTags() { return tags; }
+    public void setTags(String[] tags) { this.tags = tags; }
+
     public Type getType() { return type; }
+    public void setType(Type type) { this.type = type; }
 }

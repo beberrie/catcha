@@ -9,7 +9,7 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.Calendar;
 import java.util.Date;
 
-import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
+import ph.edu.uscDCISMCatcha.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.MembershipModel;
 import ph.edu.uscDCISMCatcha.data.models.Organization;

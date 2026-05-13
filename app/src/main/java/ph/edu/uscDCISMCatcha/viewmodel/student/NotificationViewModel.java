@@ -1,94 +1,61 @@
-    package ph.edu.uscDCISMCatcha.viewmodel.student;
+package ph.edu.uscDCISMCatcha.viewmodel;
 
-    import android.os.Handler;
-    import android.os.Looper;
-    import androidx.lifecycle.LiveData;
-    import androidx.lifecycle.MutableLiveData;
-    import androidx.lifecycle.ViewModel;
-    import com.google.firebase.Timestamp;
-    import java.util.ArrayList;
-    import java.util.Date;
-    import java.util.List;
-    import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
-    import ph.edu.uscDCISMCatcha.data.models.EventModel;
-    import ph.edu.uscDCISMCatcha.models.NotificationModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import java.util.ArrayList;
+import java.util.List;
+import ph.edu.uscDCISMCatcha.models.NotificationModel;
 
-    public class NotificationViewModel extends ViewModel {
+public class NotificationViewModel extends ViewModel {
 
-        private final MutableLiveData<List<NotificationModel>> notifications
-                = new MutableLiveData<>();
+    private final MutableLiveData<List<NotificationModel>> notifications = new MutableLiveData<>(new ArrayList<>());
 
-        public LiveData<List<NotificationModel>> getNotifications() {
-            return notifications;
+    public LiveData<List<NotificationModel>> getNotifications() {
+        return notifications;
+    }
+
+    /**
+     * Adds a new notification to the top of the local list.
+     */
+    public void addNotification(NotificationModel newNotif) {
+        List<NotificationModel> currentList = notifications.getValue();
+        List<NotificationModel> updatedList = new ArrayList<>();
+
+        if (currentList != null) {
+            updatedList.addAll(currentList);
         }
 
-        public void loadDummyNotifications() {
-            new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                List<NotificationModel> list = new ArrayList<>();
+        updatedList.add(0, newNotif); // Add to top
+        notifications.setValue(updatedList);
+    }
 
-                // Announcement 1 - unread
-                AnnouncementModel ann1 = new AnnouncementModel(
-                        "No classes on Wednesday to Friday",
-                        "In observance of Holy Week, there will be no class from Wednesday to Friday.",
-                        "user_001");
-                ann1.setTimestamp(new Timestamp(new Date(
-                        System.currentTimeMillis() - 1000 * 60 * 2)));
-                NotificationModel n1 = NotificationModel.fromAnnouncement(
-                        "notif_001", ann1,
-                        "Don Joseph Gesta", "CISCO President", 312);
-                n1.setSentTime("2:15 PM");
-                list.add(n1);
-
-                // Announcement 2 - read
-                AnnouncementModel ann2 = new AnnouncementModel(
-                        "Reminder: CCS Week starts tomorrow!",
-                        "Make sure to attend the opening ceremony.",
-                        "user_001");
-                ann2.setTimestamp(new Timestamp(new Date(
-                        System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 5)));
-                NotificationModel n2 = NotificationModel.fromAnnouncement(
-                        "notif_002", ann2,
-                        "Don Joseph Gesta", "CISCO President", 312);
-                n2.setSentTime("9:00 AM");
-                n2.setRead(true);
-                list.add(n2);
-
-                // Event 1 - 1 hour
-                EventModel ev1 = new EventModel(
-                        "org_001", "DCISM Department",
-                        "CCS Week: Day 1 Opening",
-                        "Join us for the opening ceremony of CCS Week.",
-                        "Gymnasium, Bldg A",
-                        new Date(System.currentTimeMillis() + 1000L * 60 * 50),
-                        new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 4),
-                        "USC", null, "user_001");
-                NotificationModel n3 = NotificationModel.fromEvent(
-                        "notif_003", ev1, 312);
-                list.add(n3);
-
-                // Event 2 - 24 hours, read
-                EventModel ev2 = new EventModel(
-                        "org_001", "DCISM Department",
-                        "CCS Week: Day 1 Opening",
-                        "Join us for the opening ceremony of CCS Week.",
-                        "Gymnasium, Bldg A",
-                        new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 20),
-                        new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24),
-                        "USC", null, "user_001");
-                NotificationModel n4 = NotificationModel.fromEvent(
-                        "notif_004", ev2, 312);
-                n4.setRead(true);
-                list.add(n4);
-
-                notifications.setValue(list);
-            }, 300);
-        }
-
-        public void markAsRead(String notificationId) {
-            // TODO: connect to Firestore later
-        }
-
-        public void markAllAsRead() {
-            // TODO: connect to Firestore later
+    /**
+     * Updates a specific notification's status to 'read' locally.
+     */
+    public void markAsRead(String notificationId) {
+        List<NotificationModel> currentList = notifications.getValue();
+        if (currentList != null) {
+            List<NotificationModel> updatedList = new ArrayList<>(currentList);
+            for (NotificationModel notification : updatedList) {
+                // Ensure notificationId matches your Model's getter
+                if (notification.getNotificationId().equals(notificationId)) {
+                    notification.setRead(true);
+                    break;
+                }
+            }
+            notifications.setValue(updatedList);
         }
     }
+
+    public void markAllAsRead() {
+        List<NotificationModel> currentList = notifications.getValue();
+        if (currentList != null) {
+            List<NotificationModel> updatedList = new ArrayList<>(currentList);
+            for (NotificationModel notification : updatedList) {
+                notification.setRead(true);
+            }
+            notifications.setValue(updatedList);
+        }
+    }
+}

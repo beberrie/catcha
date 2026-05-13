@@ -2,47 +2,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#F7F7F7">
 
     <!-- Header -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="4dp">
+        android:padding="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:src="@drawable/catcha_icon"
                 android:scaleType="fitCenter" />
 
             <ImageView
-                android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:layout_weight="1"
-                android:src="@drawable/catcha_typo"
-                android:layout_marginStart="8dp"
-                android:scaleType="fitStart" />
-
-            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="13sp"
-                android:textColor="#AAAAAA"
-                android:fontFamily="sans-serif-medium" />
+                android:layout_height="22dp"
+                android:src="@drawable/catcha_typo"
+                android:layout_marginStart="6dp"
+                android:scaleType="fitCenter" />
         </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notification"
+            android:textSize="13sp"
+            android:textColor="#AAAAAA" />
+    </LinearLayout>
 
     <!-- Tab switcher -->
     <LinearLayout
@@ -75,7 +77,7 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
-                android:text="Token"
+                android:text="Push Token"
                 android:textAllCaps="false"
                 android:textSize="12sp"
                 android:textColor="#888888"
@@ -106,7 +108,8 @@
                 android:orientation="vertical"
                 android:padding="12dp"
                 android:layout_marginBottom="2dp"
-                android:elevation="2dp">
+                android:elevation="2dp"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,7 +139,6 @@
                             android:id="@+id/tvBannerAppName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="DCISM Department · now"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:textColor="#1A1A1A" />
@@ -145,7 +147,6 @@
                             android:id="@+id/tvBannerSubtitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Announcement"
                             android:textSize="10sp"
                             android:textColor="#888888" />
                     </LinearLayout>
@@ -155,7 +156,6 @@
                     android:id="@+id/tvBannerTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="No classes on Wednesday to Friday"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:textColor="#1A1A1A"
@@ -165,15 +165,17 @@
                     android:id="@+id/tvBannerBody"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="In observance of Holy Week, there will be no class..."
                     android:textSize="11sp"
                     android:textColor="#555555"
                     android:layout_marginBottom="8dp" />
 
+                <!-- ✅ Banner action buttons -->
                 <LinearLayout
+                    android:id="@+id/layoutBannerActions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <Button
                         android:id="@+id/btnBannerDismiss"
@@ -184,8 +186,8 @@
                         android:text="Dismiss"
                         android:textAllCaps="false"
                         android:textSize="12sp"
-                        android:textColor="#F5C842"
-                        android:backgroundTint="#1D1D2E"
+                        android:textColor="#666666"
+                        android:background="@drawable/bg_field_outline_light"
                         android:stateListAnimator="@null" />
 
                     <Button
@@ -198,7 +200,7 @@
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:textColor="#F5C842"
-                        android:backgroundTint="#1D1D2E"
+                        android:background="@drawable/bg_btn_dark"
                         android:stateListAnimator="@null" />
                 </LinearLayout>
             </LinearLayout>
@@ -239,10 +241,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:clipToPadding="false"
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
-                android:paddingBottom="16dp" />
+                android:paddingBottom="16dp"
+                android:clipToPadding="false" />
         </LinearLayout>
 
         <!-- PUSH TOKEN TAB -->
@@ -259,7 +261,6 @@
                 android:padding="16dp"
                 android:gravity="center_horizontal">
 
-                <!-- Success circle -->
                 <LinearLayout
                     android:layout_width="64dp"
                     android:layout_height="64dp"
@@ -568,7 +569,6 @@
                             android:textColor="#1A1A1A" />
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
         </ScrollView>
     </FrameLayout>

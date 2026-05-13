@@ -35,13 +35,12 @@
             android:text="Create post"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF" />
+            android:textColor="#F5C842" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
         android:fillViewport="true">
 
         <LinearLayout
@@ -190,6 +189,7 @@
                     android:inputType="textMultiLine|textCapSentences"
                     android:layout_marginBottom="14dp" />
 
+                <!-- Attach image -->
                 <LinearLayout
                     android:id="@+id/layoutAttachImage"
                     android:layout_width="match_parent"
@@ -218,6 +218,7 @@
                         android:textColor="#AAAAAA" />
                 </LinearLayout>
 
+                <!-- Push notification toggle -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -257,6 +258,7 @@
                         app:trackTint="#A9A9B2" />
                 </LinearLayout>
 
+                <!-- Broadcast button -->
                 <Button
                     android:id="@+id/btnBroadcast"
                     android:layout_width="match_parent"

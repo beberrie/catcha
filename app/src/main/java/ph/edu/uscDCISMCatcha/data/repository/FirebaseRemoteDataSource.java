@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 
 // FIXED: Corrected package path for AnnouncementModel
-import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
+import ph.edu.uscDCISMCatcha.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.data.models.RSVPModel;

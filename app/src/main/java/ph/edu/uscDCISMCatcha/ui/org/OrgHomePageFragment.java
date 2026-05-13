@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import ph.edu.uscDCISMCatcha.R;
-import ph.edu.uscDCISMCatcha.data.models.AnnouncementModel;
+import ph.edu.uscDCISMCatcha.models.AnnouncementModel;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.databinding.ItemAnnouncementCardBinding;
 import ph.edu.uscDCISMCatcha.databinding.ItemEventCardHandlerBinding;
