@@ -354,7 +354,7 @@ public class OrgHomePageFragment extends Fragment {
         }
 
 
-        ph.edu.uscDCISMCatcha.fragments.CreatePostFragment fragment = new ph.edu.uscDCISMCatcha.fragments.CreatePostFragment();
+        CreatePostFragment fragment = new CreatePostFragment();
         fragment.setArguments(args);
 
 
