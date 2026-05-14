@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/off_white">
+    android:background="@color/white">
 
     <!-- Header -->
     <include
@@ -21,6 +21,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:padding="16dp"
+        android:background="@color/white"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/inputContainer"
         app:layout_constraintTop_toBottomOf="@id/header"
@@ -40,7 +41,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp">
+            android:padding="4dp"
+            android:background="@color/white">
 
             <EditText
                 android:id="@+id/etMessage"

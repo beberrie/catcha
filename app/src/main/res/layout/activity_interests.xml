@@ -7,11 +7,13 @@
     android:background="@color/white"
     android:fitsSystemWindows="true">
 
-    <!-- FIXED BACKGROUND: Decorative element anchored to the bottom right -->
+    <!-- FIXED BACKGROUND: Cat decoration positioned on the bottom right edge -->
     <ImageView
         android:id="@+id/iv_catcha_cat"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_marginEnd="-80dp"
+        android:layout_marginBottom="-80dp"
         android:alpha="1.0"
         android:contentDescription="@string/interests_cat_desc"
         android:src="@drawable/catcha_cat"
@@ -81,7 +83,7 @@
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/poppins"
                 android:text="@string/interests_hint"
-                android:textColor="@color/red"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_interests_label" />
@@ -100,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:fontFamily="@font/poppins_bold"
-                    android:text="@string/label_sas"
+                    android:text="SCHOOL OF ARTS AND SCIENCES"
                     android:textColor="@color/blue"
                     android:textSize="14sp" />
 
@@ -111,12 +113,12 @@
                     android:layout_marginBottom="10dp"
                     app:flexWrap="wrap">
 
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dcism" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dcism" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dmb" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dmb" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dcomm" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dcomm" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dpa" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dpa" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dpsy" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dpsy" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dphi" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dphi" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dcism" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DCISM" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dmb" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DMB" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dcomm" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DCOMM" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dpa" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DPA" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dpsy" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DPSY" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dphi" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DPHI" />
                 </com.google.android.flexbox.FlexboxLayout>
 
                 <FrameLayout
@@ -126,46 +128,46 @@
                     android:layout_marginBottom="16dp">
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dcism" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_coding" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_hackathon" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_data_science" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_networking" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_web_app_dev" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Coding" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Hackathon" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Data Science" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Networking" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Web/App Dev" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dmb" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_lab_research" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_environmental" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_biotech" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_seminar" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Lab Research" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Environmental" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Biotech" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Seminar" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dcomm" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_journalism" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_broadcasting" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_public_speaking" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_creative_writing" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Journalism" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Broadcasting" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Public Speaking" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Creative Writing" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dpa" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_sociology" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_human_behavior" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_advocacy" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_discussion" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Sociology" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Human Behavior" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Advocacy" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Discussion" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dpsy" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_astronomy" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_robotics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_engineering" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_workshop" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Astronomy" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Robotics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Engineering" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Workshop" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dphi" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_ethics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_logic" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_debate" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_literature" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Ethics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Logic" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Debate" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Literature" />
                     </com.google.android.flexbox.FlexboxLayout>
                 </FrameLayout>
 
@@ -173,10 +175,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
                     android:layout_marginBottom="12dp"
                     android:fontFamily="@font/poppins_bold"
-                    android:text="@string/label_soe"
+                    android:text="SCHOOL OF ENGINEERING"
                     android:textColor="@color/blue"
                     android:textSize="14sp" />
 
@@ -184,15 +185,15 @@
                     android:id="@+id/soe_chips_row"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="10dp"
                     app:flexWrap="wrap">
 
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dcpe" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dcpe" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dce" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dce" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dmme" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dmme" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_dche" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_dche" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_die" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_die" />
-                    <com.google.android.material.chip.Chip android:id="@+id/chip_deee" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/dept_deee" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dcpe" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DCPE" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dce" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DCE" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dmme" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DMME" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_dche" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DCHE" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_die" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DIE" />
+                    <com.google.android.material.chip.Chip android:id="@+id/chip_deee" style="@style/Widget.InterestChip" android:layout_width="wrap_content" android:layout_height="44dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="DEEE" />
                 </com.google.android.flexbox.FlexboxLayout>
 
                 <FrameLayout
@@ -202,52 +203,50 @@
                     android:layout_marginBottom="16dp">
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dcpe" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_robotics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_iot" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_embedded_systems" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_ai" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_hardware_proto" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Robotics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="AI/ML" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="IoT" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Embedded Systems" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Hardware Prototyping" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dce" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_structural_design" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_surveying" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_construction_mgmt" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_geotechnology" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_hydraulics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Structural Design" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Surveying" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Construction Mgmt" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Geotechnology" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Hydraulics" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dmme" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_thermodynamics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_mechatronics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_automotive" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_hvac" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_machining" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_cad_cam" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Mechatronics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Automotive" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="HVAC" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Machining" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="CAD/CAM" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_dche" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_unit_ops" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_process_control" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_biotech" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_env_eng" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_plant_design" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Process Control" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Plant Design" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Unit Operations" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Thermodynamics" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_die" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_supply_chain" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_logistics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_ops_research" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_ergonomics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_quality_control" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Supply Chain" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Logistics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Operations Research" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Ergonomics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Quality Control" />
                     </com.google.android.flexbox.FlexboxLayout>
 
                     <com.google.android.flexbox.FlexboxLayout android:id="@+id/sub_deee" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone" app:flexWrap="wrap">
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_power_systems" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_microelectronics" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_renewable_energy" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_telecomm" />
-                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="@string/interests_circuit_design" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Power Systems" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Microelectronics" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Renewable Energy" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Telecommunications" />
+                        <com.google.android.material.chip.Chip style="@style/Widget.SubChip" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginEnd="8dp" android:layout_marginBottom="8dp" android:text="Circuit Design" />
                     </com.google.android.flexbox.FlexboxLayout>
                 </FrameLayout>
 
@@ -256,42 +255,31 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <!-- STICKY FOOTER AREA: Ensuring buttons are always reachable and responsive -->
+    <!-- STICKY FOOTER AREA: Transparent background to show cat element behind -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/footer_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:elevation="8dp"
+        android:background="@android:color/transparent"
+        android:elevation="0dp"
         android:paddingHorizontal="24dp"
         android:paddingTop="16dp"
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <!-- Buttons moved to the left and stacked vertically -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:gravity="start"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/tv_skip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="@font/poppins"
-                android:padding="8dp"
-                android:text="@string/interests_skip"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_continue"
-                android:layout_width="140dp"
+                android:layout_width="wrap_content"
                 android:layout_height="56dp"
                 android:alpha="0.5"
                 android:enabled="false"
@@ -299,10 +287,28 @@
                 android:text="@string/interests_continue"
                 android:textColor="@color/black"
                 android:textSize="16sp"
+                android:paddingStart="24dp"
+                android:paddingEnd="16dp"
+                app:icon="@drawable/ic_arrow_right"
+                app:iconGravity="textEnd"
+                app:iconPadding="10dp"
                 app:backgroundTint="@color/white"
                 app:cornerRadius="28dp"
                 app:strokeColor="@color/black"
                 app:strokeWidth="1.5dp" />
+
+            <TextView
+                android:id="@+id/tv_skip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:fontFamily="@font/poppins"
+                android:padding="8dp"
+                android:text="@string/interests_skip"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
 
         </LinearLayout>
 

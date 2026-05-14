@@ -22,7 +22,7 @@ public class EventModel implements Serializable {
     private String university;
     private String imageUrl;
     private String createdBy;
-    private String registrationUrl; // Link to Google Form or other registration
+    private String registrationUrl;
     private int maxCapacity = 0; // 0 means unlimited if not specified
     private int currentRsvpCount = 0; // Specifically for "Going"
     private int interestedCount = 0;
