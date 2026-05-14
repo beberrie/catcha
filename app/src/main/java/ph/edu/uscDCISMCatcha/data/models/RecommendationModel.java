@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.models;
+package ph.edu.uscDCISMCatcha.data.models;
 
 import com.google.firebase.firestore.IgnoreExtraProperties;
 

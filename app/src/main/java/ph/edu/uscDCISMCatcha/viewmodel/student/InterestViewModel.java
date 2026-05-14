@@ -1,4 +1,4 @@
-package ph.edu.uscDCISMCatcha.viewmodel;
+package ph.edu.uscDCISMCatcha.viewmodel.student;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import ph.edu.uscDCISMCatcha.models.InterestModel;
-import ph.edu.uscDCISMCatcha.models.RecommendationModel;
+import ph.edu.uscDCISMCatcha.data.models.InterestModel;
+import ph.edu.uscDCISMCatcha.data.models.RecommendationModel;
 
 public class InterestViewModel extends ViewModel {
 
@@ -40,6 +40,7 @@ public class InterestViewModel extends ViewModel {
                             || documentSnapshot == null
                             || !documentSnapshot.exists()) return;
 
+                    @SuppressWarnings("unchecked")
                     List<String> userInterests =
                             (List<String>) documentSnapshot.get("interests");
 
@@ -93,8 +94,7 @@ public class InterestViewModel extends ViewModel {
                 || current.getTagWeights() == null) return;
 
         Map<String, Double> weights = current.getTagWeights();
-        double currentWeight = weights.containsKey(tag)
-                ? weights.get(tag) : 0.0;
+        double currentWeight = weights.getOrDefault(tag, 0.0);
         double newWeight = Math.min(currentWeight + delta, 1.0);
         weights.put(tag, newWeight);
         current.setLastUpdated(System.currentTimeMillis());

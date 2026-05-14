@@ -19,9 +19,9 @@ import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.databinding.FragmentOrgCardMainBinding;
 import ph.edu.uscDCISMCatcha.databinding.FragmentOrgCardSuggestBinding;
 import ph.edu.uscDCISMCatcha.databinding.OrgDashboardBinding;
-import ph.edu.uscDCISMCatcha.models.RecommendationModel;
+import ph.edu.uscDCISMCatcha.data.models.RecommendationModel;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
-import ph.edu.uscDCISMCatcha.viewmodel.InterestViewModel;
+import ph.edu.uscDCISMCatcha.viewmodel.student.InterestViewModel;
 
 public class OrgDashboardFragment extends Fragment {
 

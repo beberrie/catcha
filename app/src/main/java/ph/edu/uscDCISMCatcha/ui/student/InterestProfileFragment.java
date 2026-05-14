@@ -3,7 +3,7 @@ package ph.edu.uscDCISMCatcha.ui.student;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.view. View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Map;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentInterestProfileBinding;
-import ph.edu.uscDCISMCatcha.models.InterestModel;
-import ph.edu.uscDCISMCatcha.viewmodel.InterestViewModel;
+import ph.edu.uscDCISMCatcha.data.models.InterestModel;
+import ph.edu.uscDCISMCatcha.viewmodel.student.InterestViewModel;
 
 public class InterestProfileFragment extends Fragment {
 

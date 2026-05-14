@@ -38,7 +38,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(EventViewModel.class);
 
         MaterialButton btnBack = findViewById(R.id.btnBack);
-        MaterialButton btnRSVP = findViewById(R.id.btnRSVP);
         TextView tvTitle = findViewById(R.id.tvEventTitle);
         TextView tvHost = findViewById(R.id.tvHostName);
         TextView tvLocation = findViewById(R.id.tvLocation);
@@ -110,20 +109,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         viewModel.rsvpStatus.observe(this, result -> {
             if (result != null) {
                 Toast.makeText(this, result, Toast.LENGTH_LONG).show();
-                if (result.contains("Successful")) {
-                    btnRSVP.setEnabled(false);
-                    btnRSVP.setText("RSVP Sent");
-                }
             }
-        });
-
-        btnRSVP.setOnClickListener(v -> {
-            // Create a temporary EventModel for the RSVP call
-            EventModel event = new EventModel();
-            event.setEventId(eventId != null ? eventId : "dummy_id");
-            event.setTitle(title);
-
-            viewModel.rsvpToEvent(event, Constants.STATUS_GOING);
         });
 
         btnBack.setOnClickListener(v -> finish());
