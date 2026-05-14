@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.Organization;
 import ph.edu.uscDCISMCatcha.databinding.FragmentOrgCardMainBinding;
+import ph.edu.uscDCISMCatcha.databinding.FragmentOrgCardSuggestBinding;
 import ph.edu.uscDCISMCatcha.databinding.OrgDashboardBinding;
 import ph.edu.uscDCISMCatcha.models.RecommendationModel;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
@@ -96,11 +97,10 @@ public class OrgDashboardFragment extends Fragment {
                 });
     }
 
-    // ✅ Builds each suggested org card
-    // Same UI as before — no design changes
+    // ✅ Builds each suggested org card using fragment_org_card_suggest.xml
     private void addSuggestedOrgCard(RecommendationModel rec) {
-        FragmentOrgCardMainBinding cardBinding =
-                FragmentOrgCardMainBinding.inflate(
+        FragmentOrgCardSuggestBinding cardBinding =
+                FragmentOrgCardSuggestBinding.inflate(
                         getLayoutInflater(),
                         binding.suggestedOrgsContainer, false);
 
@@ -111,21 +111,21 @@ public class OrgDashboardFragment extends Fragment {
                 .getDisplayMetrics().widthPixels * 0.82);
         cardBinding.getRoot().setLayoutParams(params);
 
-        cardBinding.tvOrgNameMain.setText(rec.getTitle());
-        cardBinding.chipCategory.setText(
-                rec.getMatchPercent() + "% Match");
-        cardBinding.chipCategory.setVisibility(View.VISIBLE);
-        cardBinding.tvMemberCount.setText("Highly Recommended");
+        cardBinding.tvOrgNameSuggest.setText(rec.getTitle());
+        cardBinding.chipSchoolSuggest.setText(rec.getSchool());
+        cardBinding.chipDeptSuggest.setText(rec.getDepartment());
+        cardBinding.chipCategorySuggest.setText(rec.getCategory());
 
-        cardBinding.btnJoin.setOnClickListener(v -> {
-            // ✅ Update interest weight when user taps Follow
+        cardBinding.getRoot().setOnClickListener(v -> {
+            // ✅ Update interest weight when user taps
             if (rec.getTags() != null
                     && rec.getTags().length > 0
                     && currentUserId != null) {
                 interestViewModel.updateTagWeight(
                         currentUserId, rec.getTags()[0], 0.08);
             }
-            navigateToOrgProfile(rec.getTitle(), "");
+            // ✅ Pass the correct Firestore ID for navigation
+            navigateToOrgProfile(rec.getTitle(), rec.getId());
         });
 
         binding.suggestedOrgsContainer.addView(

@@ -3,12 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="200dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="10dp"
+    android:layout_marginEnd="12dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp"
     app:cardBackgroundColor="@color/white"
     app:strokeColor="@color/yellow"
-    app:strokeWidth="1dp">
+    app:strokeWidth="1dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,8 +19,9 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/ivOrgBannerSuggest"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="90dp"
             android:scaleType="centerCrop"
             android:src="@android:drawable/ic_menu_gallery" />
 
@@ -25,33 +29,54 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/tvOrgNameSuggest"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title of the Org"
+                android:text="Organization Name"
                 android:textColor="@color/blue"
-                android:textSize="11sp"
-                android:fontFamily="@font/inter" />
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <!-- ───────────────────────────────────────────── -->
-                <!-- WHERE YOU INSERT THE TAG                      -->
-                <!-- ───────────────────────────────────────────── -->
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
 
                 <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSchoolSuggest"
                     style="@style/Widget.Catcha.Chip.Tag.Blue"
                     android:layout_width="wrap_content"
-                    android:layout_height="35dp"
+                    android:layout_height="28dp"
                     android:clickable="false"
-                    android:focusable="false"
-                    android:text="SAS" />
+                    android:text="School"
+                    android:textSize="8sp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipDeptSuggest"
+                    style="@style/Widget.Catcha.Chip.Tag.Blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="4dp"
+                    android:clickable="false"
+                    android:text="Dept"
+                    android:textSize="8sp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategorySuggest"
+                    style="@style/Widget.Catcha.Chip.Tag.Blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="4dp"
+                    android:clickable="false"
+                    android:text="Category"
+                    android:textSize="8sp" />
 
             </LinearLayout>
         </LinearLayout>

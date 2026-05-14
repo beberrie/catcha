@@ -73,6 +73,7 @@ public class InterestViewModel extends ViewModel {
                         RecommendationModel org =
                                 doc.toObject(RecommendationModel.class);
                         if (org != null) {
+                            org.setId(doc.getId()); // ✅ Set the Firestore ID
                             org.setType(RecommendationModel.Type.ORG);
                             orgList.add(org);
                         }
