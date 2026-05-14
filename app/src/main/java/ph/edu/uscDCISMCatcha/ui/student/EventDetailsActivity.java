@@ -19,6 +19,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.text.SimpleDateFormat;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.utils.Constants;
@@ -48,15 +49,41 @@ public class EventDetailsActivity extends AppCompatActivity {
         ImageView ivQRCode = findViewById(R.id.ivQRCode);
 
         // Get data from intent
-        eventId = getIntent().getStringExtra(Constants.EXTRA_EVENT_ID);
-        String title = getIntent().getStringExtra(Constants.EXTRA_EVENT_TITLE);
-        String host = getIntent().getStringExtra(Constants.EXTRA_EVENT_HOST);
-        String location = getIntent().getStringExtra(Constants.EXTRA_EVENT_LOCATION);
-        String dateTime = getIntent().getStringExtra(Constants.EXTRA_EVENT_DATETIME);
-        String description = getIntent().getStringExtra(Constants.EXTRA_EVENT_DESCRIPTION);
-        String status = getIntent().getStringExtra(Constants.EXTRA_EVENT_STATUS);
-        int statusColor = getIntent().getIntExtra(Constants.EXTRA_EVENT_STATUS_COLOR, R.color.yellow);
-        String registrationUrl = getIntent().getStringExtra(Constants.EXTRA_EVENT_REGISTRATION_URL);
+        String title, host, location, dateTime = null, description, status, registrationUrl;
+        int statusColor;
+
+        EventModel eventData = (EventModel) getIntent().getSerializableExtra("EVENT_DATA");
+
+        if (eventData != null) {
+            eventId = eventData.getEventId();
+            title = eventData.getTitle();
+            host = eventData.getOrgName();
+            location = eventData.getLocation();
+            if (eventData.getStartDateTime() != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy • hh:mm a", java.util.Locale.getDefault());
+                dateTime = sdf.format(eventData.getStartDateTime());
+            }
+            description = eventData.getDescription();
+            registrationUrl = eventData.getRegistrationUrl();
+            
+            // Check for status in intent first, then default to UPCOMING
+            status = getIntent().getStringExtra(Constants.EXTRA_EVENT_STATUS);
+            statusColor = getIntent().getIntExtra(Constants.EXTRA_EVENT_STATUS_COLOR, R.color.yellow);
+            if (status == null) {
+                status = "UPCOMING";
+                statusColor = R.color.yellow;
+            }
+        } else {
+            eventId = getIntent().getStringExtra(Constants.EXTRA_EVENT_ID);
+            title = getIntent().getStringExtra(Constants.EXTRA_EVENT_TITLE);
+            host = getIntent().getStringExtra(Constants.EXTRA_EVENT_HOST);
+            location = getIntent().getStringExtra(Constants.EXTRA_EVENT_LOCATION);
+            dateTime = getIntent().getStringExtra(Constants.EXTRA_EVENT_DATETIME);
+            description = getIntent().getStringExtra(Constants.EXTRA_EVENT_DESCRIPTION);
+            status = getIntent().getStringExtra(Constants.EXTRA_EVENT_STATUS);
+            statusColor = getIntent().getIntExtra(Constants.EXTRA_EVENT_STATUS_COLOR, R.color.yellow);
+            registrationUrl = getIntent().getStringExtra(Constants.EXTRA_EVENT_REGISTRATION_URL);
+        }
 
         // Populate views
         if (title != null) tvTitle.setText(title);
