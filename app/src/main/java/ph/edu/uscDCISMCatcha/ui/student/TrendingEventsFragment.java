@@ -16,10 +16,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import ph.edu.uscDCISMCatcha.R;
-import ph.edu.uscDCISMCatcha.adapters.CommonGroundTrendingAdapter;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
-import ph.edu.uscDCISMCatcha.models.EventModel;
+import ph.edu.uscDCISMCatcha.adapters.CommonGroundTrendingAdapter;
 import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
+
 public class TrendingEventsFragment extends Fragment {
 
     @Nullable
@@ -31,11 +31,11 @@ public class TrendingEventsFragment extends Fragment {
         LinearLayout llEventCards = view.findViewById(R.id.llEventCards);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // Other Events - real Firebase data
         db.collection("events").get()
                 .addOnSuccessListener(querySnapshots -> {
                     for (QueryDocumentSnapshot doc : querySnapshots) {
                         String eventId = doc.getId();
-                        android.util.Log.d("EventID", "Event ID: " + eventId);
 
                         View eventCard = inflater.inflate(
                                 R.layout.other_events_card, llEventCards, false);
@@ -46,66 +46,86 @@ public class TrendingEventsFragment extends Fragment {
                         rvCommonGround.setVisibility(View.GONE);
                         tvCommonGroundLabel.setVisibility(View.GONE);
 
-                        rvCommonGround.setVisibility(View.GONE);
-                        tvCommonGroundLabel.setVisibility(View.GONE);
+                        CommonGroundUtils.getFriendsAttending(eventId, friendsAttending -> {
+                            if (!isAdded()) return; // ← ADD THIS CHECK
+                            if (!friendsAttending.isEmpty()) {
+                                tvCommonGroundLabel.setVisibility(View.VISIBLE);
+                                rvCommonGround.setVisibility(View.VISIBLE);
+                                CommonGroundAdapter adapter = new CommonGroundAdapter(requireContext(), friendsAttending);
+                                rvCommonGround.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                                rvCommonGround.setAdapter(adapter);
+                            }
+                        });
 
-                        // HARDCODED FOR DEMO
-                        java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers = new java.util.ArrayList<>();
-                        demoUsers.add(new ph.edu.uscDCISMCatcha.models.UserModel("Beth", "Santos", "beth",
-                                "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
-                        demoUsers.add(new ph.edu.uscDCISMCatcha.models.UserModel("Carl", "Gomez", "carl",
-                                "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
-
-                        tvCommonGroundLabel.setVisibility(View.VISIBLE);
-                        rvCommonGround.setVisibility(View.VISIBLE);
-
-                        CommonGroundAdapter adapter = new CommonGroundAdapter(requireContext(), demoUsers);
-                        rvCommonGround.setLayoutManager(
-                                new LinearLayoutManager(requireContext(),
-                                        LinearLayoutManager.HORIZONTAL, false));
-                        rvCommonGround.setAdapter(adapter);
+                        // Real Firebase Common Ground
+                        CommonGroundUtils.getFriendsAttending(eventId, friendsAttending -> {
+                            if (!friendsAttending.isEmpty()) {
+                                tvCommonGroundLabel.setVisibility(View.VISIBLE);
+                                rvCommonGround.setVisibility(View.VISIBLE);
+                                CommonGroundAdapter adapter = new CommonGroundAdapter(
+                                        requireContext(), friendsAttending);
+                                rvCommonGround.setLayoutManager(new LinearLayoutManager(
+                                        requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                                rvCommonGround.setAdapter(adapter);
+                            }
+                        });
 
                         llEventCards.addView(eventCard);
                     }
                 })
-                .addOnFailureListener(e -> {
-                });
+                .addOnFailureListener(e -> {});
 
-        // Demo for trending card 1
-        RecyclerView rvTrending1 = view.findViewById(R.id.rvCommonGround);
-        View tvTrending1 = view.findViewById(R.id.tvCommonGroundLabel);
+        // Trending cards - real Firebase data
+        db.collection("events").limit(2).get()
+                .addOnSuccessListener(trendingSnapshots -> {
+                    java.util.List<QueryDocumentSnapshot> trendingDocs = new java.util.ArrayList<>();
+                    for (QueryDocumentSnapshot doc : trendingSnapshots) {
+                        trendingDocs.add(doc);
+                    }
 
-        if (rvTrending1 != null && tvTrending1 != null) {
-            tvTrending1.setVisibility(View.VISIBLE);
-            rvTrending1.setVisibility(View.VISIBLE);
+                    // Trending card 1
+                    if (trendingDocs.size() >= 1) {
+                        String trendingEventId1 = trendingDocs.get(0).getId();
+                        RecyclerView rvTrending1 = view.findViewById(R.id.rvCommonGround);
+                        View tvTrending1 = view.findViewById(R.id.tvCommonGroundLabel);
 
-            java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers1 = new java.util.ArrayList<>();
-            demoUsers1.add(new ph.edu.uscDCISMCatcha.models.UserModel("Beth", "Santos", "beth",
-                    "beth@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
-            demoUsers1.add(new ph.edu.uscDCISMCatcha.models.UserModel("Carl", "Gomez", "carl",
-                    "carl@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
+                        if (rvTrending1 != null && tvTrending1 != null) {
+                            CommonGroundUtils.getFriendsAttending(trendingEventId1, friendsAttending -> {
+                                if (!friendsAttending.isEmpty()) {
+                                    tvTrending1.setVisibility(View.VISIBLE);
+                                    rvTrending1.setVisibility(View.VISIBLE);
+                                    CommonGroundTrendingAdapter adapter1 = new CommonGroundTrendingAdapter(
+                                            requireContext(), friendsAttending);
+                                    rvTrending1.setLayoutManager(new LinearLayoutManager(
+                                            requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                                    rvTrending1.setAdapter(adapter1);
+                                }
+                            });
+                        }
+                    }
 
-            CommonGroundTrendingAdapter adapter1 = new CommonGroundTrendingAdapter(requireContext(), demoUsers1);
-            rvTrending1.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-            rvTrending1.setAdapter(adapter1);
-        }
+                    // Trending card 2
+                    if (trendingDocs.size() >= 2) {
+                        String trendingEventId2 = trendingDocs.get(1).getId();
+                        RecyclerView rvTrending2 = view.findViewById(R.id.rvCommonGround2);
+                        View tvTrending2 = view.findViewById(R.id.tvCommonGroundLabel2);
 
-        // Demo for trending card 2
-        RecyclerView rvTrending2 = view.findViewById(R.id.rvCommonGround2);
-        View tvTrending2 = view.findViewById(R.id.tvCommonGroundLabel2);
-
-        if (rvTrending2 != null && tvTrending2 != null) {
-            tvTrending2.setVisibility(View.VISIBLE);
-            rvTrending2.setVisibility(View.VISIBLE);
-
-            java.util.List<ph.edu.uscDCISMCatcha.models.UserModel> demoUsers2 = new java.util.ArrayList<>();
-            demoUsers2.add(new ph.edu.uscDCISMCatcha.models.UserModel("Dana", "Cruz", "dana",
-                    "dana@usc.edu.ph", "University of San Carlos", "DCISM", "Student"));
-
-            CommonGroundTrendingAdapter adapter2 = new CommonGroundTrendingAdapter(requireContext(), demoUsers2);
-            rvTrending2.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
-            rvTrending2.setAdapter(adapter2);
-        }
+                        if (rvTrending2 != null && tvTrending2 != null) {
+                            CommonGroundUtils.getFriendsAttending(trendingEventId2, friendsAttending -> {
+                                if (!friendsAttending.isEmpty()) {
+                                    tvTrending2.setVisibility(View.VISIBLE);
+                                    rvTrending2.setVisibility(View.VISIBLE);
+                                    CommonGroundTrendingAdapter adapter2 = new CommonGroundTrendingAdapter(
+                                            requireContext(), friendsAttending);
+                                    rvTrending2.setLayoutManager(new LinearLayoutManager(
+                                            requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                                    rvTrending2.setAdapter(adapter2);
+                                }
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {});
 
         return view;
     }

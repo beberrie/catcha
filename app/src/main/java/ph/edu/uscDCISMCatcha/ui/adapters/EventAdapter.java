@@ -79,6 +79,27 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             } else {
                 binding.tvCapacity.setText("Unlimited slots");
             }
+            binding.rvCommonGround.setVisibility(android.view.View.GONE);
+            binding.tvCommonGroundLabel.setVisibility(android.view.View.GONE);
+
+            ph.edu.uscDCISMCatcha.utils.CommonGroundUtils.getFriendsAttending(
+                    event.getEventId(),
+                    friendsAttending -> {
+                        if (!friendsAttending.isEmpty()) {
+                            binding.tvCommonGroundLabel.setVisibility(android.view.View.VISIBLE);
+                            binding.rvCommonGround.setVisibility(android.view.View.VISIBLE);
+
+                            ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter adapter =
+                                    new ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter(
+                                            itemView.getContext(), friendsAttending);
+                            binding.rvCommonGround.setLayoutManager(
+                                    new androidx.recyclerview.widget.LinearLayoutManager(
+                                            itemView.getContext(),
+                                            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false));
+                            binding.rvCommonGround.setAdapter(adapter);
+                        }
+                    }
+            );
 
             itemView.setOnClickListener(v -> listener.onEventClick(event));
         }
