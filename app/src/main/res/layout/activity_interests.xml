@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <!-- FIXED BACKGROUND: Cat decoration - peeking from corner, more visible now -->
+    <!-- FIXED BACKGROUND: Cat decoration -->
     <ImageView
         android:id="@+id/iv_catcha_cat"
         android:layout_width="320dp"
@@ -38,27 +38,35 @@
 
             <include layout="@layout/auth_layout_header" />
 
+            <!-- Greeting Line 1: Welcome (Bigger font size: 36sp) -->
             <TextView
                 android:id="@+id/tv_welcome"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="100dp"
                 android:fontFamily="@font/poppins_bold"
                 android:text="@string/interests_welcome"
                 android:textColor="@color/text_dark"
-                android:textSize="32sp"
+                android:textSize="36sp"
+                android:maxLines="1"
+                android:ellipsize="end"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ivLogo" />
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- Greeting Line 2: Username Greeting (Smaller and Gray) -->
             <TextView
                 android:id="@+id/tv_user_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_extrabold"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="@string/interests_user_name"
-                android:textColor="@color/text_dark"
-                android:textSize="32sp"
+                android:textColor="#888888"
+                android:textSize="14sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="OUR DEAR USER !"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_welcome" />
@@ -95,7 +103,7 @@
                 android:orientation="vertical"
                 app:layout_constraintTop_toBottomOf="@id/tv_interests_hint">
 
-                <!-- SAS Section -->
+                <!-- SCHOOL OF ARTS AND SCIENCES Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -170,7 +178,7 @@
                     </com.google.android.flexbox.FlexboxLayout>
                 </FrameLayout>
 
-                <!-- SOE Section -->
+                <!-- SCHOOL OF ENGINEERING Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -254,7 +262,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <!-- STICKY FOOTER AREA: Transparent background to show cat element behind -->
+    <!-- STICKY FOOTER AREA -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/footer_container"
         android:layout_width="match_parent"

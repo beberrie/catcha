@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
@@ -32,12 +33,15 @@
             <!-- SUGGESTED FOR YOU                             -->
             <!-- ───────────────────────────────────────────── -->
             <LinearLayout
+                android:id="@+id/layoutSuggestedSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 android:orientation="vertical"
                 android:paddingTop="14dp"
-                android:paddingBottom="14dp">
+                android:paddingBottom="14dp"
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <!-- Header row -->
                 <LinearLayout
@@ -78,20 +82,38 @@
                                 android:textAlignment="textStart"/>
 
                             <TextView
+                                android:id="@+id/tvSeeAllSuggested"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="See all"
                                 android:fontFamily="@font/inter_bold"
-                                android:textColor="@color/soft_blue"
+                                android:textColor="@color/brand_orange"
                                 android:textSize="12sp"
-                                android:textAlignment="textEnd"/>
+                                android:textAlignment="textEnd"
+                                android:clickable="true"
+                                android:focusable="true" />
                         </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
 
+                <!-- No suggestions message -->
+                <TextView
+                    android:id="@+id/tvNoSuggestions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="32dp"
+                    android:text="Sorry! There are no Organizations that fit your interests."
+                    android:fontFamily="@font/poppins"
+                    android:textColor="#757575"
+                    android:textSize="13sp"
+                    android:textAlignment="center"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
                 <!-- Horizontally scrollable cards -->
                 <HorizontalScrollView
+                    android:id="@+id/hsvSuggestedOrgs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingVertical="12dp"
@@ -114,9 +136,12 @@
 
             <!-- Spacer between sections -->
             <View
+                android:id="@+id/suggestedDivider"
                 android:layout_width="match_parent"
                 android:layout_height="3dp"
-                android:background="@color/soft_blue" />
+                android:background="#F5F5F5"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
             <!-- ───────────────────────────────────────────── -->
             <!-- ORGANIZATIONS SECTION                         -->
@@ -143,7 +168,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Organizations"
+                        android:text="Explore Organizations"
                         android:fontFamily="@font/poppins_bold"
                         android:textColor="@color/blue"
                         android:textSize="16sp" />
@@ -185,7 +210,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="24dp"
-                android:text="You've reached the limits :&lt;"
+                android:text="You've reached the limits :)"
                 android:textColor="#AAAAAA"
                 android:textSize="13sp" />
 

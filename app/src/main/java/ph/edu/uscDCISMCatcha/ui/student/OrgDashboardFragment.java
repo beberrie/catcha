@@ -1,6 +1,7 @@
 package ph.edu.uscDCISMCatcha.ui.student;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import com.google.android.material.chip.Chip;
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,14 +29,12 @@ public class OrgDashboardFragment extends Fragment {
     private OrgDashboardBinding binding;
     private FirebaseFirestore db;
     private InterestViewModel interestViewModel;
-    private String currentUserId;
+    private static final String TAG = "OrgDashboardFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         db = FirebaseFirestore.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) currentUserId = user.getUid();
     }
 
     @Nullable
@@ -59,56 +58,59 @@ public class OrgDashboardFragment extends Fragment {
         setupFilters();
         setupChatBot();
 
-        // ✅ Observe org recommendations from InterestViewModel
-        // These show in the "Suggested for you" horizontal container
+        // 1. Observe org recommendations
         observeOrgRecommendations();
 
-        // Fetch all orgs for the vertical "Organizations" list
+        // 2. Fetch all orgs for the main list
         fetchOrganizations();
 
-        // Load user interests from Firestore → triggers recommendations
-        if (currentUserId != null) {
-            interestViewModel.loadUserContent(currentUserId);
+        // 3. Load user context to trigger recommendations
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            interestViewModel.loadUserContent(user.getUid());
         }
     }
 
-    // ✅ Merged from RecommendationFragment — now lives here
     private void observeOrgRecommendations() {
         interestViewModel.getOrgRecommendations().observe(
                 getViewLifecycleOwner(), recommendations -> {
-                    if (recommendations == null
-                            || binding == null) return;
+                    if (binding == null) return;
 
                     binding.suggestedOrgsContainer.removeAllViews();
 
-                    if (recommendations.isEmpty()) {
-                        // Hide the suggested section if no matches
-                        binding.suggestedOrgsContainer
-                                .setVisibility(View.GONE);
-                        return;
-                    }
+                    // Always show the suggested section layout
+                    binding.layoutSuggestedSection.setVisibility(View.VISIBLE);
+                    binding.suggestedDivider.setVisibility(View.VISIBLE);
 
-                    binding.suggestedOrgsContainer
-                            .setVisibility(View.VISIBLE);
+                    if (recommendations == null || recommendations.isEmpty()) {
+                        Log.d(TAG, "No matching organizations found for suggestions.");
+                        // Show "No suggestions" message and hide the scroll view
+                        binding.tvNoSuggestions.setVisibility(View.VISIBLE);
+                        binding.hsvSuggestedOrgs.setVisibility(View.GONE);
+                        binding.tvSeeAllSuggested.setVisibility(View.GONE);
+                    } else {
+                        Log.d(TAG, "Displaying " + recommendations.size() + " suggestion cards.");
+                        // Hide "No suggestions" message and show the scroll view
+                        binding.tvNoSuggestions.setVisibility(View.GONE);
+                        binding.hsvSuggestedOrgs.setVisibility(View.VISIBLE);
+                        binding.tvSeeAllSuggested.setVisibility(View.VISIBLE);
 
-                    for (RecommendationModel rec : recommendations) {
-                        addSuggestedOrgCard(rec);
+                        for (RecommendationModel rec : recommendations) {
+                            addSuggestedOrgCard(rec);
+                        }
                     }
                 });
     }
 
-    // ✅ Builds each suggested org card using fragment_org_card_suggest.xml
     private void addSuggestedOrgCard(RecommendationModel rec) {
         FragmentOrgCardSuggestBinding cardBinding =
                 FragmentOrgCardSuggestBinding.inflate(
                         getLayoutInflater(),
                         binding.suggestedOrgsContainer, false);
 
-        // Keep horizontal scroll card width at 82% of screen
-        ViewGroup.LayoutParams params =
-                cardBinding.getRoot().getLayoutParams();
-        params.width = (int) (getResources()
-                .getDisplayMetrics().widthPixels * 0.82);
+        // Keep horizontal cards at a fixed comfortable width
+        ViewGroup.LayoutParams params = cardBinding.getRoot().getLayoutParams();
+        params.width = (int) (getResources().getDisplayMetrics().widthPixels * 0.82);
         cardBinding.getRoot().setLayoutParams(params);
 
         cardBinding.tvOrgNameSuggest.setText(rec.getTitle());
@@ -116,23 +118,20 @@ public class OrgDashboardFragment extends Fragment {
         cardBinding.chipDeptSuggest.setText(rec.getDepartment());
         cardBinding.chipCategorySuggest.setText(rec.getCategory());
 
-        cardBinding.getRoot().setOnClickListener(v -> {
-            // ✅ Update interest weight when user taps
-            if (rec.getTags() != null
-                    && rec.getTags().length > 0
-                    && currentUserId != null) {
-                interestViewModel.updateTagWeight(
-                        currentUserId, rec.getTags()[0], 0.08);
-            }
-            // ✅ Pass the correct Firestore ID for navigation
-            navigateToOrgProfile(rec.getTitle(), rec.getId());
-        });
+        // Load banner image if available
+        if (rec.getBannerImageUrl() != null && !rec.getBannerImageUrl().isEmpty()) {
+            Glide.with(this)
+                    .load(rec.getBannerImageUrl())
+                    .placeholder(R.drawable.qr_dummy_data)
+                    .centerCrop()
+                    .into(cardBinding.ivOrgBannerSuggest);
+        }
 
-        binding.suggestedOrgsContainer.addView(
-                cardBinding.getRoot());
+        cardBinding.getRoot().setOnClickListener(v -> navigateToOrgProfile(rec.getTitle(), rec.getId()));
+
+        binding.suggestedOrgsContainer.addView(cardBinding.getRoot());
     }
 
-    // Fetches all orgs for the main vertical list
     private void fetchOrganizations() {
         db.collection("organizations")
                 .orderBy("name", Query.Direction.ASCENDING)
@@ -141,8 +140,7 @@ public class OrgDashboardFragment extends Fragment {
                     binding.allOrgsContainer.removeAllViews();
                     if (value != null) {
                         for (QueryDocumentSnapshot doc : value) {
-                            Organization org =
-                                    doc.toObject(Organization.class);
+                            Organization org = doc.toObject(Organization.class);
                             addAllOrgCard(org, doc.getId());
                         }
                     }
@@ -158,10 +156,38 @@ public class OrgDashboardFragment extends Fragment {
         cardBinding.tvOrgNameMain.setText(org.getName());
         cardBinding.chipSchool.setText(org.getSchool());
         cardBinding.chipDept.setText(org.getDepartment());
-        cardBinding.tvMemberCount.setText("View Details");
+        cardBinding.chipCategory.setText(org.getCategory());
+        cardBinding.tvDescriptionMain.setText(org.getDescription());
+        
+        // Handle Join Button visibility based on org status
+        if (org.isJoinEnabled()) {
+            cardBinding.btnJoin.setVisibility(View.VISIBLE);
+            cardBinding.btnJoin.setText("Join");
+            cardBinding.tvMemberCount.setText("Recruitment Open");
+        } else {
+            cardBinding.btnJoin.setVisibility(View.GONE);
+            cardBinding.tvMemberCount.setText("Recruitment Closed");
+        }
 
-        View.OnClickListener listener = v ->
-                navigateToOrgProfile(org.getName(), orgId);
+        // Load banner image
+        if (org.getBannerImageUrl() != null && !org.getBannerImageUrl().isEmpty()) {
+            Glide.with(this)
+                    .load(org.getBannerImageUrl())
+                    .placeholder(R.drawable.qr_dummy_data)
+                    .centerCrop()
+                    .into(cardBinding.ivOrgBanner);
+        }
+
+        // Load logo
+        if (org.getProfileImageUrl() != null && !org.getProfileImageUrl().isEmpty()) {
+            Glide.with(this)
+                    .load(org.getProfileImageUrl())
+                    .placeholder(R.drawable.qr_dummy_data)
+                    .circleCrop()
+                    .into(cardBinding.ivOrgLogoMain);
+        }
+
+        View.OnClickListener listener = v -> navigateToOrgProfile(org.getName(), orgId);
         cardBinding.btnJoin.setOnClickListener(listener);
         cardBinding.getRoot().setOnClickListener(listener);
 
@@ -169,32 +195,23 @@ public class OrgDashboardFragment extends Fragment {
     }
 
     private void setupHeader() {
-        binding.header.ivUserAvatarHeader.setOnClickListener(v ->
-                navigateTo(new UserProfileFragment()));
-        binding.header.ivNotificationsHeader.setOnClickListener(v ->
-                navigateTo(new NotificationFragment()));
-        binding.header.ivSearchHeader.setOnClickListener(v ->
-                navigateTo(new SearchFragment()));
+        binding.header.ivUserAvatarHeader.setOnClickListener(v -> navigateTo(new UserProfileFragment()));
+        binding.header.ivNotificationsHeader.setOnClickListener(v -> navigateTo(new NotificationFragment()));
+        binding.header.ivSearchHeader.setOnClickListener(v -> navigateTo(new SearchFragment()));
     }
 
     private void setupFilters() {
         binding.chipFilters.setOnClickListener(v ->
-                new OrgFiltersBottomSheet().show(
-                        getParentFragmentManager(), "Filters"));
+                new OrgFiltersBottomSheet().show(getParentFragmentManager(), "Filters"));
     }
 
     private void setupChatBot() {
-        binding.fabChatBot.setOnClickListener(v ->
-                navigateTo(new ChatBotFragment()));
+        binding.fabChatBot.setOnClickListener(v -> navigateTo(new ChatBotFragment()));
     }
 
     private void navigateTo(Fragment fragment) {
         getParentFragmentManager().beginTransaction()
-                .setCustomAnimations(
-                        R.anim.slide_in_right,
-                        R.anim.slide_out_left,
-                        R.anim.slide_in_left,
-                        R.anim.slide_out_right)
+                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                 .replace(R.id.fragment_container, fragment)
                 .addToBackStack(null)
                 .commit();

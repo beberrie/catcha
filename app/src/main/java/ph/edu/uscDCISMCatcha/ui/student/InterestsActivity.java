@@ -22,6 +22,7 @@ import ph.edu.uscDCISMCatcha.ui.org.OrgHomeActivity;
 
 public class InterestsActivity extends AppCompatActivity {
 
+    private TextView tvUserName;
     private TextView tvInterestsHint;
     private MaterialButton btnContinue;
     private final Set<String> selectedInterests = new HashSet<>();
@@ -40,9 +41,13 @@ public class InterestsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        tvUserName = findViewById(R.id.tv_user_name);
         tvInterestsHint = findViewById(R.id.tv_interests_hint);
         btnContinue = findViewById(R.id.btn_continue);
         TextView tvSkip = findViewById(R.id.tv_skip);
+
+        // Fetch and display username
+        fetchUserData();
 
         // SAS Departments
         setupDept(R.id.chip_dcism, R.id.sub_dcism);
@@ -66,6 +71,24 @@ public class InterestsActivity extends AppCompatActivity {
         updateValidation();
     }
 
+    private void fetchUserData() {
+        String uid = mAuth.getUid();
+        if (uid != null) {
+            db.collection("users").document(uid).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            String username = documentSnapshot.getString("username");
+                            if (username != null && !username.isEmpty()) {
+                                tvUserName.setText(getString(R.string.interests_user_name, username.toUpperCase()));
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        tvUserName.setText(getString(R.string.interests_user_name, "USER"));
+                    });
+        }
+    }
+
     private void setupDept(int chipId, int subId) {
         Chip chip = findViewById(chipId);
         FlexboxLayout subContainer = findViewById(subId);
@@ -73,12 +96,11 @@ public class InterestsActivity extends AppCompatActivity {
         if (chip != null) {
             chip.setOnClickListener(v -> {
                 boolean isSameChip = currentCheckedChip == chip;
+
                 if (currentOpenSub != null) {
                     currentOpenSub.setVisibility(View.GONE);
                 }
                 
-                // Uncheck all main chips in the same group or globally
-                // For simplicity, just uncheck the previously checked one
                 if (currentCheckedChip != null) {
                     currentCheckedChip.setChecked(false);
                 }
@@ -87,6 +109,7 @@ public class InterestsActivity extends AppCompatActivity {
                     currentOpenSub = null;
                     currentCheckedChip = null;
                     chip.setChecked(false);
+                    selectedInterests.remove(chip.getText().toString());
                 } else {
                     if (subContainer != null) {
                         subContainer.setVisibility(View.VISIBLE);
@@ -94,7 +117,9 @@ public class InterestsActivity extends AppCompatActivity {
                     chip.setChecked(true);
                     currentOpenSub = subContainer;
                     currentCheckedChip = chip;
+                    selectedInterests.add(chip.getText().toString());
                 }
+                updateValidation();
             });
         }
 
@@ -161,6 +186,7 @@ public class InterestsActivity extends AppCompatActivity {
 
     private void updateValidation() {
         int count = selectedInterests.size();
+        // Updated to require at least 3 interests as per hint text
         boolean isReady = count >= 3;
         btnContinue.setEnabled(isReady);
 

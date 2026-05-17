@@ -67,8 +67,61 @@
     </string-array>
 
     <string-array name="interest_categories">
+        <item>DCISM</item>
+        <item>DMB</item>
+        <item>DCOMM</item>
+        <item>DPA</item>
+        <item>DPSY</item>
+        <item>DPHI</item>
+        <item>DCPE</item>
+        <item>DCE</item>
+        <item>DMME</item>
+        <item>DCHE</item>
+        <item>DIE</item>
+        <item>DEEE</item>
+        <item>Coding</item>
         <item>Hackathon</item>
+        <item>Data Science</item>
+        <item>Networking</item>
+        <item>Web/App Dev</item>
         <item>Robotics</item>
+        <item>AI/ML</item>
+        <item>IoT</item>
+        <item>Embedded Systems</item>
+        <item>Lab Research</item>
+        <item>Environmental</item>
+        <item>Biotech</item>
+        <item>Seminar</item>
+        <item>Journalism</item>
+        <item>Broadcasting</item>
+        <item>Public Speaking</item>
+        <item>Creative Writing</item>
+        <item>Sociology</item>
+        <item>Human Behavior</item>
+        <item>Advocacy</item>
+        <item>Discussion</item>
+        <item>Astronomy</item>
+        <item>Engineering</item>
+        <item>Workshop</item>
+        <item>Ethics</item>
+        <item>Logic</item>
+        <item>Debate</item>
+        <item>Literature</item>
+        <item>Structural Design</item>
+        <item>Surveying</item>
+        <item>Construction Mgmt</item>
+        <item>Mechatronics</item>
+        <item>Automotive</item>
+        <item>CAD/CAM</item>
+        <item>Process Control</item>
+        <item>Plant Design</item>
+        <item>Supply Chain</item>
+        <item>Logistics</item>
+        <item>Quality Control</item>
+        <item>Power Systems</item>
+        <item>Microelectronics</item>
+        <item>Renewable Energy</item>
+        <item>Telecommunications</item>
         <item>Arts</item>
         <item>Music</item>
         <item>Sports</item>
@@ -80,7 +133,7 @@
 
     <!-- Interests Page -->
     <string name="interests_welcome">Welcome,</string>
-    <string name="interests_user_name">OUR DEAR ZEV !</string>
+    <string name="interests_user_name">OUR DEAR %1$s !</string>
     <string name="interests_label">Interests</string>
     <string name="interests_hint">Please select at least 3 interests!</string>
     <string name="interests_continue">Continue</string>
@@ -104,7 +157,7 @@
     <string name="dept_die">DIE</string>
     <string name="dept_deee">DEEE</string>
 
-    <!-- Sub-categories from OrgFiltersBottomSheet.java -->
+    <!-- Sub-categories -->
     <string name="interests_music">Music</string>
     <string name="interests_dance">Dance</string>
     <string name="interests_photography">Photography</string>

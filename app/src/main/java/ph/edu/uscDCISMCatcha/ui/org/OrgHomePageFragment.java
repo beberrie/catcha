@@ -1,6 +1,5 @@
 package ph.edu.uscDCISMCatcha.ui.org;
 
-
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -27,14 +27,11 @@ import ph.edu.uscDCISMCatcha.databinding.ItemAnnouncementCardBinding;
 import ph.edu.uscDCISMCatcha.databinding.ItemEventCardHandlerBinding;
 import ph.edu.uscDCISMCatcha.databinding.OrgHomePageBinding;
 
-
 import ph.edu.uscDCISMCatcha.data.models.MembershipModel;
 import ph.edu.uscDCISMCatcha.data.models.UserModel;
 import ph.edu.uscDCISMCatcha.databinding.ItemMembershipRequestBinding;
 
-
 public class OrgHomePageFragment extends Fragment {
-
 
     private static final String TAG = "OrgHomePageFragment";
     private OrgHomePageBinding binding;
@@ -45,11 +42,9 @@ public class OrgHomePageFragment extends Fragment {
     private String organizationName;
     private String organizationId;
 
-
     public OrgHomePageFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +53,6 @@ public class OrgHomePageFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,17 +60,14 @@ public class OrgHomePageFragment extends Fragment {
         return binding.getRoot();
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
 
         setupHeader();
         setupCreatePostCard();
         fetchOrganizationData();
     }
-
 
     private void setupHeader() {
         binding.header.ivUserAvatarHeader.setOnClickListener(v -> {
@@ -89,10 +80,8 @@ public class OrgHomePageFragment extends Fragment {
         });
     }
 
-
     private void setupCreatePostCard() {
         binding.ivUserAvatar.setImageResource(R.drawable.bg_avatar_dark);
-
 
         binding.btnOpenCreatePost.setOnClickListener(v -> openCreatePost(true, null));
         binding.btnShortcutAnnouncement.setOnClickListener(v -> openCreatePost(true, null));
@@ -100,40 +89,59 @@ public class OrgHomePageFragment extends Fragment {
         binding.btnAttachImage.setOnClickListener(v -> openCreatePost(true, null));
     }
 
-
     private void fetchOrganizationData() {
         String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : "";
         if (uid.isEmpty()) return;
 
-
         db.collection("organizations")
                 .whereEqualTo("ownerUid", uid)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty()) {
-                        organizationId = queryDocumentSnapshots.getDocuments().get(0).getId();
-                        organizationName = queryDocumentSnapshots.getDocuments().get(0).getString("name");
-                        if (organizationName != null) {
-                            fetchAnnouncements();
-                            fetchEvents();
-                            fetchMembershipRequests();
-                        }
+                .addSnapshotListener((value, error) -> {
+                    if (error != null || value == null || value.isEmpty()) return;
+
+                    DocumentSnapshot doc = value.getDocuments().get(0);
+                    organizationId = doc.getId();
+                    organizationName = doc.getString("name");
+                    Boolean joinEnabled = doc.getBoolean("joinEnabled");
+
+                    if (binding != null) {
+                        binding.switchJoinEnabled.setOnCheckedChangeListener(null);
+                        binding.switchJoinEnabled.setChecked(joinEnabled != null && joinEnabled);
+                        setupJoinToggleListener();
                     }
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Error fetching org", e));
+
+                    if (organizationName != null) {
+                        fetchAnnouncements();
+                        fetchEvents();
+                        fetchMembershipRequests();
+                    }
+                });
     }
 
+    private void setupJoinToggleListener() {
+        binding.switchJoinEnabled.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (organizationId != null) {
+                db.collection("organizations").document(organizationId)
+                    .update("joinEnabled", isChecked)
+                    .addOnSuccessListener(aVoid -> {
+                        String status = isChecked ? "enabled" : "disabled";
+                        Toast.makeText(getContext(), "Recruitment " + status, Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Failed to update status", Toast.LENGTH_SHORT).show();
+                        binding.switchJoinEnabled.setChecked(!isChecked);
+                    });
+            }
+        });
+    }
 
     private void fetchMembershipRequests() {
         if (organizationId == null) return;
-
 
         db.collection("memberships")
                 .whereEqualTo("orgId", organizationId)
                 .whereEqualTo("status", "Pending")
                 .addSnapshotListener((value, error) -> {
                     if (error != null) return;
-
 
                     if (binding != null) {
                         binding.membershipRequestsContainer.removeAllViews();
@@ -151,11 +159,9 @@ public class OrgHomePageFragment extends Fragment {
                 });
     }
 
-
     private void addMembershipRequestCard(MembershipModel request, String membershipId) {
         ItemMembershipRequestBinding reqBinding = ItemMembershipRequestBinding.inflate(
                 getLayoutInflater(), binding.membershipRequestsContainer, false);
-
 
         // Fetch user details for the name
         db.collection("users").document(request.getUserId()).get()
@@ -168,19 +174,15 @@ public class OrgHomePageFragment extends Fragment {
                     }
                 });
 
-
         if (request.getJoinedAt() != null) {
             reqBinding.tvRequestDate.setText("Requested on " + shortDate.format(request.getJoinedAt().toDate()));
         }
 
-
         reqBinding.btnApprove.setOnClickListener(v -> updateMembershipStatus(membershipId, "Active"));
         reqBinding.btnReject.setOnClickListener(v -> showRejectConfirmation(membershipId));
 
-
         binding.membershipRequestsContainer.addView(reqBinding.getRoot());
     }
-
 
     private void updateMembershipStatus(String membershipId, String newStatus) {
         db.collection("memberships").document(membershipId)
@@ -190,7 +192,6 @@ public class OrgHomePageFragment extends Fragment {
                     Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
                 });
     }
-
 
     private void showRejectConfirmation(String membershipId) {
         new AlertDialog.Builder(getContext())
@@ -204,12 +205,9 @@ public class OrgHomePageFragment extends Fragment {
                 .show();
     }
 
-
     private void fetchAnnouncements() {
         if (organizationName == null || organizationName.isEmpty()) return;
 
-
-        // Removed .orderBy() to avoid index requirement for now
         db.collection("announcements")
                 .whereEqualTo("orgName", organizationName)
                 .addSnapshotListener((value, error) -> {
@@ -217,7 +215,6 @@ public class OrgHomePageFragment extends Fragment {
                         Log.e(TAG, "Announcements error: " + error.getMessage());
                         return;
                     }
-
 
                     if (binding != null) {
                         binding.announcementsContainer.removeAllViews();
@@ -229,12 +226,10 @@ public class OrgHomePageFragment extends Fragment {
                                 list.add(announcement);
                             }
 
-                            // Sort locally by timestamp descending
                             Collections.sort(list, (a, b) -> {
                                 if (a.getTimestamp() == null || b.getTimestamp() == null) return 0;
                                 return b.getTimestamp().compareTo(a.getTimestamp());
                             });
-
 
                             for (AnnouncementModel announcement : list) {
                                 addAnnouncementCard(announcement, announcement.getAnnouncementId());
@@ -244,11 +239,9 @@ public class OrgHomePageFragment extends Fragment {
                 });
     }
 
-
     private void addAnnouncementCard(AnnouncementModel announcement, String docId) {
         ItemAnnouncementCardBinding cardBinding = ItemAnnouncementCardBinding.inflate(
                 getLayoutInflater(), binding.announcementsContainer, false);
-
 
         cardBinding.tvAnnouncementTitle.setText(announcement.getTitle());
         cardBinding.tvAnnouncementContent.setText(announcement.getContent());
@@ -256,20 +249,15 @@ public class OrgHomePageFragment extends Fragment {
             cardBinding.tvAnnouncementDate.setText(dateFormat.format(announcement.getTimestamp().toDate()));
         }
 
-
         cardBinding.btnEditAnnouncement.setOnClickListener(v -> openCreatePost(true, docId));
         cardBinding.btnDeleteAnnouncement.setOnClickListener(v -> showDeleteConfirmation("announcements", docId));
-
 
         binding.announcementsContainer.addView(cardBinding.getRoot());
     }
 
-
     private void fetchEvents() {
         if (organizationName == null || organizationName.isEmpty()) return;
 
-
-        // Removed .orderBy() to avoid index requirement for now
         db.collection("events")
                 .whereEqualTo("orgName", organizationName)
                 .addSnapshotListener((value, error) -> {
@@ -277,7 +265,6 @@ public class OrgHomePageFragment extends Fragment {
                         Log.e(TAG, "Events error: " + error.getMessage());
                         return;
                     }
-
 
                     if (binding != null) {
                         binding.eventsContainer.removeAllViews();
@@ -289,13 +276,10 @@ public class OrgHomePageFragment extends Fragment {
                                 list.add(event);
                             }
 
-
-                            // Sort locally by createdAt descending
                             Collections.sort(list, (a, b) -> {
                                 if (a.getCreatedAt() == null || b.getCreatedAt() == null) return 0;
                                 return b.getCreatedAt().compareTo(a.getCreatedAt());
                             });
-
 
                             for (EventModel event : list) {
                                 addEventCard(event, event.getEventId());
@@ -305,11 +289,9 @@ public class OrgHomePageFragment extends Fragment {
                 });
     }
 
-
     private void addEventCard(EventModel event, String docId) {
         ItemEventCardHandlerBinding cardBinding = ItemEventCardHandlerBinding.inflate(
                 getLayoutInflater(), binding.eventsContainer, false);
-
 
         cardBinding.tvEventTitle.setText(event.getTitle());
         cardBinding.tvLocation.setText(event.getLocation());
@@ -320,14 +302,11 @@ public class OrgHomePageFragment extends Fragment {
         cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots",
                 event.getCurrentRsvpCount(), event.getMaxCapacity()));
 
-
         cardBinding.btnEditEvent.setOnClickListener(v -> openCreatePost(false, docId));
         cardBinding.btnDeleteEvent.setOnClickListener(v -> showDeleteConfirmation("events", docId));
 
-
         binding.eventsContainer.addView(cardBinding.getRoot());
     }
-
 
     private void showDeleteConfirmation(String collection, String docId) {
         new AlertDialog.Builder(getContext())
@@ -338,13 +317,11 @@ public class OrgHomePageFragment extends Fragment {
                 .show();
     }
 
-
     private void deletePost(String collection, String docId) {
         db.collection(collection).document(docId).delete()
                 .addOnSuccessListener(aVoid -> Toast.makeText(getContext(), "Post deleted successfully", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Error deleting post", Toast.LENGTH_SHORT).show());
     }
-
 
     private void openCreatePost(boolean startOnAnnouncement, @Nullable String editId) {
         Bundle args = new Bundle();
@@ -353,10 +330,8 @@ public class OrgHomePageFragment extends Fragment {
             args.putString("EDIT_ID", editId);
         }
 
-
         CreatePostFragment fragment = new CreatePostFragment();
         fragment.setArguments(args);
-
 
         if (getActivity() != null) {
             getParentFragmentManager().beginTransaction()
@@ -365,7 +340,6 @@ public class OrgHomePageFragment extends Fragment {
                     .commit();
         }
     }
-
 
     @Override
     public void onDestroyView() {

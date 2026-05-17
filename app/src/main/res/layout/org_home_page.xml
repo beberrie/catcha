@@ -27,6 +27,57 @@
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
+            <!-- Recruitment Status Toggle Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/recruitmentStatusCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp"
+                android:backgroundTint="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins_bold"
+                            android:text="Recruitment Status"
+                            android:textColor="@color/blue"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvJoinStatusDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/inter"
+                            android:text="Allow students to join your organization"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchJoinEnabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:useMaterialThemeColors="true" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- Create Post Card -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/createPostCard"
@@ -271,6 +322,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/suggestedDivider"
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:layout_marginTop="16dp"
