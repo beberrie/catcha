@@ -213,8 +213,8 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
             String eventStatus = "UPCOMING"; // Default
             long now = System.currentTimeMillis();
             if (event.getStartDateTime() != null && event.getEndDateTime() != null) {
-                long start = event.getStartDateTime().getTime();
-                long end = event.getEndDateTime().getTime();
+                long start = event.getStartDateTime().toDate().getTime();
+                long end = event.getEndDateTime().toDate().getTime();
                 if (now < start) eventStatus = "UPCOMING";
                 else if (now <= end) eventStatus = "ONGOING";
                 else eventStatus = "FINISHED";
@@ -222,14 +222,13 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
             if (!eventStatus.equalsIgnoreCase(status)) return false;
         }
 
-        // Filter by Time
         if (startT != null && endT != null && event.getStartDateTime() != null) {
             try {
                 Date filterStart = timeFormat.parse(startT);
                 Date filterEnd = timeFormat.parse(endT);
 
                 // Get only time part of event start
-                Date eventDate = event.getStartDateTime();
+                Date eventDate = event.getStartDateTime().toDate();
                 String eventTimeStr = timeFormat.format(eventDate);
                 Date eventTime = timeFormat.parse(eventTimeStr);
 
@@ -253,8 +252,8 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
         cardBinding.tvDescription.setText(event.getDescription());
         
         if (event.getStartDateTime() != null) {
-            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime()));
-            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime()));
+            cardBinding.tvDate.setText(dateFormat.format(event.getStartDateTime().toDate()));
+            cardBinding.tvTime.setText(dateFormat.format(event.getStartDateTime().toDate()));
         }
 
         cardBinding.tvCapacity.setText(String.format(Locale.getDefault(), "%d/%d slots", 
@@ -266,7 +265,7 @@ public class OrgProfileFragment extends Fragment implements EventFiltersBottomSh
             intent.putExtra("EVENT_HOST", event.getOrgName());
             intent.putExtra("EVENT_LOCATION", event.getLocation());
             if (event.getStartDateTime() != null) {
-                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime()));
+                intent.putExtra("EVENT_DATETIME", dateFormat.format(event.getStartDateTime().toDate()));
             }
             intent.putExtra("EVENT_DESCRIPTION", event.getDescription());
             intent.putExtra("EVENT_STATUS", "UPCOMING"); // Simplified status

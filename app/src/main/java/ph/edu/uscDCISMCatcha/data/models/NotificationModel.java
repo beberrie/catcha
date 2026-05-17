@@ -70,9 +70,9 @@ public class NotificationModel {
         n.orgId = e.getOrgId();
         n.orgName = e.getOrgName();
         n.location = e.getLocation();
-        if (e.getStartDateTime() != null) n.startDateTime = new Timestamp(e.getStartDateTime());
-        if (e.getEndDateTime() != null) n.endDateTime = new Timestamp(e.getEndDateTime());
-        if (e.getCreatedAt() != null) n.createdAt = new Timestamp(e.getCreatedAt());
+        if (e.getStartDateTime() != null) n.startDateTime = e.getStartDateTime();
+        if (e.getEndDateTime() != null) n.endDateTime = e.getEndDateTime();
+        if (e.getCreatedAt() != null) n.createdAt = e.getCreatedAt();
         n.university = e.getUniversity();
         n.imageUrl = e.getImageUrl();
         n.createdBy = e.getCreatedBy();

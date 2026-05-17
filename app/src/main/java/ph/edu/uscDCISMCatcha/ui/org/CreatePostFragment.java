@@ -1,12 +1,11 @@
-package ph.edu.uscDCISMCatcha.fragments;
-
+package ph.edu.uscDCISMCatcha.ui.org;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view. View;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,14 +19,11 @@ import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.FragmentCreatePostBinding;
 import ph.edu.uscDCISMCatcha.viewmodel.student.SharedAnnouncementViewModel;
 
-
 public class CreatePostFragment extends Fragment {
-
 
     private FragmentCreatePostBinding binding;
     private SharedAnnouncementViewModel sharedViewModel;
     private boolean isAnnouncementTab = true;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,22 +34,18 @@ public class CreatePostFragment extends Fragment {
         return binding.getRoot();
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view,
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         // Activity scope — shared with NotificationFragment
         sharedViewModel = new ViewModelProvider(requireActivity())
                 .get(SharedAnnouncementViewModel.class);
 
-
         setupTabs();
         setupDateTimePickers();
         setupButtons();
-
 
         // Open on correct tab if launched from shortcut
         Bundle args = getArguments();
@@ -63,7 +55,6 @@ public class CreatePostFragment extends Fragment {
         }
     }
 
-
     private void setupTabs() {
         binding.btnTabAnnouncement.setOnClickListener(
                 v -> switchTab(true));
@@ -72,12 +63,10 @@ public class CreatePostFragment extends Fragment {
         switchTab(true);
     }
 
-
     private void switchTab(boolean showAnnouncement) {
         isAnnouncementTab = showAnnouncement;
         binding.tvNavTitle.setText(
                 showAnnouncement ? "Create post" : "Create event");
-
 
         if (showAnnouncement) {
             binding.btnTabAnnouncement.setBackgroundResource(
@@ -99,13 +88,11 @@ public class CreatePostFragment extends Fragment {
                     Color.parseColor("#888888"));
         }
 
-
         binding.layoutAnnouncement.setVisibility(
                 showAnnouncement ? View.VISIBLE : View.GONE);
         binding.layoutEvent.setVisibility(
                 showAnnouncement ? View.GONE : View.VISIBLE);
     }
-
 
     private void setupDateTimePickers() {
         binding.layoutPickDate.setOnClickListener(v -> {
@@ -121,13 +108,11 @@ public class CreatePostFragment extends Fragment {
                     c.get(Calendar.DAY_OF_MONTH)).show();
         });
 
-
         binding.layoutPickTime.setOnClickListener(v ->
                 showTimePicker(binding.tvTime));
         binding.layoutPickEndTime.setOnClickListener(v ->
                 showTimePicker(binding.tvEndTime));
     }
-
 
     private void showTimePicker(TextView target) {
         Calendar c = Calendar.getInstance();
@@ -143,15 +128,12 @@ public class CreatePostFragment extends Fragment {
                 c.get(Calendar.MINUTE), false).show();
     }
 
-
     private void setupButtons() {
-
 
         // Back
         binding.btnBack.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager()
                         .popBackStack());
-
 
         // Broadcast announcement
         binding.btnBroadcast.setOnClickListener(v -> {
@@ -159,7 +141,6 @@ public class CreatePostFragment extends Fragment {
                     .getText().toString().trim();
             String message = binding.etMessage
                     .getText().toString().trim();
-
 
             if (title.isEmpty()) {
                 binding.etTitle.setError("Title is required");
@@ -172,7 +153,6 @@ public class CreatePostFragment extends Fragment {
                 return;
             }
 
-
             // Send real announcement to shared ViewModel
             // NotificationFragment observes and shows it
             sharedViewModel.broadcastAnnouncement(
@@ -184,20 +164,16 @@ public class CreatePostFragment extends Fragment {
                     312                   // followersCount
             );
 
-
             Toast.makeText(requireContext(),
                     "Announcement broadcasted!",
                     Toast.LENGTH_SHORT).show();
 
-
             clearInputs();
-
 
             // Go back
             requireActivity().getSupportFragmentManager()
                     .popBackStack();
         });
-
 
         // Create event
         binding.btnCreateEvent.setOnClickListener(v -> {
@@ -207,7 +183,6 @@ public class CreatePostFragment extends Fragment {
             String time = binding.tvTime.getText().toString();
             String location = binding.etLocation
                     .getText().toString().trim();
-
 
             if (title.isEmpty()) {
                 binding.etTitle.setError("Title is required");
@@ -222,20 +197,16 @@ public class CreatePostFragment extends Fragment {
                 return;
             }
 
-
             Toast.makeText(requireContext(),
                     "Event created!",
                     Toast.LENGTH_SHORT).show();
 
-
             clearInputs();
-
 
             requireActivity().getSupportFragmentManager()
                     .popBackStack();
         });
     }
-
 
     private void clearInputs() {
         binding.etTitle.setText("");
@@ -248,7 +219,6 @@ public class CreatePostFragment extends Fragment {
         binding.switchPushNotification.setChecked(false);
         binding.switchAutoReminders.setChecked(false);
     }
-
 
     @Override
     public void onDestroyView() {

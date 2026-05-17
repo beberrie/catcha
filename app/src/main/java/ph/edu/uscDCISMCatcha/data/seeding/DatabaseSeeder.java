@@ -70,13 +70,13 @@ public class DatabaseSeeder {
                 "Hackathon 2024",
                 "Annual coding competition for all students.",
                 "DCISM Lobby",
-                now,
-                nextWeek,
+                new Timestamp(now),
+                new Timestamp(nextWeek),
                 "University of San Carlos",
                 "https://example.com/hackathon.png",
                 user1Id
         );
-        event1.setCreatedAt(now);
+        event1.setCreatedAt(new Timestamp(now));
         batch.set(db.collection("events").document(event1Id), event1);
 
         // 5. Seed Sample RSVP
