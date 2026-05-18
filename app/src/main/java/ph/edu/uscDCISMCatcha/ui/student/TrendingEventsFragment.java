@@ -16,18 +16,18 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter;
+import ph.edu.uscDCISMCatcha.adapters.CommonGroundTrendingAdapter;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
 import ph.edu.uscDCISMCatcha.databinding.ItemTrendingCardBinding;
 import ph.edu.uscDCISMCatcha.databinding.OtherEventsCardBinding;
 import ph.edu.uscDCISMCatcha.databinding.TrendingEventsBinding;
 import ph.edu.uscDCISMCatcha.ui.chat.ChatBotFragment;
-import ph.edu.uscDCISMCatcha.ui.student.NotificationFragment;
+import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
 import ph.edu.uscDCISMCatcha.utils.Constants;
 
 public class TrendingEventsFragment extends Fragment {
@@ -124,10 +124,20 @@ public class TrendingEventsFragment extends Fragment {
         cardBinding.btnAction.setOnClickListener(v -> openEventDetails(event));
         cardBinding.getRoot().setOnClickListener(v -> openEventDetails(event));
 
-        // TODO: Populate Common Ground for real if needed
-        // For now, hide it as it requires more complex queries
+        // Common Ground logic from your code
         cardBinding.tvCommonGroundLabel.setVisibility(View.GONE);
         cardBinding.rvCommonGround.setVisibility(View.GONE);
+
+        CommonGroundUtils.getFriendsAttending(event.getEventId(), friendsAttending -> {
+            if (!isAdded()) return;
+            if (!friendsAttending.isEmpty()) {
+                cardBinding.tvCommonGroundLabel.setVisibility(View.VISIBLE);
+                cardBinding.rvCommonGround.setVisibility(View.VISIBLE);
+                CommonGroundTrendingAdapter adapter = new CommonGroundTrendingAdapter(requireContext(), friendsAttending);
+                cardBinding.rvCommonGround.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                cardBinding.rvCommonGround.setAdapter(adapter);
+            }
+        });
 
         binding.llFeaturedContainer.addView(cardBinding.getRoot());
     }
@@ -149,6 +159,21 @@ public class TrendingEventsFragment extends Fragment {
 
         cardBinding.btnAction.setOnClickListener(v -> openEventDetails(event));
         cardBinding.getRoot().setOnClickListener(v -> openEventDetails(event));
+
+        // Common Ground logic from your code
+        cardBinding.rvCommonGround.setVisibility(View.GONE);
+        cardBinding.tvCommonGroundLabel.setVisibility(View.GONE);
+
+        CommonGroundUtils.getFriendsAttending(event.getEventId(), friendsAttending -> {
+            if (!isAdded()) return;
+            if (!friendsAttending.isEmpty()) {
+                cardBinding.tvCommonGroundLabel.setVisibility(View.VISIBLE);
+                cardBinding.rvCommonGround.setVisibility(View.VISIBLE);
+                CommonGroundAdapter adapter = new CommonGroundAdapter(requireContext(), friendsAttending);
+                cardBinding.rvCommonGround.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
+                cardBinding.rvCommonGround.setAdapter(adapter);
+            }
+        });
 
         binding.llEventCards.addView(cardBinding.getRoot());
     }

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
@@ -16,6 +17,7 @@ import java.util.Locale;
 import ph.edu.uscDCISMCatcha.R;
 import ph.edu.uscDCISMCatcha.databinding.OtherEventsCardBinding;
 import ph.edu.uscDCISMCatcha.data.models.EventModel;
+import ph.edu.uscDCISMCatcha.utils.CommonGroundUtils;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
@@ -66,6 +68,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
 
         public void bind(EventModel event) {
+            final String currentEventId = event.getEventId();
             binding.tvEventTitle.setText(event.getTitle());
             binding.tvDescription.setText(event.getDescription());
             binding.tvLocation.setText(event.getLocation());
@@ -89,10 +92,35 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 binding.tvCapacity.setText("Unlimited slots");
             }
 
+            // Initially hide common ground to prevent flicker from recycled views
+            binding.rvCommonGround.setVisibility(View.GONE);
+            binding.tvCommonGroundLabel.setVisibility(View.GONE);
+
+            /* Disabled until Friend feature is implemented
+            CommonGroundUtils.getFriendsAttending(
+                    currentEventId,
+                    friendsAttending -> {
+                        // Safety check: ensure ViewHolder is still showing the same event
+                        if (currentEventId.equals(event.getEventId()) && !friendsAttending.isEmpty()) {
+                            binding.tvCommonGroundLabel.setVisibility(View.VISIBLE);
+                            binding.rvCommonGround.setVisibility(View.VISIBLE);
+
+                            ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter adapter =
+                                    new ph.edu.uscDCISMCatcha.adapters.CommonGroundAdapter(
+                                            itemView.getContext(), friendsAttending);
+                            binding.rvCommonGround.setLayoutManager(
+                                    new LinearLayoutManager(
+                                            itemView.getContext(),
+                                            LinearLayoutManager.HORIZONTAL, false));
+                            binding.rvCommonGround.setAdapter(adapter);
+                        }
+                    }
+            );
+            */
+
             if (joinedEventIds != null && joinedEventIds.contains(event.getEventId())) {
                 binding.tvUpcoming.setText("JOINED");
-                binding.tvUpcoming.setBackgroundResource(R.drawable.bg_btn_yellow); // Keep yellow but change text, or use a green one if exists
-                // Note: I don't know if there's a green background, sticking to text change for now or setting color directly if possible
+                binding.tvUpcoming.setBackgroundResource(R.drawable.bg_btn_yellow);
                 binding.tvUpcoming.setVisibility(View.VISIBLE);
             } else {
                 binding.tvUpcoming.setText("UPCOMING");
