@@ -20,6 +20,7 @@ public class Organization implements Serializable {
     private String profileImageUrl;
     private String bannerImageUrl;
     private String ownerUid;
+    private boolean joinEnabled = true; // Default to true
     @ServerTimestamp
     private Date createdAt;
 
@@ -34,6 +35,7 @@ public class Organization implements Serializable {
         this.category = category;
         this.profileImageUrl = profileImageUrl;
         this.ownerUid = ownerUid;
+        this.joinEnabled = true;
     }
 
     @Exclude
@@ -60,6 +62,8 @@ public class Organization implements Serializable {
     public void setBannerImageUrl(String bannerImageUrl) { this.bannerImageUrl = bannerImageUrl; }
     public String getOwnerUid() { return ownerUid; }
     public void setOwnerUid(String ownerUid) { this.ownerUid = ownerUid; }
+    public boolean isJoinEnabled() { return joinEnabled; }
+    public void setJoinEnabled(boolean joinEnabled) { this.joinEnabled = joinEnabled; }
     public Date getCreatedAt() { return createdAt; }
     public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 }

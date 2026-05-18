@@ -67,8 +67,61 @@
     </string-array>
 
     <string-array name="interest_categories">
+        <item>DCISM</item>
+        <item>DMB</item>
+        <item>DCOMM</item>
+        <item>DPA</item>
+        <item>DPSY</item>
+        <item>DPHI</item>
+        <item>DCPE</item>
+        <item>DCE</item>
+        <item>DMME</item>
+        <item>DCHE</item>
+        <item>DIE</item>
+        <item>DEEE</item>
+        <item>Coding</item>
         <item>Hackathon</item>
+        <item>Data Science</item>
+        <item>Networking</item>
+        <item>Web/App Dev</item>
         <item>Robotics</item>
+        <item>AI/ML</item>
+        <item>IoT</item>
+        <item>Embedded Systems</item>
+        <item>Lab Research</item>
+        <item>Environmental</item>
+        <item>Biotech</item>
+        <item>Seminar</item>
+        <item>Journalism</item>
+        <item>Broadcasting</item>
+        <item>Public Speaking</item>
+        <item>Creative Writing</item>
+        <item>Sociology</item>
+        <item>Human Behavior</item>
+        <item>Advocacy</item>
+        <item>Discussion</item>
+        <item>Astronomy</item>
+        <item>Engineering</item>
+        <item>Workshop</item>
+        <item>Ethics</item>
+        <item>Logic</item>
+        <item>Debate</item>
+        <item>Literature</item>
+        <item>Structural Design</item>
+        <item>Surveying</item>
+        <item>Construction Mgmt</item>
+        <item>Mechatronics</item>
+        <item>Automotive</item>
+        <item>CAD/CAM</item>
+        <item>Process Control</item>
+        <item>Plant Design</item>
+        <item>Supply Chain</item>
+        <item>Logistics</item>
+        <item>Quality Control</item>
+        <item>Power Systems</item>
+        <item>Microelectronics</item>
+        <item>Renewable Energy</item>
+        <item>Telecommunications</item>
         <item>Arts</item>
         <item>Music</item>
         <item>Sports</item>
@@ -80,40 +133,95 @@
 
     <!-- Interests Page -->
     <string name="interests_welcome">Welcome,</string>
-    <string name="interests_user_name">OUR DEAR ZEV !</string>
+    <string name="interests_user_name">OUR DEAR %1$s !</string>
     <string name="interests_label">Interests</string>
     <string name="interests_hint">Please select at least 3 interests!</string>
-    <string name="interests_counter_format">(%1$d selected)</string>
-    <string name="interests_creative_arts">Creative &amp; Arts</string>
-    <string name="interests_tech_innovation">Tech &amp; Innovation</string>
-    <string name="interests_academic_career">Academic &amp; Career</string>
-    <string name="interests_sports_wellness">Sports &amp; Wellness</string>
-    <string name="interests_community_service">Community &amp; Service</string>
-    <string name="interests_faith_culture">Faith &amp; Culture</string>
+    <string name="interests_continue">Continue</string>
+    <string name="interests_skip">Skip for now</string>
+    <string name="interests_cat_desc">Catcha cat decoration</string>
+
+    <string name="label_sas">School of Arts &amp; Sciences</string>
+    <string name="label_soe">School of Engineering</string>
+
+    <!-- Departments -->
+    <string name="dept_dcism">DCISM</string>
+    <string name="dept_dmb">DMB</string>
+    <string name="dept_dcomm">DComm</string>
+    <string name="dept_dpa">DPA</string>
+    <string name="dept_dpsy">DPsy</string>
+    <string name="dept_dphi">DPhi</string>
+    <string name="dept_dcpe">DCPE</string>
+    <string name="dept_dce">DCE</string>
+    <string name="dept_dmme">DMME</string>
+    <string name="dept_dche">DCHE</string>
+    <string name="dept_die">DIE</string>
+    <string name="dept_deee">DEEE</string>
+
+    <!-- Sub-categories -->
     <string name="interests_music">Music</string>
     <string name="interests_dance">Dance</string>
-    <string name="interests_theater_acting">Theater/Acting</string>
     <string name="interests_photography">Photography</string>
-    <string name="interests_visual_arts">Visual Arts/Drawing</string>
-    <string name="interests_film_video">Film/Video Editing</string>
+    <string name="interests_journalism">Journalism</string>
+    <string name="interests_broadcasting">Broadcasting</string>
+    <string name="interests_creative_writing">Creative Writing</string>
+    <string name="interests_literature">Literature</string>
     <string name="interests_coding">Coding</string>
+    <string name="interests_hackathon">Hackathon</string>
+    <string name="interests_data_science">Data Science</string>
+    <string name="interests_networking">Networking</string>
+    <string name="interests_web_app_dev">Web/App Dev</string>
     <string name="interests_robotics">Robotics</string>
-    <string name="interests_ai">AI</string>
+    <string name="interests_ai">AI/ML</string>
+    <string name="interests_iot">IoT</string>
+    <string name="interests_embedded_systems">Embedded Systems</string>
+    <string name="interests_hardware_proto">Hardware Prototyping</string>
+    <string name="interests_astronomy">Astronomy</string>
+    <string name="interests_engineering">Engineering</string>
+    <string name="interests_workshop">Workshop</string>
+    <string name="interests_process_control">Process Control</string>
+    <string name="interests_plant_design">Plant Design</string>
+    <string name="interests_power_systems">Power Systems</string>
+    <string name="interests_microelectronics">Microelectronics</string>
+    <string name="interests_renewable_energy">Renewable Energy</string>
+    <string name="interests_telecomm">Telecommunications</string>
+    <string name="interests_circuit_design">Circuit Design</string>
+    <string name="interests_mechatronics">Mechatronics</string>
+    <string name="interests_automotive">Automotive</string>
+    <string name="interests_hvac">HVAC</string>
+    <string name="interests_machining">Machining</string>
+    <string name="interests_cad_cam">CAD/CAM</string>
+    <string name="interests_biotech">Biotech</string>
     <string name="interests_research">Research</string>
     <string name="interests_entrepreneurship">Entrepreneurship</string>
     <string name="interests_public_speaking">Public Speaking</string>
+    <string name="interests_sociology">Sociology</string>
+    <string name="interests_human_behavior">Human Behavior</string>
+    <string name="interests_discussion">Discussion</string>
+    <string name="interests_lab_research">Lab Research</string>
+    <string name="interests_seminar">Seminar</string>
+    <string name="interests_ethics">Ethics</string>
+    <string name="interests_logic">Logic</string>
+    <string name="interests_debate">Debate</string>
+    <string name="interests_structural_design">Structural Design</string>
+    <string name="interests_surveying">Surveying</string>
+    <string name="interests_construction_mgmt">Construction Mgmt</string>
+    <string name="interests_geotechnology">Geotechnology</string>
+    <string name="interests_hydraulics">Hydraulics</string>
+    <string name="interests_unit_ops">Unit Operations</string>
+    <string name="interests_supply_chain">Supply Chain</string>
+    <string name="interests_logistics">Logistics</string>
+    <string name="interests_ops_research">Operations Research</string>
+    <string name="interests_ergonomics">Ergonomics</string>
+    <string name="interests_quality_control">Quality Control</string>
+    <string name="interests_thermodynamics">Thermodynamics</string>
     <string name="interests_basketball">Basketball</string>
     <string name="interests_volleyball">Volleyball</string>
     <string name="interests_yoga">Yoga</string>
     <string name="interests_volunteering">Volunteering</string>
-    <string name="interests_advocacy">Advocacy</string>
     <string name="interests_charity">Charity</string>
-    <string name="interests_subcat1">Sub-category 1</string>
-    <string name="interests_subcat2">Sub-category 2</string>
-    <string name="interests_subcat3">Sub-category 3</string>
-    <string name="interests_continue">Continue</string>
-    <string name="interests_skip">Skip for now</string>
-    <string name="interests_cat_desc">Catcha cat decoration</string>
+    <string name="interests_advocacy">Advocacy</string>
+    <string name="interests_environmental">Environmental</string>
+    <string name="interests_env_eng">Environmental Engineering</string>
 
     <!-- Org Profile Strings -->
     <string name="org_banner_desc">Organization banner image</string>
@@ -151,6 +259,8 @@
     <string name="status_ended">ENDED</string>
     <string name="status_ongoing">ONGOING</string>
 
-    <string name="search_results_count">%1$d Results for \"%2$s\"</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Search Strings -->
+    <string name="search_results_count">%1$d results found for \"%2$s\"</string>
 </resources>

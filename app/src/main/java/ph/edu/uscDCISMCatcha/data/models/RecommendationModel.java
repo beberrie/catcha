@@ -5,8 +5,6 @@ import com.google.firebase.firestore.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class RecommendationModel {
 
-    public enum Type { ORG }
-
     private String id;
     private String name;
     private String school;
@@ -14,7 +12,6 @@ public class RecommendationModel {
     private String category;
     private String bannerImageUrl;
     private int matchPercent;
-    private Type type;
 
     public RecommendationModel() {}
 
@@ -23,7 +20,6 @@ public class RecommendationModel {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    // Getters and Setters for Compatibility
     public String getTitle() { return name; }
     public void setTitle(String title) { this.name = title; }
 
@@ -41,6 +37,4 @@ public class RecommendationModel {
     public void setBannerImageUrl(String bannerImageUrl) { this.bannerImageUrl = bannerImageUrl; }
     public int getMatchPercent() { return matchPercent; }
     public void setMatchPercent(int matchPercent) { this.matchPercent = matchPercent; }
-    public Type getType() { return type; }
-    public void setType(Type type) { this.type = type; }
 }
